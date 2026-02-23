@@ -73,14 +73,13 @@
         .money-btn.clear-btn { background: #f5f5f5; color: #666; border: 1px solid #ddd; }
         .money-btn.exact { background: #fff3e0; color: #e65100; border: 1px solid #ffe0b2; }
         
-        /* ★修正部分：画面外にはみ出さないようストッパーを追加 */
         .tender-input-wrap { display: flex; align-items: center; gap: 5px; margin-bottom: 15px; }
         .tender-input-wrap label { font-weight: bold; white-space: nowrap; }
         .tender-input-wrap input { 
             flex-grow: 1; 
-            width: 100%; /* 追加 */
-            min-width: 0; /* 追加：飛び出し防止 */
-            box-sizing: border-box; /* 追加 */
+            width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
             padding: 10px; 
             font-size: 1.5rem; 
             text-align: right; 
@@ -157,16 +156,17 @@
 
 <div class="modal-overlay" id="checkout-modal">
     <div class="modal-content">
-        <h2 class="modal-title">お会計</h2>
+        <h2 class="modal-title">はづきれじ お会計</h2>
         <div class="calc-total">合計: ¥<span id="modal-total-amount">0</span></div>
         
         <div class="quick-money-btns">
             <button class="money-btn" onclick="addTenderAmount(100)">＋100円</button>
+            <button class="money-btn" onclick="addTenderAmount(500)">＋500円</button>
             <button class="money-btn" onclick="addTenderAmount(1000)">＋1,000円</button>
             <button class="money-btn" onclick="addTenderAmount(5000)">＋5,000円</button>
             <button class="money-btn" onclick="addTenderAmount(10000)">＋10,000円</button>
             <button class="money-btn clear-btn" onclick="clearTenderAmount()">クリア</button>
-            <button class="money-btn exact" onclick="setTenderExact()">ピッタリ</button>
+            <button class="money-btn exact" style="grid-column: span 3;" onclick="setTenderExact()">ピッタリ</button>
         </div>
         
         <div class="tender-input-wrap">
