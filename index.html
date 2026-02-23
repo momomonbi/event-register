@@ -6,6 +6,7 @@
     <title>はづきれじ</title>
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&family=Noto+Sans+JP:wght@400;700&family=Kiwi+Maru:wght@400;700&family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
     <style>
+        /* テーマ設定 */
         :root {
             --bg-color: #f4f4f9; --header-bg: #222; --tab-bg: #333; --accent-color: #e91e63;
             --tab-active-bg: #e91e63; --tab-active-color: #fff;
@@ -16,7 +17,7 @@
             --bg-color: #fff0f5; --header-bg: #ffb6c1; --tab-bg: #ffe4e1; --accent-color: #ff69b4;
             --tab-active-bg: #ff69b4; --tab-active-color: #fff;
             --card-bg: #ffffff; --text-color: #5d4037; --btn-checkout: #ff69b4;
-            --app-font: 'Zen Maru Gothic', sans-serif; /* 丸みを帯びたポップなフォント */
+            --app-font: 'Zen Maru Gothic', sans-serif; 
         }
         [data-theme="chocolate"] {
             --bg-color: #f3e5f5; --header-bg: #3e2723; --tab-bg: #5d4037; --accent-color: #795548;
@@ -54,7 +55,7 @@
         input { font-family: inherit; }
 
         .preset-header { background-color: var(--header-bg); padding: 10px; display: flex; justify-content: space-between; align-items: center; gap: 5px; }
-        .preset-header select { flex-grow: 1; padding: 10px; border-radius: 4px; font-size: 1rem; border: none; font-weight: bold; background: #fff; }
+        .preset-header select { flex-grow: 1; padding: 10px; border-radius: 4px; font-size: 1rem; border: none; font-weight: bold; background: #fff; color: #333; }
         .preset-btn { background-color: #555; color: white; padding: 10px; font-weight: bold; font-size: 0.9rem; }
         .preset-btn.primary { background-color: #FFC107; color: #333; }
         .preset-btn.danger { background-color: #f44336; color: white; }
@@ -65,7 +66,6 @@
         .tab-content { display: none; padding: 10px; }
         .tab-content.active { display: block; }
         
-        /* レジ商品のコンパクト化 */
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         .item { background: var(--card-bg); border-radius: 10px; padding: 6px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: relative; overflow: hidden; }
         .item img { width: 100%; height: 90px; object-fit: contain; border-radius: 6px; background-color: #f0f0f0; margin-bottom: 4px; }
@@ -82,48 +82,53 @@
         .checkout-btn { background-color: var(--btn-checkout); color: white; padding: 14px; font-size: 1.1rem; font-weight: bold; width: 100%; transition: transform 0.1s; }
         .checkout-btn:disabled { background-color: #ccc; color: #666; }
         
-        /* 小計金額を大幅に大きく */
         .total-amount-display { font-weight: bold; font-size: 1.8rem; color: #333; }
 
         .form-group { margin-bottom: 12px; }
         .form-group label { display: block; font-size: 0.85rem; color: #666; margin-bottom: 4px; }
-        .form-group input, .form-group select { width: 100%; padding: 12px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; }
-        .save-btn { background-color: var(--accent-color); color: white; padding: 14px; width: 100%; font-size: 1rem; font-weight: bold; }
+        .form-group input, .form-group select { width: 100%; padding: 14px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; color: #333; background: #fff;}
+        .save-btn { background-color: var(--accent-color); color: white; padding: 16px; width: 100%; font-size: 1.1rem; font-weight: bold; }
         
-        /* リストスタイル（編集・削除ボタン横並び） */
         .list-item { background: var(--card-bg); padding: 10px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 10px; border-radius: 8px; margin-bottom: 5px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);}
         .list-item img { width: 45px; height: 45px; object-fit: contain; background: #f9f9f9; border-radius: 4px; }
         .list-btn { padding: 6px 10px; font-size: 0.8rem; font-weight: bold; }
         
-        /* 横長の履歴カード */
         .history-card { background: var(--card-bg); padding: 12px; border-radius: 8px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .history-info { display: flex; align-items: center; gap: 10px; flex-grow: 1; overflow: hidden; }
         .history-time { font-size: 0.8rem; color: #888; background: #f0f0f0; padding: 3px 6px; border-radius: 4px; white-space: nowrap; }
         .history-detail { font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-color); }
         .history-price { font-weight:bold; color:var(--accent-color); font-size: 1.1rem; white-space: nowrap; margin-left: 5px;}
 
-        /* モーダル共通設定 */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; padding: 10px; }
-        .modal-content { background: white; width: 100%; max-width: 450px; border-radius: 16px; padding: 20px; box-sizing: border-box; max-height: 95vh; overflow-y: auto; color: #333; }
+        .modal-content { background: white; width: 100%; max-width: 450px; border-radius: 16px; padding: 20px; box-sizing: border-box; max-height: 95vh; overflow-y: auto; position: relative; color: #333; }
         
-        /* お会計UI */
         .money-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .money-btn { background: #e3f2fd; color: #1565c0; padding: 15px 5px; font-size: 1rem; font-weight: bold; }
-        .tender-input { width: 100%; padding: 12px; font-size: 1.6rem; text-align: right; border: 2px solid var(--btn-checkout); border-radius: 10px; box-sizing: border-box; }
-        .change-box { background: #fff0f5; padding: 12px; border-radius: 10px; text-align: center; margin-bottom: 15px; border: 2px dashed var(--accent-color); }
-        .change-val { font-size: 2rem; font-weight: bold; color: var(--accent-color); }
+        .money-btn { background: #e3f2fd; color: #1565c0; padding: 18px 5px; font-size: 1.1rem; font-weight: bold; box-shadow: 0 2px 0 #bbdefb; }
+        .money-btn:active { transform: translateY(2px); box-shadow: none; }
+        .tender-input { width: 100%; padding: 15px; font-size: 1.8rem; text-align: right; border: 2px solid var(--btn-checkout); border-radius: 10px; box-sizing: border-box; }
+        .change-box { background: #fff0f5; padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 15px; border: 2px dashed var(--accent-color); }
+        .change-val { font-size: 2.2rem; font-weight: bold; color: var(--accent-color); }
         
-        /* カートモーダル用サムネイル付き */
         .cart-item-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #ddd; padding: 10px 0; }
-        .cart-item-info { flex-grow: 1; display: flex; align-items: center; gap: 10px; }
         .qty-btn { width: 32px; height: 32px; border-radius: 50%; border: none; background: #eee; font-size: 1.2rem; font-weight: bold; color: #333;}
-        .modal-large-btn { width: 100%; padding: 15px; font-size: 1.1rem; font-weight: bold; margin-bottom: 10px; }
+        .modal-large-btn { width: 100%; padding: 18px; font-size: 1.1rem; font-weight: bold; margin-bottom: 10px; }
 
-        /* マップ機能用 */
-        #map-container { width: 100%; height: 60vh; background: #ddd; overflow: hidden; position: relative; border-radius: 8px; touch-action: none; margin-top: 10px; border: 2px solid #ccc;}
+        /* マップ関連 */
+        #map-container { width: 100%; height: 65vh; background: #ddd; overflow: hidden; position: relative; border-radius: 8px; touch-action: none; margin-top: 10px; border: 2px solid #ccc;}
         #map-wrapper { position: absolute; transform-origin: 0 0; }
-        .map-pin { position: absolute; font-size: 24px; transform: translate(-50%, -100%); cursor: pointer; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5)); transition: transform 0.1s; }
-        .map-pin:active { transform: translate(-50%, -100%) scale(1.2); }
+        .map-pin-wrap { position: absolute; transform: translate(-50%, -100%); cursor: pointer; text-align: center; z-index: 10; }
+        .pin-icon { font-size: 28px; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5)); transition: transform 0.1s; }
+        .map-pin-wrap:active .pin-icon { transform: scale(1.2); }
+        .pin-label { background: rgba(255,255,255,0.95); padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; color: #333; font-weight: bold; white-space: nowrap; border: 1px solid #ccc; margin-top: 2px; box-shadow: 0 1px 3px rgba(0,0,0,0.2); pointer-events: none;}
+        
+        /* 拡大鏡（ルーペ） */
+        #magnifier {
+            position: fixed; width: 120px; height: 120px; border: 3px solid var(--accent-color); border-radius: 50%;
+            background-color: white; background-repeat: no-repeat; pointer-events: none; display: none; z-index: 2000; box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        }
+        #magnifier::after {
+            content: '+'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--accent-color); font-size: 24px; font-weight: bold; text-shadow: 0 0 2px white;
+        }
     </style>
 </head>
 <body data-theme="default">
@@ -166,15 +171,19 @@
         <h3 id="form-title" style="margin-top:0;">📦 商品登録</h3>
         <input type="hidden" id="edit-item-id">
         <div class="form-group"><input type="text" id="itemName" placeholder="商品名"></div>
-        <div class="form-group"><input type="number" id="itemPrice" placeholder="価格" inputmode="numeric"></div>
         <div class="form-group">
-            <label style="font-weight:bold; color:var(--accent-color);">在庫数（上下スワイプで変更できます）</label>
-            <input type="number" id="itemStock" placeholder="在庫数" inputmode="numeric" style="font-size:1.2rem; text-align:center; font-weight:bold; background:#e0f7fa; border:2px solid #00acc1;">
+            <input type="text" id="itemPriceDisplay" placeholder="タップして価格を設定" readonly onclick="openPriceModal()" style="background:#f9f9f9; cursor:pointer;">
+            <input type="hidden" id="itemPrice">
         </div>
+        <div class="form-group"><input type="number" id="itemStock" placeholder="在庫数" inputmode="numeric"></div>
+        
         <div class="form-group" style="background: #f9f9f9; padding: 10px; border-radius: 4px; border:1px solid #ddd;">
             <label>商品画像を選択：</label>
-            <input type="file" id="itemImage" accept="image/*" style="border:none; padding:5px 0;">
+            <img id="edit-image-preview" style="display:none; width: 60px; height: 60px; object-fit: contain; margin-bottom: 5px; border-radius:4px; background:#fff;">
+            <input type="file" id="itemImage" accept="image/*" style="border:none; padding:5px 0; background:transparent;">
+            <div id="image-hint" style="display:none; font-size:0.8rem; color:#888;">※変更しない場合は選択不要です</div>
         </div>
+        
         <button class="save-btn" id="save-product-btn" onclick="addNewItem()">✨ この内容で登録する</button>
         <button class="save-btn" id="cancel-edit-btn" onclick="cancelEdit()" style="display:none; background:#888; margin-top:5px;">キャンセル</button>
     </div>
@@ -208,6 +217,9 @@
     <h3 style="border-bottom:2px solid #ddd; padding-bottom:5px;">🏆 商品別売上</h3>
     <div id="stat-items" style="background:var(--card-bg); padding:15px; border-radius:12px; margin-bottom:20px; box-shadow:0 1px 3px rgba(0,0,0,0.1);"></div>
 
+    <h3 style="border-bottom:2px solid #ddd; padding-bottom:5px;">⏰ 時間帯別売上</h3>
+    <div id="stat-time" style="background:var(--card-bg); padding:15px; border-radius:12px; margin-bottom:20px; box-shadow:0 1px 3px rgba(0,0,0,0.1);"></div>
+
     <div style="display:flex; justify-content:space-between; align-items:flex-end; border-bottom:2px solid #ddd; padding-bottom:5px; margin-bottom:10px;">
         <h3 style="margin:0;">📝 取引履歴</h3>
         <button onclick="clearEventHistory()" style="background:#f44336; color:white; padding:6px 10px; font-size:0.8rem; border-radius:4px; font-weight:bold;">🔄 履歴をリセット</button>
@@ -220,14 +232,14 @@
         <label style="background:var(--btn-checkout); color:white; padding:10px; border-radius:6px; font-size:0.9rem; font-weight:bold; flex-grow:1; text-align:center;">
             🗺 図面を読込む <input type="file" style="display:none;" id="map-upload" accept="image/*" onchange="loadMapImage(this)">
         </label>
-        <button onclick="resetMap()" style="background:#555; color:white; padding:10px; border-radius:6px; font-weight:bold;">リセット</button>
+        <button onclick="resetMap()" style="background:#555; color:white; padding:10px; border-radius:6px; font-weight:bold;">視点リセット</button>
     </div>
     <div style="margin-top:10px;">
         <button id="pin-mode-btn" onclick="togglePinMode()" style="width:100%; padding:12px; background:#f0f0f0; border:2px solid #ccc; font-weight:bold; font-size:1rem; color:#333;">
-            📍 ピン追加モード：【OFF】（地図を動かせます）
+            📍 ピン追加モード：【OFF】（地図移動）
         </button>
     </div>
-    <p style="font-size:0.8rem; color:#666; margin:5px 0;">※2本指で拡大縮小、1本指で移動。ピン追加ONの時はタップでピンを立てられます。</p>
+    <p style="font-size:0.8rem; color:#666; margin:5px 0;">※2本指で拡大縮小。ピン追加ONにして地図をドラッグするとルーペが出ます。</p>
     
     <div id="map-container">
         <div id="map-wrapper">
@@ -236,6 +248,8 @@
         </div>
     </div>
 </div>
+
+<div id="magnifier"></div>
 
 <div class="bottom-bar" id="cart-bar">
     <div class="cart-status">
@@ -246,6 +260,29 @@
         <div>小計: <span class="total-amount-display">¥<span id="cart-total">0</span></span></div>
     </div>
     <button class="checkout-btn" id="checkout-btn" onclick="openCheckoutModal()" disabled>会計へ進む</button>
+</div>
+
+<div class="modal-overlay" id="price-modal">
+    <div class="modal-content" style="padding:15px;">
+        <h2 style="text-align:center; margin-top:0;">価格を設定</h2>
+        <div class="money-grid">
+            <button class="money-btn" onclick="addPriceAmount(100)">＋100</button>
+            <button class="money-btn" onclick="addPriceAmount(500)">＋500</button>
+            <button class="money-btn" onclick="addPriceAmount(1000)">＋1000</button>
+            <button class="money-btn" onclick="addPriceAmount(5000)">＋5000</button>
+            <button class="money-btn" onclick="addPriceAmount(10000)">＋1万</button>
+            <button class="money-btn" onclick="clearPriceAmount()" style="background:#eee; color:#333;">クリア</button>
+        </div>
+        <div style="margin-bottom:15px;">
+            <label style="font-size:0.85rem; color:#666;">手入力も可能です</label>
+            <div style="display:flex; align-items:center; gap:5px;">
+                <input type="number" id="modal-price-input" class="tender-input" inputmode="numeric" placeholder="0">
+                <span style="font-weight:bold; font-size:1.2rem;">円</span>
+            </div>
+        </div>
+        <button onclick="commitPriceModal()" style="width:100%; padding:15px; background:var(--accent-color); color:white; font-size:1.2rem; font-weight:bold; border-radius:6px; margin-bottom:10px;">決定</button>
+        <button onclick="closePriceModal()" style="width:100%; padding:15px; background:#ddd; color:#333; font-size:1rem; font-weight:bold; border-radius:6px;">キャンセル</button>
+    </div>
 </div>
 
 <div class="modal-overlay" id="cart-modal">
@@ -330,7 +367,6 @@
         localStorage.setItem('pos_app_data', JSON.stringify(appData));
     }
     
-    // データ移行処理（古いデータにマップ用の配列を追加）
     appData.events.forEach(ev => {
         if (ev.mapImage === undefined) ev.mapImage = null;
         if (!ev.pins) ev.pins = [];
@@ -346,8 +382,7 @@
 
     updateEventSelector();
     renderAll();
-    setupStockSwipe(); // 在庫スワイプ機能の初期化
-    setupMapGestures(); // マップ機能の初期化
+    setupMapGestures();
 
     function saveData() { localStorage.setItem('pos_app_data', JSON.stringify(appData)); }
     function changeTheme(name) { appData.theme = name; document.body.setAttribute('data-theme', name); saveData(); }
@@ -392,34 +427,30 @@
         }
     }
 
-    // --- ★在庫の上下スワイプ入力処理 ---
-    function setupStockSwipe() {
-        const stockInput = document.getElementById('itemStock');
-        let startY = 0;
-        let initialVal = 0;
-        
-        stockInput.addEventListener('touchstart', (e) => {
-            startY = e.touches[0].clientY;
-            initialVal = parseInt(stockInput.value) || 0;
-        });
-
-        stockInput.addEventListener('touchmove', (e) => {
-            e.preventDefault(); // 画面のスクロールを止める
-            let deltaY = startY - e.touches[0].clientY; // 上にスワイプでプラス
-            // 3px移動するごとに1増減する（感度調整）
-            let newVal = initialVal + Math.floor(deltaY / 3);
-            if (newVal < 0) newVal = 0;
-            // 100までというご要望ですが、念のため少し余裕を持たせて上限なし（または999）にします
-            if (newVal > 999) newVal = 999;
-            stockInput.value = newVal;
-        }, {passive: false});
+    // --- 価格入力ポップアップ ---
+    function openPriceModal() {
+        document.getElementById('modal-price-input').value = document.getElementById('itemPrice').value;
+        document.getElementById('price-modal').style.display = 'flex';
+    }
+    function closePriceModal() { document.getElementById('price-modal').style.display = 'none'; }
+    function addPriceAmount(amount) {
+        const el = document.getElementById('modal-price-input');
+        el.value = (parseInt(el.value) || 0) + amount;
+    }
+    function clearPriceAmount() { document.getElementById('modal-price-input').value = ''; }
+    function commitPriceModal() {
+        const val = document.getElementById('modal-price-input').value;
+        document.getElementById('itemPrice').value = val;
+        document.getElementById('itemPriceDisplay').value = val ? "¥" + parseInt(val).toLocaleString() : "";
+        closePriceModal();
     }
 
     // --- 商品管理 (登録・編集・削除) ---
     function addNewItem() {
         const n = document.getElementById('itemName').value;
-        const p = parseInt(document.getElementById('itemPrice').value.replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0)));
-        const s = parseInt(document.getElementById('itemStock').value.replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0)));
+        const p = parseInt(document.getElementById('itemPrice').value);
+        const sStr = document.getElementById('itemStock').value;
+        const s = parseInt(sStr.replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0)));
         const f = document.getElementById('itemImage');
         const editId = document.getElementById('edit-item-id').value;
 
@@ -429,14 +460,15 @@
         const finalize = (img) => {
             if (editId) {
                 const item = ev.items.find(i => i.id == editId);
-                item.name = n; item.price = p; item.stock = s; if(img) item.image = img;
+                item.name = n; item.price = p; item.stock = s; 
+                if(img) item.image = img; // 新しい画像があれば上書き、なければ以前のまま
             } else {
                 ev.items.push({ id: Date.now(), name: n, price: p, stock: s, image: img || 'https://placehold.co/300x300/e0e0e0/666666?text=No+Image' });
             }
             saveData(); renderAll(); cancelEdit(); alert('保存しました！');
         };
 
-        if (f.files[0]) {
+        if (f.files && f.files[0]) {
             const r = new FileReader();
             r.onload = (e) => {
                 const img = new Image();
@@ -450,29 +482,42 @@
                 img.src = e.target.result;
             };
             r.readAsDataURL(f.files[0]);
-        } else { finalize(null); }
+        } else {
+            finalize(null); // 画像未選択
+        }
     }
 
     function startEdit(id) {
         const item = appData.events.find(e => e.id == appData.currentEventId).items.find(i => i.id == id);
         document.getElementById('itemName').value = item.name;
         document.getElementById('itemPrice').value = item.price;
+        document.getElementById('itemPriceDisplay').value = "¥" + item.price.toLocaleString();
         document.getElementById('itemStock').value = item.stock;
         document.getElementById('edit-item-id').value = item.id;
+        
+        // 以前の画像を表示
+        const preview = document.getElementById('edit-image-preview');
+        preview.src = item.image;
+        preview.style.display = 'block';
+        document.getElementById('image-hint').style.display = 'block';
+
         document.getElementById('form-title').innerText = "✏️ 商品編集";
         document.getElementById('save-product-btn').innerText = "💾 変更を保存する";
         document.getElementById('cancel-edit-btn').style.display = "block";
-        document.getElementById('image-input-wrap').style.display = "none"; // 編集時は画像変更を簡易的に隠す
         window.scrollTo(0, 0);
     }
 
     function cancelEdit() {
-        document.getElementById('itemName').value = ''; document.getElementById('itemPrice').value = ''; document.getElementById('itemStock').value = '';
+        document.getElementById('itemName').value = ''; 
+        document.getElementById('itemPrice').value = ''; document.getElementById('itemPriceDisplay').value = '';
+        document.getElementById('itemStock').value = '';
         document.getElementById('edit-item-id').value = ''; document.getElementById('itemImage').value = '';
+        document.getElementById('edit-image-preview').style.display = 'none';
+        document.getElementById('image-hint').style.display = 'none';
+
         document.getElementById('form-title').innerText = "📦 商品登録";
         document.getElementById('save-product-btn').innerText = "✨ この内容で登録する";
         document.getElementById('cancel-edit-btn').style.display = "none";
-        document.getElementById('image-input-wrap').style.display = "block";
     }
 
     function deleteItem(id) {
@@ -538,7 +583,6 @@
         const map = {}; cart.forEach(i => { if(!map[i.id]) map[i.id] = {...i, count:0}; map[i.id].count++; });
         Object.values(map).forEach(i => {
             const avail = getAvailableStock(i.id);
-            // ★ サムネイル画像付きで表示
             list.innerHTML += `<div class="cart-item-row">
                 <div class="cart-item-info">
                     <img src="${i.image}" style="width:40px; height:40px; object-fit:contain; border-radius:4px; background:#f0f0f0;">
@@ -598,6 +642,7 @@
     let isPanning = false, startTx = 0, startTy = 0;
     let initialDist = null, lastScale = 1;
     let isPinMode = false;
+    let isPlacingPin = false;
 
     function loadMapImage(input) {
         if (input.files && input.files[0]) {
@@ -606,7 +651,6 @@
                 const img = new Image();
                 img.onload = () => {
                     const c = document.createElement('canvas'); const ctx = c.getContext('2d');
-                    // 容量削減のため最大1500pxに制限
                     const max = 1500; const scale = max / Math.max(img.width, img.height);
                     c.width = img.width * (scale < 1 ? scale : 1); c.height = img.height * (scale < 1 ? scale : 1);
                     ctx.drawImage(img, 0, 0, c.width, c.height);
@@ -630,8 +674,15 @@
             imgEl.src = ev.mapImage;
             imgEl.style.display = 'block';
             ev.pins.forEach(p => {
-                // ピンの描画
-                pinsContainer.innerHTML += `<div class="map-pin" style="left:${p.x}px; top:${p.y}px;" onclick="openPinModal(${p.id}, ${p.x}, ${p.y}, '${p.booth}', '${p.author}', '${p.memo}')">📍</div>`;
+                let labelHTML = '';
+                if(p.booth || p.author) {
+                    labelHTML = `<div class="pin-label">${p.booth ? p.booth + '<br>' : ''}${p.author}</div>`;
+                }
+                pinsContainer.innerHTML += `
+                    <div class="map-pin-wrap" style="left:${p.x}px; top:${p.y}px;" onclick="openPinModal(${p.id}, ${p.x}, ${p.y}, '${p.booth}', '${p.author}', '${p.memo}')">
+                        <div class="pin-icon">📍</div>
+                        ${labelHTML}
+                    </div>`;
             });
         } else {
             imgEl.style.display = 'none';
@@ -650,60 +701,106 @@
         const btn = document.getElementById('pin-mode-btn');
         if (isPinMode) {
             btn.style.background = '#ffeb3b'; btn.style.borderColor = '#fbc02d';
-            btn.innerText = '📍 ピン追加モード：【ON】（タップで追加）';
+            btn.innerText = '📍 ピン追加モード：【ON】（ドラッグで配置）';
         } else {
             btn.style.background = '#f0f0f0'; btn.style.borderColor = '#ccc';
-            btn.innerText = '📍 ピン追加モード：【OFF】（地図を動かせます）';
+            btn.innerText = '📍 ピン追加モード：【OFF】（地図移動）';
+            document.getElementById('magnifier').style.display = 'none';
         }
     }
 
     function setupMapGestures() {
         const container = document.getElementById('map-container');
-        const wrapper = document.getElementById('map-wrapper');
+        let lastTouch = null;
 
         container.addEventListener('touchstart', e => {
             if (e.touches.length === 2) {
+                // 2本指ズーム開始
+                isPlacingPin = false;
+                document.getElementById('magnifier').style.display = 'none';
                 initialDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
                 lastScale = mapScale;
-            } else if (e.touches.length === 1 && !isPinMode) {
-                isPanning = true;
-                startTx = e.touches[0].clientX - mapTx;
-                startTy = e.touches[0].clientY - mapTy;
+            } else if (e.touches.length === 1) {
+                if (isPinMode) {
+                    // ピン追加モードでの長押し/ドラッグ開始（既存ピンタップは無視）
+                    if (e.target.closest('.map-pin-wrap')) return; 
+                    isPlacingPin = true;
+                    updateMagnifier(e.touches[0]);
+                } else {
+                    // 1本指パン（移動）開始
+                    isPanning = true;
+                    startTx = e.touches[0].clientX - mapTx;
+                    startTy = e.touches[0].clientY - mapTy;
+                }
             }
         }, {passive: false});
 
         container.addEventListener('touchmove', e => {
-            e.preventDefault(); // デフォルトのスクロールを止める
+            e.preventDefault();
             if (e.touches.length === 2 && initialDist) {
+                // 2本指ズーム中（ピンチ中心を計算してズーム）
                 const currentDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
-                mapScale = lastScale * (currentDist / initialDist);
-                mapScale = Math.max(0.2, Math.min(mapScale, 5)); // 制限
+                const newScale = Math.max(0.2, Math.min(lastScale * (currentDist / initialDist), 5));
+                const ratio = newScale / mapScale;
+
+                const cx = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+                const cy = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+                const rect = container.getBoundingClientRect();
+                const pinchX = cx - rect.left;
+                const pinchY = cy - rect.top;
+
+                mapTx -= (pinchX - mapTx) * (ratio - 1);
+                mapTy -= (pinchY - mapTy) * (ratio - 1);
+                mapScale = newScale;
                 updateMapTransform();
             } else if (e.touches.length === 1 && isPanning) {
+                // 移動中
                 mapTx = e.touches[0].clientX - startTx;
                 mapTy = e.touches[0].clientY - startTy;
                 updateMapTransform();
+            } else if (e.touches.length === 1 && isPlacingPin) {
+                // ルーペを動かす
+                updateMagnifier(e.touches[0]);
             }
         }, {passive: false});
 
         container.addEventListener('touchend', e => {
             if (e.touches.length < 2) initialDist = null;
             if (e.touches.length === 0) isPanning = false;
+
+            if (isPlacingPin && lastTouch) {
+                isPlacingPin = false;
+                document.getElementById('magnifier').style.display = 'none';
+                
+                // 指を離した場所の画像上座標を計算してモーダルを開く
+                const imgRect = document.getElementById('map-image').getBoundingClientRect();
+                const realX = (lastTouch.clientX - imgRect.left) / mapScale;
+                const realY = (lastTouch.clientY - imgRect.top) / mapScale;
+                openPinModal(Date.now(), realX, realY, '', '', '');
+                lastTouch = null;
+            }
         });
 
-        // ピン追加のタップイベント
-        container.addEventListener('click', e => {
-            if (!isPinMode) return;
-            // クリックした要素がピン自身なら追加処理はしない
-            if (e.target.classList.contains('map-pin')) return;
+        function updateMagnifier(touch) {
+            lastTouch = touch;
+            const mag = document.getElementById('magnifier');
+            const img = document.getElementById('map-image');
+            if(!img.src) return;
 
-            const rect = wrapper.getBoundingClientRect();
-            // スケールとパンを加味して、画像上の元の座標を計算
-            const x = (e.clientX - rect.left) / mapScale;
-            const y = (e.clientY - rect.top) / mapScale;
-            
-            openPinModal(Date.now(), x, y, '', '', '');
-        });
+            mag.style.display = 'block';
+            mag.style.left = (touch.clientX - 60) + 'px';
+            mag.style.top = (touch.clientY - 150) + 'px'; // 指の少し上に表示
+
+            const rect = img.getBoundingClientRect();
+            mag.style.backgroundImage = `url(${img.src})`;
+            const magZoom = 2; // ルーペ内のズーム倍率
+            mag.style.backgroundSize = `${rect.width * magZoom}px ${rect.height * magZoom}px`;
+
+            const relX = touch.clientX - rect.left;
+            const relY = touch.clientY - rect.top;
+            // ルーペの中心に合わせる
+            mag.style.backgroundPosition = `-${relX * magZoom - 60}px -${relY * magZoom - 60}px`;
+        }
     }
 
     // --- ピン編集モーダル ---
@@ -711,12 +808,11 @@
         document.getElementById('pin-id').value = id;
         document.getElementById('pin-x').value = x;
         document.getElementById('pin-y').value = y;
-        document.getElementById('pin-booth').value = booth;
-        document.getElementById('pin-author').value = author;
-        document.getElementById('pin-memo').value = memo;
+        document.getElementById('pin-booth').value = booth !== 'undefined' ? booth : '';
+        document.getElementById('pin-author').value = author !== 'undefined' ? author : '';
+        document.getElementById('pin-memo').value = memo !== 'undefined' ? memo : '';
         document.getElementById('pin-modal').style.display = 'flex';
-        // 一旦追加モードはオフにする（誤爆防止）
-        if(isPinMode) togglePinMode();
+        if(isPinMode) togglePinMode(); // 開いたら追加モードはOFFにする
     }
     function closePinModal() { document.getElementById('pin-modal').style.display = 'none'; }
     
@@ -729,7 +825,6 @@
         const author = document.getElementById('pin-author').value;
         const memo = document.getElementById('pin-memo').value;
 
-        // 既存ピンの更新か新規追加か
         const existing = ev.pins.find(p => p.id === id);
         if (existing) {
             existing.booth = booth; existing.author = author; existing.memo = memo;
@@ -761,7 +856,6 @@
         if(!ev.items.length) { grid.innerHTML = '<p style="grid-column:1/span 2; text-align:center; padding:60px 0; color:#888;">[商品設定]から<br>商品を登録してください</p>'; return; }
         ev.items.forEach(i => {
             const avail = getAvailableStock(i.id);
-            // 追加ボタンを廃止し、画像全体で操作
             grid.innerHTML += `<div class="item"><img src="${i.image}" class="${avail>0?'clickable':''}" ${avail>0?`onclick="addToCart(event,${i.id})"`:''}><h3>${i.name}</h3><p>¥${i.price.toLocaleString()}</p><div class="stock">残り: ${avail}</div>${avail<=0?'<div class="sold-out">完売</div>':''}</div>`;
         });
     }
@@ -782,51 +876,76 @@
         });
     }
 
+    // ★ バグ修正済み分析レンダリング
     function renderAnalytics() {
         const ev = appData.events.find(e => e.id == appData.currentEventId);
         let total = 0, itemMap = {}, hourMap = {}, maxItem = 0, maxHour = 0;
+        
         ev.history.forEach(h => {
             total += h.total;
-            const hour = h.time.split(':')[0] + '時台';
-            hourMap[hour] = (hourMap[hour]||0) + h.total;
-            if(hourMap[hour] > maxHour) maxHour = hourMap[hour];
-            h.detail.split(', ').forEach(p => {
-                const m = p.match(/(.+)x([0-9]+)$/), n = m?m[1]:p, c = m?parseInt(m[2]):1;
-                itemMap[n] = (itemMap[n]||0)+c; if(itemMap[n]>maxItem) maxItem = itemMap[n];
+            let timeParts = h.time.split(':');
+            if(timeParts.length > 0) {
+                const hour = timeParts[0] + '時台';
+                hourMap[hour] = (hourMap[hour]||0) + h.total;
+                if(hourMap[hour] > maxHour) maxHour = hourMap[hour];
+            }
+            
+            // 安全な文字列解析
+            let parts = h.detail.split(',');
+            parts.forEach(p => {
+                p = p.trim();
+                if(!p) return;
+                let name = p;
+                let count = 1;
+                // "アイテム名x数" を判定する
+                let lastX = p.lastIndexOf('x');
+                if(lastX !== -1 && lastX < p.length - 1) {
+                    let countStr = p.substring(lastX + 1);
+                    if(!isNaN(countStr)) {
+                        name = p.substring(0, lastX);
+                        count = parseInt(countStr);
+                    }
+                }
+                itemMap[name] = (itemMap[name] || 0) + count;
+                if(itemMap[name] > maxItem) maxItem = itemMap[name];
             });
         });
+        
         document.getElementById('stat-total-rev').innerText = total.toLocaleString();
         document.getElementById('stat-total-tx').innerText = ev.history.length;
         document.getElementById('stat-avg-spend').innerText = ev.history.length ? Math.floor(total/ev.history.length).toLocaleString() : 0;
         document.getElementById('history-total-price').innerText = total.toLocaleString();
 
         const idiv = document.getElementById('stat-items'); idiv.innerHTML = '';
-        Object.keys(itemMap).sort((a,b)=>itemMap[b]-itemMap[a]).forEach(n => {
+        const sortedItems = Object.keys(itemMap).sort((a,b)=>itemMap[b]-itemMap[a]);
+        if(sortedItems.length === 0) idiv.innerHTML = '<p style="text-align:center; color:#888;">データがありません</p>';
+        sortedItems.forEach(n => {
             idiv.innerHTML += `<div style="margin-bottom:12px;"><div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span style="font-weight:bold;">${n}</span><span style="color:var(--accent-color); font-weight:bold;">${itemMap[n]}個</span></div><div style="background:#eee; height:10px; border-radius:5px; overflow:hidden;"><div style="background:var(--accent-color); height:100%; width:${(itemMap[n]/maxItem)*100}%"></div></div></div>`;
         });
+        
         const hdiv = document.getElementById('stat-time'); hdiv.innerHTML = '';
-        Object.keys(hourMap).sort((a,b)=>parseInt(a)-parseInt(b)).forEach(h => {
+        const sortedHours = Object.keys(hourMap).sort((a,b)=>parseInt(a)-parseInt(b));
+        if(sortedHours.length === 0) hdiv.innerHTML = '<p style="text-align:center; color:#888;">データがありません</p>';
+        sortedHours.forEach(h => {
             hdiv.innerHTML += `<div style="margin-bottom:12px;"><div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span style="font-weight:bold;">${h}</span><span style="color:var(--btn-checkout); font-weight:bold;">¥${hourMap[h].toLocaleString()}</span></div><div style="background:#eee; height:10px; border-radius:5px; overflow:hidden;"><div style="background:var(--btn-checkout); height:100%; width:${(hourMap[h]/maxHour)*100}%"></div></div></div>`;
         });
-    }
-
-    function switchTab(id) {
-        document.querySelectorAll('.tab, .tab-content').forEach(el => el.classList.remove('active'));
-        document.querySelector(`.tab[onclick*="${id}"]`).classList.add('active');
-        document.getElementById(id).classList.add('active');
-        document.getElementById('cart-bar').style.display = id === 'pos' ? 'flex' : 'none';
-        if (id === 'analytics') renderAnalytics();
-        if (id === 'map') renderMap();
-        window.scrollTo(0, 0);
     }
 
     function copyReportToClipboard() {
         const ev = appData.events.find(e=>e.id==appData.currentEventId);
         let total = 0, itemMap = {};
-        ev.history.forEach(h => { total += h.total; h.detail.split(', ').forEach(p => {
-            const m = p.match(/(.+)x([0-9]+)$/), n = m?m[1]:p, c = m?parseInt(m[2]):1;
-            itemMap[n] = (itemMap[n]||0)+c;
-        }); });
+        ev.history.forEach(h => { 
+            total += h.total; 
+            h.detail.split(',').forEach(p => {
+                p = p.trim(); if(!p) return;
+                let n = p, c = 1, lastX = p.lastIndexOf('x');
+                if(lastX !== -1 && lastX < p.length - 1) {
+                    let countStr = p.substring(lastX + 1);
+                    if(!isNaN(countStr)) { n = p.substring(0, lastX); c = parseInt(countStr); }
+                }
+                itemMap[n] = (itemMap[n]||0)+c;
+            }); 
+        });
         if(!ev.history.length) return alert('データがありません');
         let txt = `【${ev.name} 売上レポート】\n総売上: ¥${total.toLocaleString()}\n会計回数: ${ev.history.length}回\n\n■ 商品別販売数\n` + 
                   Object.keys(itemMap).sort((a,b)=>itemMap[b]-itemMap[a]).map(n=>`・${n} : ${itemMap[n]}個`).join("\n") + "\n\n#はづきれじ";
