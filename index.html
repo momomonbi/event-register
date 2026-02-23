@@ -252,10 +252,12 @@
 
 <script>
     // --- データ初期化 ---
+    // IDを共通変数にしてズレを防止
+    const initialId = Date.now();
     let appData = JSON.parse(localStorage.getItem('pos_app_data_v2')) || {
-        currentEventId: Date.now(),
+        currentEventId: initialId,
         theme: 'default',
-        events: [{ id: Date.now(), name: "イベント①", items: [], history: [] }]
+        events: [{ id: initialId, name: "イベント①", items: [], history: [] }]
     };
 
     let cart = [];
@@ -269,7 +271,12 @@
     };
 
     function saveData() {
-        localStorage.setItem('pos_app_data_v2', JSON.stringify(appData));
+        try {
+            localStorage.setItem('pos_app_data_v2', JSON.stringify(appData));
+        } catch (e) {
+            console.error("Storage Error:", e);
+            alert("データの保存に失敗しました。画像サイズが大きすぎる可能性があります。");
+        }
     }
 
     // --- テーマ管理 ---
@@ -291,7 +298,14 @@
     function switchTab(tabId) {
         document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-        document.querySelector(`.tab[onclick*="${tabId}"]`).classList.add('active');
+        // タブクリック時の判定を修正
+        const clickedTab = Array.from(document.querySelectorAll('.tab')).find(t => t.innerText.includes(
+            tabId === 'pos' ? 'レジ' : 
+            tabId === 'settings' ? '設定' : 
+            tabId === 'history' ? '売上' : '分析'
+        ));
+        if (clickedTab) clickedTab.classList.add('active');
+        
         document.getElementById(tabId).classList.add('active');
         document.getElementById('cart-bar').style.display = tabId === 'pos' ? 'flex' : 'none';
         if (tabId === 'analytics') renderAnalytics();
@@ -306,7 +320,7 @@
     }
 
     function changeEvent(id) {
-        appData.currentEventId = id;
+        appData.currentEventId = Number(id); // 数値として保持
         cart = [];
         saveData();
         updateCartDisplay();
@@ -325,7 +339,8 @@
     }
 
     function renameCurrentEvent() {
-        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        const ev = appData.events.find(e => Number(e.id) === Number(appData.currentEventId));
+        if (!ev) return;
         const newName = prompt("名前を変更", ev.name);
         if (newName) {
             ev.name = newName;
@@ -336,8 +351,10 @@
 
     // --- レジ機能 ---
     function renderPos() {
-        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        const ev = appData.events.find(e => Number(e.id) === Number(appData.currentEventId));
         const grid = document.getElementById('pos-grid');
+        if (!ev) return grid.innerHTML = "";
+
         grid.innerHTML = ev.items.map(item => {
             const inCart = cart.filter(c => c.id === item.id).length;
             const available = item.stock - inCart;
@@ -360,10 +377,10 @@
     }
 
     function addToCart(itemId) {
-        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        const ev = appData.events.find(e => Number(e.id) === Number(appData.currentEventId));
         const item = ev.items.find(i => i.id === itemId);
         const inCart = cart.filter(c => c.id === itemId).length;
-        if (item.stock - inCart > 0) {
+        if (item && item.stock - inCart > 0) {
             cart.push({...item});
             updateCartDisplay();
             renderPos();
@@ -475,7 +492,8 @@
     }
 
     function executeCheckout() {
-        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        const ev = appData.events.find(e => Number(e.id) === Number(appData.currentEventId));
+        if (!ev) return;
         const total = cart.reduce((sum, i) => sum + i.price, 0);
         
         // 在庫減算
@@ -513,25 +531,35 @@
 
         if (!name || isNaN(price)) return alert("名前と価格を入力してください");
 
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const ev = appData.events.find(ev => ev.id == appData.currentEventId);
+        const ev = appData.events.find(e => Number(e.id) === Number(appData.currentEventId));
+        if (!ev) return alert("イベントが見つかりません");
+
+        const addItem = (imageData) => {
             ev.items.push({
                 id: Date.now(),
                 name: name,
                 price: price,
                 stock: stock || 0,
-                image: e.target ? e.target.result : ''
+                image: imageData
             });
+            
             saveData();
             renderAll();
+            
+            // 入力欄リセット
             document.getElementById('itemName').value = '';
             document.getElementById('itemPrice').value = '';
             document.getElementById('itemStock').value = '';
+            document.getElementById('itemImage').value = '';
         };
 
-        if (file) reader.readAsDataURL(file);
-        else reader.onload({});
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => addItem(e.target.result);
+            reader.readAsDataURL(file);
+        } else {
+            addItem('');
+        }
     }
 
     function deleteCheckedItems() {
@@ -539,7 +567,8 @@
         if (checks.length === 0) return;
         if (!confirm("選択した商品を削除しますか？")) return;
         
-        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        const ev = appData.events.find(e => Number(e.id) === Number(appData.currentEventId));
+        if (!ev) return;
         const ids = Array.from(checks).map(c => parseInt(c.value));
         ev.items = ev.items.filter(i => !ids.includes(i.id));
         saveData();
@@ -554,8 +583,10 @@
     }
 
     function renderSettingsList() {
-        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        const ev = appData.events.find(e => Number(e.id) === Number(appData.currentEventId));
         const list = document.getElementById('settings-list');
+        if (!ev) return list.innerHTML = "";
+
         list.innerHTML = ev.items.map(i => `
             <div class="list-item">
                 <input type="checkbox" class="custom-checkbox item-checkbox" value="${i.id}">
@@ -569,8 +600,10 @@
     }
 
     function renderHistory() {
-        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        const ev = appData.events.find(e => Number(e.id) === Number(appData.currentEventId));
         const list = document.getElementById('history-list');
+        if (!ev) return list.innerHTML = "";
+
         let total = 0;
         list.innerHTML = ev.history.map(h => {
             total += h.total;
@@ -586,7 +619,9 @@
     }
 
     function renderAnalytics() {
-        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        const ev = appData.events.find(e => Number(e.id) === Number(appData.currentEventId));
+        if (!ev) return;
+
         const stats = {};
         ev.history.forEach(h => {
             const items = h.detail.split(", ");
@@ -615,8 +650,8 @@
     }
 
     function exportCSV() {
-        const ev = appData.events.find(e => e.id == appData.currentEventId);
-        if (ev.history.length === 0) return;
+        const ev = appData.events.find(e => Number(e.id) === Number(appData.currentEventId));
+        if (!ev || ev.history.length === 0) return;
         let csv = "\uFEFF時刻,内容,金額\n";
         ev.history.forEach(h => { csv += `${h.time},"${h.detail}",${h.total}\n`; });
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -627,15 +662,16 @@
     }
 
     function copyReportToClipboard() {
-        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        const ev = appData.events.find(e => Number(e.id) === Number(appData.currentEventId));
+        if (!ev) return;
         const total = ev.history.reduce((sum, h) => sum + h.total, 0);
         let text = `【${ev.name} 売上報告】\n総売上: ¥${total.toLocaleString()}\n会計数: ${ev.history.length}件\n\n`;
-        // 販売数
+        
         const stats = {};
         ev.history.forEach(h => {
             h.detail.split(", ").forEach(s => {
                 let [n, c] = s.split("x");
-                stats[n] = (stats[n] || 0) + (parseInt(c) || 1);
+                stats[n.trim()] = (stats[n.trim()] || 0) + (parseInt(c) || 1);
             });
         });
         Object.entries(stats).forEach(([n, c]) => text += `・${n}: ${c}個\n`);
