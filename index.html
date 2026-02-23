@@ -12,7 +12,7 @@
             --bg-color: #f4f4f9;
             --header-bg: #222;
             --tab-bg: #333;
-            --accent-color: #e91e63; /* 基本のピンク */
+            --accent-color: #e91e63;
             --card-bg: #ffffff;
             --text-color: #333;
             --btn-add: #4CAF50;
@@ -20,130 +20,81 @@
             --app-font: 'Noto Sans JP', sans-serif;
         }
 
-        /* [かわいい] テーマ */
         [data-theme="cute"] {
-            --bg-color: #fff0f5;
-            --header-bg: #ffb6c1;
-            --tab-bg: #ffc0cb;
-            --accent-color: #ff69b4;
-            --card-bg: #ffffff;
-            --text-color: #5d4037;
-            --btn-add: #ff8fb1;
-            --btn-checkout: #ffb7c5;
+            --bg-color: #fff0f5; --header-bg: #ffb6c1; --tab-bg: #ffc0cb; --accent-color: #ff69b4;
+            --card-bg: #ffffff; --text-color: #5d4037; --btn-add: #ff8fb1; --btn-checkout: #ffb7c5;
             --app-font: 'M PLUS Rounded 1c', sans-serif;
         }
 
-        /* [チョコレート] テーマ */
         [data-theme="chocolate"] {
-            --bg-color: #f3e5f5;
-            --header-bg: #3e2723;
-            --tab-bg: #5d4037;
-            --accent-color: #795548;
-            --card-bg: #fff8e1;
-            --text-color: #3e2723;
-            --btn-add: #8d6e63;
-            --btn-checkout: #a1887f;
+            --bg-color: #f3e5f5; --header-bg: #3e2723; --tab-bg: #5d4037; --accent-color: #795548;
+            --card-bg: #fff8e1; --text-color: #3e2723; --btn-add: #8d6e63; --btn-checkout: #a1887f;
             --app-font: 'Kiwi Maru', serif;
         }
 
-        /* [抹茶] テーマ */
         [data-theme="matcha"] {
-            --bg-color: #f1f8e9;
-            --header-bg: #33691e;
-            --tab-bg: #558b2f;
-            --accent-color: #689f38;
-            --card-bg: #ffffff;
-            --text-color: #1b5e20;
-            --btn-add: #8bc34a;
-            --btn-checkout: #aed581;
+            --bg-color: #f1f8e9; --header-bg: #33691e; --tab-bg: #558b2f; --accent-color: #689f38;
+            --card-bg: #ffffff; --text-color: #1b5e20; --btn-add: #8bc34a; --btn-checkout: #aed581;
             --app-font: 'Noto Sans JP', sans-serif;
         }
 
-        /* [見やすさ重視] テーマ（高コントラスト） */
         [data-theme="visibility"] {
-            --bg-color: #ffffff;
-            --header-bg: #000000;
-            --tab-bg: #1a1a1a;
-            --accent-color: #ffeb3b;
-            --card-bg: #ffffff;
-            --text-color: #000000;
-            --btn-add: #000000;
-            --btn-checkout: #0000ff;
+            --bg-color: #ffffff; --header-bg: #000000; --tab-bg: #1a1a1a; --accent-color: #ffeb3b;
+            --card-bg: #ffffff; --text-color: #000000; --btn-add: #000000; --btn-checkout: #0000ff;
             --app-font: sans-serif;
         }
 
         /* 全体の設定 */
-        body { 
-            font-family: var(--app-font); 
-            margin: 0; padding: 0; 
-            background-color: var(--bg-color); 
-            color: var(--text-color); 
-            padding-bottom: 110px; 
-            touch-action: manipulation; 
-            transition: background-color 0.3s, color 0.3s;
-        }
+        body { font-family: var(--app-font); margin: 0; padding: 0; background-color: var(--bg-color); color: var(--text-color); padding-bottom: 110px; touch-action: manipulation; transition: 0.3s; }
         button { touch-action: manipulation; font-family: inherit; }
         
-        /* 上部ヘッダー */
         .preset-header { background-color: var(--header-bg); padding: 10px; display: flex; justify-content: space-between; align-items: center; gap: 5px; }
-        .preset-header select { flex-grow: 1; padding: 8px; border-radius: 4px; font-size: 1rem; border: none; font-weight: bold; background: #fff; }
+        .preset-header select { flex-grow: 1; padding: 8px; border-radius: 4px; font-size: 1rem; border: none; font-weight: bold; background: #fff; color: #333; }
         .preset-btns { display: flex; gap: 5px; }
         .preset-btn { background-color: #555; color: white; border: none; padding: 8px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.9rem; }
         .preset-btn.primary { background-color: #FFC107; color: #333; }
 
-        /* タブメニュー */
         .tabs { display: flex; background-color: var(--tab-bg); position: sticky; top: 0; z-index: 100; }
-        .tab { flex: 1; text-align: center; padding: 12px 2px; color: #ccc; cursor: pointer; font-weight: bold; font-size: 0.85rem; transition: 0.2s; white-space: nowrap;}
+        .tab { flex: 1; text-align: center; padding: 12px 2px; color: #ccc; cursor: pointer; font-weight: bold; font-size: 0.85rem; white-space: nowrap;}
         .tab.active { background-color: var(--accent-color); color: white; }
         .tab-content { display: none; padding: 10px; }
         .tab-content.active { display: block; }
         
-        /* レジ画面 */
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         .item { background: var(--card-bg); border-radius: 8px; padding: 8px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); position: relative; }
-        .item img { width: 100%; height: 90px; object-fit: contain; border-radius: 4px; background-color: #f0f0f0; margin-bottom: 5px; transition: opacity 0.1s; }
-        .item img.clickable { cursor: pointer; }
-        .item img.clickable:active { opacity: 0.5; } 
+        .item img { width: 100%; height: 90px; object-fit: contain; border-radius: 4px; background-color: #f0f0f0; margin-bottom: 5px; }
+        .item img.clickable { cursor: pointer; transition: 0.1s; }
+        .item img.clickable:active { opacity: 0.5; transform: scale(0.95); }
+        
         .item h3 { margin: 4px 0; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .item p { margin: 0; font-weight: bold; color: var(--accent-color); font-size: 1rem; }
         .stock { font-size: 0.75rem; color: #666; margin-bottom: 4px; font-weight: bold; }
         .sold-out { position: absolute; top:0; left:0; right:0; bottom:0; background: rgba(255,255,255,0.8); display:flex; align-items:center; justify-content:center; font-weight:bold; color:#f44336; font-size:1.1rem; pointer-events:none; border-radius:8px; border: 2px solid #f44336; }
-        button.add-btn { background-color: var(--btn-add); color: white; border: none; padding: 8px; width: 100%; border-radius: 4px; font-size: 0.9rem; cursor: pointer; margin-top: 2px;}
         
-        /* カートバー */
+        button.add-btn { background-color: var(--btn-add); color: white; border: none; padding: 8px; width: 100%; border-radius: 4px; font-size: 0.9rem; cursor: pointer; margin-top: 2px;}
         .bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 10px 15px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 8px; z-index: 90; }
         .cart-status { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-        .cart-controls { display: flex; gap: 8px; }
         .action-btn { padding: 8px 12px; border-radius: 4px; border: 1px solid #ccc; background: #f0f0f0; font-size: 0.9rem; cursor: pointer; color: #333; font-weight: bold; }
-        .checkout-btn { background-color: var(--btn-checkout); color: white; border: none; padding: 12px; border-radius: 4px; font-size: 1.1rem; font-weight: bold; width: 100%; cursor: pointer; transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .checkout-btn { background-color: var(--btn-checkout); color: white; border: none; padding: 12px; border-radius: 4px; font-size: 1.1rem; font-weight: bold; width: 100%; cursor: pointer; transition: 0.1s; }
         .checkout-btn:disabled { background-color: #ccc; color: #666; }
 
-        /* 入力フォーム・ボタン */
-        .form-group { margin-bottom: 10px; }
-        .form-group input, .form-group select { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem; font-family: inherit;}
-        .save-btn { background-color: var(--accent-color); color: white; border: none; padding: 12px; width: 100%; border-radius: 4px; font-size: 1rem; font-weight: bold; cursor: pointer; }
+        .form-group { margin-bottom: 10px; text-align: left; }
+        .form-group label { display: block; font-size: 0.8rem; margin-bottom: 3px; font-weight: bold; }
+        .form-group input, .form-group select { width: 100%; padding: 12px; box-sizing: border-box; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem; font-family: inherit; background: #fff; color: #333; }
+        .save-btn { background-color: var(--accent-color); color: white; border: none; padding: 15px; width: 100%; border-radius: 4px; font-size: 1.1rem; font-weight: bold; cursor: pointer; }
         
-        /* リスト・履歴 */
-        .list-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 10px; margin-top: 25px; border-bottom: 2px solid #ddd; padding-bottom: 5px;}
-        .list-item { background: white; padding: 10px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 10px; color: #333; }
-        .custom-checkbox { width: 20px; height: 20px; accent-color: var(--accent-color); transform: scale(1.2); }
-        .history-card { background: white; padding: 12px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 10px; color: #333;}
+        .list-item { background: white; padding: 10px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 10px; color: #333; text-align: left; }
+        .custom-checkbox { width: 22px; height: 22px; accent-color: var(--accent-color); }
+        .history-card { background: white; padding: 12px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 10px; color: #333; text-align: left;}
         .history-price { font-weight:bold; color:var(--accent-color); white-space: nowrap; font-size: 1.1rem;}
 
-        /* モーダル */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
-        .modal-content { background: white; width: 92%; max-width: 400px; border-radius: 12px; padding: 15px 20px; box-sizing: border-box; box-shadow: 0 5px 15px rgba(0,0,0,0.3); color: #333; }
-        .money-btn { background: #e0f7fa; color: #00838f; border: 1px solid #b2ebf2; padding: 10px 5px; border-radius: 6px; font-size: 0.95rem; font-weight: bold; cursor: pointer; }
-        .change-display span { font-size: 2.5rem; font-weight: bold; color: var(--accent-color); }
-
-        /* 分析 */
-        .summary-card.full-width { grid-column: 1 / span 2; background: var(--accent-color); color: white;}
-        .stat-count { font-weight: bold; color: var(--accent-color); }
-        .bar-fill.sales { background: var(--accent-color); }
-        .copy-report-btn { background-color: var(--btn-checkout); color: white; border: none; padding: 15px; width: 100%; border-radius: 4px; font-size: 1.1rem; font-weight: bold; cursor: pointer; }
+        .modal-content { background: white; width: 92%; max-width: 400px; border-radius: 12px; padding: 20px; box-sizing: border-box; color: #333; }
+        .cart-item-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #ddd; padding: 10px 0; }
+        .qty-btn { width: 36px; height: 36px; border-radius: 50%; border: none; background: #eee; font-size: 1.2rem; cursor: pointer; }
     </style>
 </head>
-<body>
+<body data-theme="default">
 
 <div class="preset-header">
     <select id="event-selector" onchange="changeEvent(this.value)"></select>
@@ -154,10 +105,10 @@
 </div>
 
 <div class="tabs">
-    <div class="tab active" onclick="switchTab('pos')">レジ</div>
-    <div class="tab" onclick="switchTab('settings')">商品設定</div>
-    <div class="tab" onclick="switchTab('history')">売上履歴</div>
-    <div class="tab" onclick="switchTab('analytics')">📊 分析</div>
+    <div class="tab active" id="tab-pos" onclick="switchTab('pos')">レジ</div>
+    <div class="tab" id="tab-settings" onclick="switchTab('settings')">商品設定</div>
+    <div class="tab" id="tab-history" onclick="switchTab('history')">売上履歴</div>
+    <div class="tab" id="tab-analytics" onclick="switchTab('analytics')">📊 分析</div>
 </div>
 
 <div id="pos" class="tab-content active">
@@ -165,8 +116,8 @@
 </div>
 
 <div id="settings" class="tab-content">
-    <h3>テーマ切り替え</h3>
     <div class="form-group">
+        <label>テーマ切り替え</label>
         <select id="theme-selector" onchange="changeTheme(this.value)">
             <option value="default">デフォルト（ピンク）</option>
             <option value="cute">かわいい（パステルピンク）</option>
@@ -176,18 +127,20 @@
         </select>
     </div>
 
+    <hr style="border:0; border-top:1px solid #ddd; margin: 20px 0;">
+
     <h3>商品を追加</h3>
-    <div class="form-group"><input type="text" id="itemName" placeholder="商品名"></div>
-    <div class="form-group"><input type="number" id="itemPrice" placeholder="価格" inputmode="numeric" pattern="\d*"></div>
-    <div class="form-group"><input type="number" id="itemStock" placeholder="在庫数" inputmode="numeric" pattern="\d*"></div>
-    <div class="form-group" style="background: white; padding: 10px; border-radius: 4px; color:#333;"><input type="file" id="itemImage" accept="image/*"></div>
+    <div class="form-group"><input type="text" id="itemName" placeholder="商品名 (例: 新譜CD)"></div>
+    <div class="form-group"><input type="number" id="itemPrice" placeholder="価格 (例: 1000)" inputmode="numeric"></div>
+    <div class="form-group"><input type="number" id="itemStock" placeholder="在庫数 (例: 50)" inputmode="numeric"></div>
+    <div class="form-group"><label>商品画像</label><input type="file" id="itemImage" accept="image/*"></div>
     <button class="save-btn" onclick="addNewItem()">＋ 商品を登録</button>
 
-    <div class="list-header">
-        <h3>登録済みリスト</h3>
-        <button class="delete-checked-btn" onclick="deleteCheckedItems()">☑ チェックを削除</button>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:30px;">
+        <h3 style="margin:0;">登録済みリスト</h3>
+        <button class="action-btn" style="background:#607D8B; color:white; border:none;" onclick="deleteCheckedItems()">☑ 削除</button>
     </div>
-    <div id="settings-list" style="border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);"></div>
+    <div id="settings-list" style="margin-top:10px; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);"></div>
 </div>
 
 <div id="history" class="tab-content">
@@ -195,37 +148,24 @@
         <h3 style="margin: 0 0 5px 0; font-size: 1rem; color: #666;">このイベントの売上合計</h3>
         <div style="font-size: 2rem; font-weight: bold; color: var(--accent-color);">¥<span id="history-total-price">0</span></div>
     </div>
-    <div class="list-header">
-        <h3>取引履歴</h3>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px;">
+        <h3 style="margin:0;">取引履歴</h3>
         <div>
-            <button class="export-csv-btn" onclick="exportCSV()">📊 CSV</button>
-            <button class="delete-checked-btn" onclick="deleteCheckedHistory()">☑ 削除</button>
+            <button class="action-btn" style="background:#4CAF50; color:white; border:none;" onclick="exportCSV()">📊 CSV</button>
+            <button class="action-btn" style="background:#607D8B; color:white; border:none;" onclick="deleteCheckedHistory()">☑ 削除</button>
         </div>
     </div>
-    <div id="history-list" style="border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);"></div>
+    <div id="history-list" style="margin-top:10px; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);"></div>
 </div>
 
 <div id="analytics" class="tab-content">
-    <h2 style="text-align:center; font-size:1.3rem; border-bottom:2px solid #ddd; padding-bottom:10px; margin-top:5px;">📋 イベントレポート</h2>
-    <div class="summary-cards">
-        <div class="summary-card full-width">
-            <div class="label" style="color:white; opacity:0.8;">本日の総売上</div>
-            <div class="value">¥<span id="stat-total-rev">0</span></div>
-        </div>
-        <div class="summary-card" style="color:#333;">
-            <div class="label">会計回数</div>
-            <div class="value"><span id="stat-total-tx">0</span>回</div>
-        </div>
-        <div class="summary-card" style="color:#333;">
-            <div class="label">平均客単価</div>
-            <div class="value">¥<span id="stat-avg-spend">0</span></div>
-        </div>
-    </div>
+    <h2 style="text-align:center; font-size:1.3rem;">📋 イベントレポート</h2>
+    <div id="analytics-summary"></div>
     <h3>🏆 商品別の販売数</h3>
-    <div id="stat-items" class="stat-list" style="color:#333;"></div>
+    <div id="stat-items" style="background:#fff; padding:15px; border-radius:8px;"></div>
     <h3>⏰ 時間帯別の動向</h3>
-    <div id="stat-time" class="stat-list" style="color:#333;"></div>
-    <button class="copy-report-btn" onclick="copyReportToClipboard()">📝 テキストで結果をコピー</button>
+    <div id="stat-time" style="background:#fff; padding:15px; border-radius:8px; margin-bottom:20px;"></div>
+    <button class="save-btn" onclick="copyReportToClipboard()">📝 結果をコピー</button>
     <p style="text-align:center; font-size:0.8rem; color:#666; margin-top:10px;">メモ帳とかに貼り付けれるよ。</p>
 </div>
 
@@ -242,43 +182,40 @@
 
 <div class="modal-overlay" id="cart-modal">
     <div class="modal-content">
-        <h2 class="modal-title">🛒 カートの中身</h2>
-        <div id="cart-items-list" style="max-height: 40vh; overflow-y: auto; margin-bottom: 15px;"></div>
-        <div class="modal-actions" style="margin-bottom: 10px;">
-            <button class="modal-btn" style="background:#f44336; color:white;" onclick="clearCart()">🗑 カートを空にする</button>
-        </div>
-        <button class="modal-btn btn-cancel" style="width:100%" onclick="closeCartModal()">閉じる</button>
+        <h3>🛒 カートの中身</h3>
+        <div id="cart-items-list" style="max-height: 40vh; overflow-y: auto;"></div>
+        <button class="save-btn" style="background:#f44336; margin: 15px 0 10px;" onclick="clearCart()">🗑 カートを空にする</button>
+        <button class="action-btn" style="width:100%; padding:12px;" onclick="closeCartModal()">閉じる</button>
     </div>
 </div>
 
 <div class="modal-overlay" id="checkout-modal">
     <div class="modal-content">
-        <h2 class="modal-title">はづきれじ お会計</h2>
-        <div class="calc-total">合計: ¥<span id="modal-total-amount">0</span></div>
-        <div class="quick-money-btns">
-            <button class="money-btn" onclick="addTenderAmount(100)">＋100円</button>
-            <button class="money-btn" onclick="addTenderAmount(500)">＋500円</button>
-            <button class="money-btn" onclick="addTenderAmount(1000)">＋1,000円</button>
-            <button class="money-btn" onclick="addTenderAmount(5000)">＋5,000円</button>
-            <button class="money-btn" onclick="addTenderAmount(10000)">＋10,000円</button>
-            <button class="money-btn" onclick="clearTenderAmount()">クリア</button>
-            <button class="money-btn exact" style="grid-column: span 3;" onclick="setTenderExact()">ピッタリ</button>
+        <h3>はづきれじ お会計</h3>
+        <div style="font-size:1.5rem; text-align:center; margin-bottom:15px;">合計: <strong>¥<span id="modal-total-amount">0</span></strong></div>
+        <div class="quick-money-btns" style="display:grid; grid-template-columns:repeat(3, 1fr); gap:5px; margin-bottom:15px;">
+            <button class="money-btn" onclick="addMoney(100)">+100</button>
+            <button class="money-btn" onclick="addMoney(500)">+500</button>
+            <button class="money-btn" onclick="addMoney(1000)">+1000</button>
+            <button class="money-btn" onclick="addMoney(5000)">+5000</button>
+            <button class="money-btn" onclick="addMoney(10000)">+10000</button>
+            <button class="money-btn" style="background:#eee; color:#333;" onclick="document.getElementById('tender-input').value=''; calculateChange();">クリア</button>
+            <button class="money-btn" style="grid-column:span 3; background:#fff3e0; color:#e65100;" onclick="setTenderExact()">ピッタリ</button>
         </div>
-        <div class="tender-input-wrap">
-            <label>お預かり</label>
-            <input type="number" id="tender-input" inputmode="numeric" pattern="\d*" placeholder="0" oninput="calculateChange()">
-            <span>円</span>
+        <input type="number" id="tender-input" style="width:100%; font-size:1.5rem; text-align:right; padding:10px; margin-bottom:10px;" placeholder="お預かり金額" oninput="calculateChange()">
+        <div style="background:#f8bbd0; padding:10px; border-radius:8px; text-align:center; margin-bottom:15px;">
+            <div style="font-size:0.9rem;">お釣り</div>
+            <div style="font-size:2rem; font-weight:bold; color:#e91e63;">¥<span id="change-amount">0</span></div>
         </div>
-        <div class="change-display"><div>お釣り</div>¥<span id="change-amount">0</span></div>
-        <div class="modal-actions">
-            <button class="modal-btn btn-cancel" onclick="closeCheckoutModal()">キャンセル</button>
-            <button class="modal-btn btn-complete" id="complete-checkout-btn" onclick="executeCheckout()" disabled>会計完了</button>
+        <div style="display:flex; gap:10px;">
+            <button class="action-btn" style="flex:1; padding:12px;" onclick="closeCheckoutModal()">戻る</button>
+            <button class="checkout-btn" id="complete-btn" style="flex:1;" onclick="executeCheckout()" disabled>会計完了</button>
         </div>
     </div>
 </div>
 
 <script>
-    // --- データと初期化 ---
+    // --- データ管理 ---
     let appData = JSON.parse(localStorage.getItem('pos_app_data')) || {
         currentEventId: Date.now(),
         events: [{ id: Date.now(), name: "最初のイベント", items: [], history: [] }],
@@ -286,290 +223,340 @@
     };
 
     let cart = [];
-    let currentCheckoutTotal = 0;
     let displayedTotal = 0;
 
-    // 起動時にテーマを適用
-    document.body.setAttribute('data-theme', appData.theme || 'default');
-    document.getElementById('theme-selector').value = appData.theme || 'default';
-
-    updateEventSelector();
-    renderAll();
-
-    // --- テーマ切り替え ---
-    function changeTheme(themeName) {
-        appData.theme = themeName;
-        document.body.setAttribute('data-theme', themeName);
-        saveData();
+    // 起動時にテーマ適用
+    function applyTheme(theme) {
+        document.body.setAttribute('data-theme', theme);
+        document.getElementById('theme-selector').value = theme;
     }
+    applyTheme(appData.theme || 'default');
 
-    // --- イベント管理 ---
-    function updateEventSelector() {
-        let selector = document.getElementById('event-selector');
-        selector.innerHTML = '';
-        appData.events.forEach(ev => {
-            let option = document.createElement('option');
-            option.value = ev.id;
-            option.text = ev.name;
-            if (ev.id == appData.currentEventId) option.selected = true;
-            selector.appendChild(option);
+    function saveData() { localStorage.setItem('pos_app_data', JSON.stringify(appData)); }
+
+    // --- 描画系 ---
+    function renderAll() {
+        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        if(!ev) return;
+
+        // レジ画面
+        const grid = document.getElementById('pos-grid');
+        grid.innerHTML = ev.items.length ? '' : '<p style="grid-column:span 2; padding:40px; color:#888;">[商品設定]から商品を追加してください</p>';
+        ev.items.forEach(item => {
+            const inCartCount = cart.filter(c => c.id === item.id).length;
+            const avail = item.stock - inCartCount;
+            const isSoldOut = avail <= 0;
+            grid.innerHTML += `
+                <div class="item">
+                    <img src="${item.image}" class="${!isSoldOut ? 'clickable' : ''}" ${!isSoldOut ? `onclick="addToCart(event, ${item.id})"` : ''}>
+                    <h3>${item.name}</h3>
+                    <p>¥${item.price.toLocaleString()}</p>
+                    <div class="stock">残り: ${avail}</div>
+                    <button class="add-btn" onclick="addToCart(event, ${item.id})" ${isSoldOut ? 'disabled style="background:#ccc;"' : ''}>追加</button>
+                    ${isSoldOut ? '<div class="sold-out">完売</div>' : ''}
+                </div>`;
         });
+
+        // 商品設定リスト
+        const setList = document.getElementById('settings-list');
+        setList.innerHTML = ev.items.map(i => `
+            <div class="list-item">
+                <input type="checkbox" class="item-cb" value="${i.id}">
+                <img src="${i.image}" style="width:40px; height:40px; object-fit:contain; border-radius:4px; background:#f0f0f0;">
+                <div style="flex:1;"><strong>${i.name}</strong><br>¥${i.price.toLocaleString()} / 在庫:${i.stock}</div>
+            </div>`).join('') || '<div style="padding:20px; color:#888;">登録なし</div>';
+
+        // 履歴
+        const histList = document.getElementById('history-list');
+        let totalRev = 0;
+        histList.innerHTML = ev.history.map(h => {
+            totalRev += h.total;
+            return `<div class="history-card"><input type="checkbox" class="hist-cb" value="${h.id}"><div><div style="font-size:0.8rem;color:#888;">${h.time}</div><div>${h.detail}</div></div><div class="history-price">¥${h.total.toLocaleString()}</div></div>`;
+        }).join('') || '<div style="padding:20px; color:#888;">履歴なし</div>';
+        document.getElementById('history-total-price').innerText = totalRev.toLocaleString();
     }
 
-    function changeEvent(eventId) {
-        if (cart.length > 0 && !confirm('イベントを切り替えるとカートは空になりますがよろしいですか？')) {
-            updateEventSelector(); return;
+    // --- カート・会計 ---
+    function addToCart(event, id) {
+        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        const item = ev.items.find(i => i.id === id);
+        const inCart = cart.filter(c => c.id === id).length;
+        if(item && (item.stock - inCart) > 0) {
+            cart.push(item);
+            updateCartUI();
+            flyEffect(event);
+            renderAll();
+            navigator.vibrate && navigator.vibrate(50);
         }
-        appData.currentEventId = parseInt(eventId);
-        cart = []; saveData(); updateCartButton(); syncCartTotalInstant(); renderAll();
     }
 
-    function createNewEvent() {
-        let name = prompt('新しいイベントの名前を入力してください');
-        if (name && name.trim()) {
-            let ev = { id: Date.now(), name: name.trim(), items: [], history: [] };
-            appData.events.push(ev); appData.currentEventId = ev.id;
-            cart = []; saveData(); updateEventSelector(); updateCartButton(); syncCartTotalInstant(); renderAll();
-        }
-    }
-
-    function renameCurrentEvent() {
-        let ev = appData.events.find(e => e.id == appData.currentEventId);
-        let name = prompt('名前を変更します', ev.name);
-        if (name && name.trim()) { ev.name = name.trim(); saveData(); updateEventSelector(); }
-    }
-
-    // --- 在庫・カート計算 ---
-    function getAvailableStock(itemId) {
-        let ev = appData.events.find(e => e.id == appData.currentEventId);
-        let item = ev.items.find(i => i.id === itemId);
-        return item ? item.stock - cart.filter(c => c.id === itemId).length : 0;
-    }
-
-    // --- アニメーション ---
-    function flyToCart(event, onComplete) {
-        let itemContainer = event.target.closest('.item');
-        let imgEl = itemContainer ? itemContainer.querySelector('img') : null;
-        let targetBtn = document.getElementById('checkout-btn');
-        if (!imgEl || !targetBtn) { if(onComplete) onComplete(); return; }
-
-        let targetRect = targetBtn.getBoundingClientRect();
-        let rect = imgEl.getBoundingClientRect();
-        let flier = document.createElement('div');
-        flier.style.cssText = `position:fixed; left:${rect.left + rect.width/2}px; top:${rect.top + rect.height/2}px; width:${rect.width}px; height:${rect.height}px; background-image:url(${imgEl.src}); background-size:contain; background-position:center; background-repeat:no-repeat; transform:translate(-50%, -50%); z-index:9999; pointer-events:none; transition:all 0.5s cubic-bezier(0.65, 0, 0.35, 1);`;
-        document.body.appendChild(flier);
-
+    function flyEffect(event) {
+        const itemContainer = event.target.closest('.item');
+        const img = itemContainer ? itemContainer.querySelector('img') : null;
+        const target = document.getElementById('checkout-btn');
+        if(!img || !target) return;
+        const tRect = target.getBoundingClientRect();
+        const iRect = img.getBoundingClientRect();
+        const f = document.createElement('div');
+        f.style.cssText = `position:fixed; left:${iRect.left}px; top:${iRect.top}px; width:${iRect.width}px; height:${iRect.height}px; background-image:url(${img.src}); background-size:contain; background-repeat:no-repeat; z-index:9999; pointer-events:none; transition:all 0.5s cubic-bezier(0.65, 0, 0.35, 1);`;
+        document.body.appendChild(f);
         setTimeout(() => {
-            flier.style.left = (targetRect.left + targetRect.width / 2) + 'px';
-            flier.style.top = (targetRect.top + targetRect.height / 2) + 'px';
-            flier.style.width = '20px'; flier.style.height = '20px'; flier.style.opacity = '0.3'; flier.style.transform = 'translate(-50%, -50%) rotate(360deg)';
+            f.style.left = (tRect.left + tRect.width/2) + 'px';
+            f.style.top = (tRect.top + tRect.height/2) + 'px';
+            f.style.width = '20px'; f.style.height = '20px'; f.style.opacity = '0'; f.style.transform = 'translate(-50%, -50%) rotate(360deg)';
         }, 10);
-
-        setTimeout(() => {
-            flier.remove(); targetBtn.style.transform = 'scale(1.05)';
-            setTimeout(() => targetBtn.style.transform = 'scale(1)', 100);
-            if (onComplete) onComplete();
+        setTimeout(() => { 
+            f.remove(); 
+            animateTotal(cart.reduce((s,i)=>s+i.price, 0));
         }, 500);
     }
 
-    function animateTotalValue(newTotal) {
-        let start = displayedTotal; let end = newTotal;
-        if (start === end) return;
-        let duration = 250; let startTime = null;
-        let obj = document.getElementById('cart-total');
-        const step = (t) => {
-            if (!startTime) startTime = t;
-            let progress = Math.min((t - startTime) / duration, 1);
-            let val = Math.floor(progress * (end - start) + start);
+    function animateTotal(end) {
+        let start = displayedTotal;
+        const obj = document.getElementById('cart-total');
+        const dur = 300;
+        let sTime = null;
+        function step(t) {
+            if(!sTime) sTime = t;
+            const progress = Math.min((t-sTime)/dur, 1);
+            const val = Math.floor(progress * (end - start) + start);
             obj.innerText = val.toLocaleString();
-            if (progress < 1) window.requestAnimationFrame(step);
+            if(progress < 1) requestAnimationFrame(step);
             else { obj.innerText = end.toLocaleString(); displayedTotal = end; }
-        };
-        window.requestAnimationFrame(step);
-    }
-
-    function syncCartTotalAnimated() { animateTotalValue(cart.reduce((s, i) => s + i.price, 0)); }
-    function syncCartTotalInstant() { let t = cart.reduce((s, i) => s + i.price, 0); document.getElementById('cart-total').innerText = t.toLocaleString(); displayedTotal = t; }
-    function updateCartButton() { let btn = document.getElementById('checkout-btn'); btn.disabled = cart.length === 0; btn.innerText = cart.length > 0 ? "会計へ進む (" + cart.length + "点)" : "会計へ進む"; }
-
-    // --- アクション ---
-    function addToCart(event, itemId) {
-        let ev = appData.events.find(e => e.id == appData.currentEventId);
-        let item = ev.items.find(i => i.id === itemId);
-        if (getAvailableStock(itemId) > 0) {
-            cart.push(item); updateCartButton();
-            flyToCart(event, () => syncCartTotalAnimated());
-            renderPos(); navigator.vibrate && navigator.vibrate(50);
         }
+        requestAnimationFrame(step);
     }
 
-    function undoLastCartItem() {
-        if (cart.length > 0) { cart.pop(); updateCartButton(); syncCartTotalAnimated(); renderPos(); navigator.vibrate && navigator.vibrate(50); }
+    function updateCartUI() {
+        const total = cart.reduce((s,i)=>s+i.price, 0);
+        const btn = document.getElementById('checkout-btn');
+        btn.disabled = cart.length === 0;
+        btn.innerText = cart.length ? `会計へ進む (${cart.length}点)` : '会計へ進む';
+        if(!cart.length) { document.getElementById('cart-total').innerText = '0'; displayedTotal = 0; }
     }
 
-    function clearCart() {
-        if(cart.length > 0 && confirm('カートを空にしますか？')) { cart = []; updateCartButton(); syncCartTotalInstant(); renderPos(); closeCartModal(); }
-    }
+    function undoLastCartItem() { if(cart.length){ cart.pop(); updateCartUI(); animateTotal(cart.reduce((s,i)=>s+i.price, 0)); renderAll(); } }
+    function clearCart() { if(cart.length && confirm('カートを空にしますか？')){ cart=[]; updateCartUI(); renderAll(); closeCartModal(); } }
 
-    // --- モーダル制御 ---
-    function openCartModal() { if (cart.length > 0) { renderCartModalItems(); document.getElementById('cart-modal').style.display = 'flex'; } }
-    function closeCartModal() { document.getElementById('cart-modal').style.display = 'none'; }
-    function renderCartModalItems() {
-        let list = document.getElementById('cart-items-list'); list.innerHTML = '';
-        let map = {}; cart.forEach(i => { if(!map[i.id]) map[i.id] = { ...i, count: 0 }; map[i.id].count++; });
-        Object.values(map).forEach(i => {
-            let avail = getAvailableStock(i.id);
-            list.innerHTML += `<div class="cart-item-row"><div class="cart-item-info"><strong>${i.name}</strong><br>¥${i.price.toLocaleString()}</div><div class="cart-item-controls"><button class="qty-btn" onclick="decreaseCartItem(${i.id})">－</button><div class="qty-num">${i.count}</div><button class="qty-btn" onclick="increaseCartItem(${i.id})" ${avail <= 0 ? 'disabled style="opacity:0.3"' : ''}>＋</button></div></div>`;
-        });
+    function openCartModal() {
+        if(!cart.length) return;
+        const list = document.getElementById('cart-items-list');
+        const map = {}; cart.forEach(i => { if(!map[i.id]) map[i.id] = {...i, count:0}; map[i.id].count++; });
+        list.innerHTML = Object.values(map).map(i => `
+            <div class="cart-item-row">
+                <div><strong>${i.name}</strong><br>¥${i.price.toLocaleString()}</div>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <button class="qty-btn" onclick="adjustQty(${i.id}, -1)">-</button>
+                    <strong>${i.count}</strong>
+                    <button class="qty-btn" onclick="adjustQty(${i.id}, 1)">+</button>
+                </div>
+            </div>`).join('');
+        document.getElementById('cart-modal').style.display='flex';
     }
-
-    function increaseCartItem(id) {
-        let item = appData.events.find(e => e.id == appData.currentEventId).items.find(i => i.id === id);
-        if (getAvailableStock(id) > 0) { cart.push(item); renderPos(); renderCartModalItems(); updateCartButton(); syncCartTotalInstant(); }
+    function adjustQty(id, delta) {
+        if(delta > 0) {
+            const ev = appData.events.find(e => e.id == appData.currentEventId);
+            const item = ev.items.find(i => i.id === id);
+            if((item.stock - cart.filter(c => c.id === id).length) > 0) cart.push(item);
+        } else {
+            const idx = cart.map(c=>c.id).lastIndexOf(id);
+            if(idx !== -1) cart.splice(idx, 1);
+        }
+        if(!cart.length) closeCartModal(); else renderCartModalItems();
+        updateCartUI(); renderAll(); syncCartTotalInstant(); openCartModal();
     }
-
-    function decreaseCartItem(id) {
-        for (let i = cart.length - 1; i >= 0; i--) { if (cart[i].id === id) { cart.splice(i, 1); break; } }
-        renderPos(); updateCartButton(); syncCartTotalInstant(); if (cart.length === 0) closeCartModal(); else renderCartModalItems();
-    }
+    function closeCartModal() { document.getElementById('cart-modal').style.display='none'; }
+    function syncCartTotalInstant() { const t = cart.reduce((s,i)=>s+i.price, 0); document.getElementById('cart-total').innerText = t.toLocaleString(); displayedTotal = t; }
 
     // --- お会計 ---
     function openCheckoutModal() {
-        currentCheckoutTotal = cart.reduce((s, i) => s + i.price, 0);
-        document.getElementById('modal-total-amount').innerText = currentCheckoutTotal.toLocaleString();
-        document.getElementById('tender-input').value = ''; document.getElementById('change-amount').innerText = '0';
-        document.getElementById('complete-checkout-btn').disabled = true;
-        document.getElementById('checkout-modal').style.display = 'flex';
+        const t = cart.reduce((s,i)=>s+i.price, 0);
+        document.getElementById('modal-total-amount').innerText = t.toLocaleString();
+        document.getElementById('tender-input').value = '';
+        calculateChange();
+        document.getElementById('checkout-modal').style.display='flex';
     }
-    function closeCheckoutModal() { document.getElementById('checkout-modal').style.display = 'none'; }
-    function addTenderAmount(a) { let el = document.getElementById('tender-input'); el.value = (parseInt(el.value.replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))) || 0) + a; calculateChange(); }
-    function clearTenderAmount() { document.getElementById('tender-input').value = ''; calculateChange(); }
-    function setTenderExact() { document.getElementById('tender-input').value = currentCheckoutTotal; calculateChange(); }
+    function closeCheckoutModal() { document.getElementById('checkout-modal').style.display='none'; }
+    function addMoney(a) { 
+        const inp = document.getElementById('tender-input');
+        const cur = parseInt(inp.value.replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))) || 0;
+        inp.value = cur + a;
+        calculateChange();
+    }
+    function setTenderExact() { document.getElementById('tender-input').value = cart.reduce((s,i)=>s+i.price,0); calculateChange(); }
     function calculateChange() {
-        let t = parseInt(document.getElementById('tender-input').value.replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))) || 0;
-        let c = t - currentCheckoutTotal;
-        document.getElementById('change-amount').innerText = (c < 0 ? Math.abs(c) : c).toLocaleString();
-        document.getElementById('change-amount').style.color = c < 0 ? 'red' : 'inherit';
-        document.getElementById('complete-checkout-btn').disabled = t === 0 || c < 0;
+        const total = cart.reduce((s,i)=>s+i.price,0);
+        const tender = parseInt(document.getElementById('tender-input').value.replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))) || 0;
+        const diff = tender - total;
+        document.getElementById('change-amount').innerText = (diff < 0 ? 0 : diff).toLocaleString();
+        document.getElementById('complete-btn').disabled = (tender < total || tender === 0);
     }
-
     function executeCheckout() {
-        let ev = appData.events.find(e => e.id == appData.currentEventId);
-        let detailMap = {}; cart.forEach(i => detailMap[i.name] = (detailMap[i.name] || 0) + 1);
-        let detail = Object.entries(detailMap).map(([n, c]) => c > 1 ? n + "x" + c : n).join(', ');
-        ev.history.unshift({ id: Date.now(), time: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}), detail, total: currentCheckoutTotal });
-        cart.forEach(ci => { let i = ev.items.find(x => x.id === ci.id); if(i) i.stock--; });
-        saveData(); closeCheckoutModal(); alert("会計完了！"); cart = []; updateCartButton(); syncCartTotalInstant(); renderAll();
+        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        const map = {}; cart.forEach(i => map[i.name] = (map[i.name]||0)+1);
+        const detail = Object.entries(map).map(([n,c]) => c>1 ? `${n}x${c}` : n).join(', ');
+        const total = cart.reduce((s,i)=>s+i.price,0);
+        ev.history.unshift({ id: Date.now(), time: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}), detail, total });
+        cart.forEach(ci => { const i = ev.items.find(x => x.id === ci.id); if(i) i.stock--; });
+        saveData(); cart = []; closeCheckoutModal(); updateCartUI(); renderAll(); alert('会計完了！');
     }
 
-    // --- その他描画 ---
+    // --- 設定操作 ---
+    function changeTheme(t) { appData.theme = t; applyTheme(t); saveData(); }
+    function updateEventSelector() {
+        const s = document.getElementById('event-selector');
+        s.innerHTML = appData.events.map(ev => `<option value="${ev.id}" ${ev.id == appData.currentEventId ? 'selected' : ''}>${ev.name}</option>`).join('');
+    }
+    function changeEvent(id) {
+        if(cart.length && !confirm('切替えるとカートが空になります')) { updateEventSelector(); return; }
+        appData.currentEventId = id; cart = []; saveData(); updateCartUI(); syncCartTotalInstant(); renderAll();
+    }
+    function createNewEvent() {
+        const n = prompt('イベント名を入力');
+        if(n && n.trim()){
+            const ev = { id: Date.now(), name: n.trim(), items: [], history: [] };
+            appData.events.push(ev); appData.currentEventId = ev.id;
+            cart = []; saveData(); updateEventSelector(); updateCartUI(); syncCartTotalInstant(); renderAll();
+        }
+    }
+    function renameCurrentEvent() {
+        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        const n = prompt('名前を変更', ev.name);
+        if(n && n.trim()){ ev.name = n.trim(); saveData(); updateEventSelector(); }
+    }
+
     function addNewItem() {
-        let n = document.getElementById('itemName').value;
-        let p = parseInt(document.getElementById('itemPrice').value.replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0)));
-        let s = parseInt(document.getElementById('itemStock').value.replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0)));
-        let f = document.getElementById('itemImage');
-        if (!n || isNaN(p) || isNaN(s)) return alert('入力が正しくありません');
-        const finalize = (img) => { appData.events.find(e => e.id == appData.currentEventId).items.push({ id: Date.now(), name: n, price: p, stock: s, image: img }); saveData(); renderAll(); document.getElementById('itemName').value=''; document.getElementById('itemPrice').value=''; document.getElementById('itemStock').value=''; document.getElementById('itemImage').value=''; };
-        if (f.files[0]) { let r = new FileReader(); r.onload = (e) => { let i = new Image(); i.onload = () => { let c = document.createElement('canvas'); let ctx = c.getContext('2d'); c.width = 300; c.height = i.height * (300/i.width); ctx.drawImage(i,0,0,c.width,c.height); finalize(c.toDataURL('image/jpeg', 0.7)); }; i.src = e.target.result; }; r.readAsDataURL(f.files[0]); }
-        else finalize('https://placehold.co/300x300/e0e0e0/666666?text=No+Image');
+        const name = document.getElementById('itemName').value;
+        const price = parseInt(document.getElementById('itemPrice').value.replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0)));
+        const stock = parseInt(document.getElementById('itemStock').value.replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0)));
+        const file = document.getElementById('itemImage').files[0];
+        
+        if(!name || isNaN(price) || isNaN(stock)) return alert('正しく入力してください');
+
+        const save = (imgData) => {
+            const ev = appData.events.find(e => e.id == appData.currentEventId);
+            ev.items.push({ id: Date.now(), name, price, stock, image: imgData });
+            saveData();
+            renderAll();
+            document.getElementById('itemName').value = '';
+            document.getElementById('itemPrice').value = '';
+            document.getElementById('itemStock').value = '';
+            document.getElementById('itemImage').value = '';
+            alert('登録完了！');
+        };
+
+        if(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = 300; canvas.height = img.height * (300/img.width);
+                    ctx.drawImage(img, 0,0, canvas.width, canvas.height);
+                    save(canvas.toDataURL('image/jpeg', 0.7));
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        } else {
+            save('https://placehold.co/300x300/e0e0e0/666666?text=No+Image');
+        }
     }
 
     function deleteCheckedItems() {
-        let cbs = document.querySelectorAll('.item-checkbox:checked');
-        if (cbs.length && confirm('削除しますか？')) { let ids = Array.from(cbs).map(c => parseInt(c.value)); let ev = appData.events.find(e => e.id == appData.currentEventId); ev.items = ev.items.filter(i => !ids.includes(i.id)); saveData(); renderAll(); }
+        const cbs = document.querySelectorAll('.item-cb:checked');
+        if(!cbs.length) return;
+        if(confirm('削除しますか？')) {
+            const ids = Array.from(cbs).map(c => parseInt(c.value));
+            const ev = appData.events.find(e => e.id == appData.currentEventId);
+            ev.items = ev.items.filter(i => !ids.includes(i.id));
+            saveData(); renderAll();
+        }
     }
 
     function deleteCheckedHistory() {
-        let cbs = document.querySelectorAll('.history-checkbox:checked');
-        if (cbs.length && confirm('削除しますか？')) { let ids = Array.from(cbs).map(c => parseInt(c.value)); let ev = appData.events.find(e => e.id == appData.currentEventId); ev.history = ev.history.filter(h => !ids.includes(h.id)); saveData(); renderAll(); }
+        const cbs = document.querySelectorAll('.hist-cb:checked');
+        if(!cbs.length) return;
+        if(confirm('削除しますか？')) {
+            const ids = Array.from(cbs).map(c => parseInt(c.value));
+            const ev = appData.events.find(e => e.id == appData.currentEventId);
+            ev.history = ev.history.filter(h => !ids.includes(h.id));
+            saveData(); renderAll();
+        }
     }
 
     function exportCSV() {
-        let ev = appData.events.find(e => e.id == appData.currentEventId);
-        let csv = "\uFEFF時間,内容,売上\n" + ev.history.map(h => `"${h.time}","${h.detail}","${h.total}"`).join("\n");
-        let link = document.createElement("a"); link.href = URL.createObjectURL(new Blob([csv], {type:'text/csv'}));
+        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        const csv = "\uFEFF時間,内容,売上\n" + ev.history.map(h => `"${h.time}","${h.detail}","${h.total}"`).join("\n");
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(new Blob([csv], {type:'text/csv'}));
         link.download = `${ev.name}_売上.csv`; link.click();
     }
 
     function switchTab(id) {
         document.querySelectorAll('.tab, .tab-content').forEach(el => el.classList.remove('active'));
-        document.querySelector(`.tab[onclick*="${id}"]`).classList.add('active');
+        document.getElementById('tab-' + id).classList.add('active');
         document.getElementById(id).classList.add('active');
         document.getElementById('cart-bar').style.display = id === 'pos' ? 'flex' : 'none';
-        if (id === 'analytics') renderAnalytics();
-    }
-
-    function saveData() { localStorage.setItem('pos_app_data', JSON.stringify(appData)); }
-
-    function renderPos() {
-        let grid = document.getElementById('pos-grid'); grid.innerHTML = '';
-        let items = appData.events.find(e => e.id == appData.currentEventId).items;
-        items.forEach(i => {
-            let avail = getAvailableStock(i.id);
-            grid.innerHTML += `<div class="item"><img src="${i.image}" class="${avail > 0 ? 'clickable' : ''}" ${avail > 0 ? `onclick="addToCart(event, ${i.id})"` : ''}><h3>${i.name}</h3><p>¥${i.price.toLocaleString()}</p><div class="stock">残り: ${avail}</div><button class="add-btn" onclick="addToCart(event, ${i.id})" ${avail <= 0 ? 'disabled' : ''}>追加</button>${avail <= 0 ? '<div class="sold-out">完売</div>' : ''}</div>`;
-        });
-    }
-
-    function renderSettings() {
-        let list = document.getElementById('settings-list'); list.innerHTML = '';
-        appData.events.find(e => e.id == appData.currentEventId).items.forEach(i => {
-            list.innerHTML += `<div class="list-item"><input type="checkbox" class="custom-checkbox item-checkbox" value="${i.id}"><img src="${i.image}" style="width:40px;height:40px;object-fit:contain;border-radius:4px;"><div><strong>${i.name}</strong><br>¥${i.price.toLocaleString()} / 在庫:${i.stock}</div></div>`;
-        });
-    }
-
-    function renderHistory() {
-        let list = document.getElementById('history-list'); list.innerHTML = '';
-        let total = 0;
-        appData.events.find(e => e.id == appData.currentEventId).history.forEach(h => {
-            total += h.total;
-            list.innerHTML += `<div class="history-card"><input type="checkbox" class="custom-checkbox history-checkbox" value="${h.id}"><div><div style="font-size:0.8rem;color:#888;">${h.time}</div><div>${h.detail}</div></div><div class="history-price">¥${h.total.toLocaleString()}</div></div>`;
-        });
-        document.getElementById('history-total-price').innerText = total.toLocaleString();
+        if(id === 'analytics') renderAnalytics();
+        window.scrollTo(0,0);
     }
 
     function renderAnalytics() {
-        let hist = appData.events.find(e => e.id == appData.currentEventId).history;
-        let total = 0, itemMap = {}, hourMap = {}, maxItem = 0, maxHour = 0;
-        hist.forEach(h => {
+        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        let total = 0, iMap = {}, hMap = {}, maxI = 0, maxH = 0;
+        ev.history.forEach(h => {
             total += h.total;
-            let hour = h.time.split(':')[0] + '時台';
-            hourMap[hour] = (hourMap[hour] || 0) + h.total;
-            if(hourMap[hour] > maxHour) maxHour = hourMap[hour];
+            const hour = h.time.split(':')[0] + '時台';
+            hMap[hour] = (hMap[hour]||0) + h.total;
+            if(hMap[hour] > maxH) maxH = hMap[hour];
             h.detail.split(', ').forEach(p => {
-                let m = p.match(/(.+)x([0-9]+)$/), name = m ? m[1] : p, count = m ? parseInt(m[2]) : 1;
-                itemMap[name] = (itemMap[name] || 0) + count;
-                if(itemMap[name] > maxItem) maxItem = itemMap[name];
+                const m = p.match(/(.+)x([0-9]+)$/), name = m ? m[1] : p, count = m ? parseInt(m[2]) : 1;
+                iMap[name] = (iMap[name]||0) + count;
+                if(iMap[name] > maxI) maxI = iMap[name];
             });
         });
-        document.getElementById('stat-total-rev').innerText = total.toLocaleString();
-        document.getElementById('stat-total-tx').innerText = hist.length;
-        document.getElementById('stat-avg-spend').innerText = hist.length ? Math.floor(total/hist.length).toLocaleString() : 0;
+        document.getElementById('analytics-summary').innerHTML = `
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:20px;">
+                <div style="grid-column:1/span 2; background:var(--accent-color); color:white; padding:20px; border-radius:8px; text-align:center;">
+                    <div style="font-size:0.9rem; opacity:0.8;">総売上</div><div style="font-size:2rem; font-weight:bold;">¥${total.toLocaleString()}</div>
+                </div>
+                <div style="background:white; padding:15px; border-radius:8px; text-align:center; color:#333;">
+                    <div style="font-size:0.8rem; color:#666;">会計数</div><div style="font-size:1.3rem; font-weight:bold;">${ev.history.length}回</div>
+                </div>
+                <div style="background:white; padding:15px; border-radius:8px; text-align:center; color:#333;">
+                    <div style="font-size:0.8rem; color:#666;">客単価</div><div style="font-size:1.3rem; font-weight:bold;">¥${ev.history.length ? Math.floor(total/ev.history.length).toLocaleString() : 0}</div>
+                </div>
+            </div>`;
         
-        let itemDiv = document.getElementById('stat-items'); itemDiv.innerHTML = '';
-        Object.keys(itemMap).sort((a,b) => itemMap[b] - itemMap[a]).forEach(n => {
-            itemDiv.innerHTML += `<div class="stat-row"><div class="stat-header"><span>${n}</span><span>${itemMap[n]} 個</span></div><div class="bar-bg"><div class="bar-fill" style="width:${(itemMap[n]/maxItem)*100}%"></div></div></div>`;
+        let iHtml = '';
+        Object.keys(iMap).sort((a,b)=>iMap[b]-iMap[a]).forEach(n => {
+            iHtml += `<div style="margin-bottom:10px;"><div style="display:flex; justify-content:space-between; font-size:0.9rem;"><span>${n}</span><strong>${iMap[n]}個</strong></div><div style="background:#eee; height:8px; border-radius:4px; overflow:hidden;"><div style="background:var(--accent-color); height:100%; width:${(iMap[n]/maxI)*100}%"></div></div></div>`;
         });
-        
-        let hourDiv = document.getElementById('stat-time'); hourDiv.innerHTML = '';
-        Object.keys(hourMap).sort((a,b) => parseInt(a)-parseInt(b)).forEach(h => {
-            hourDiv.innerHTML += `<div class="stat-row"><div class="stat-header"><span>${h}</span><span>¥${hourMap[h].toLocaleString()}</span></div><div class="bar-bg"><div class="bar-fill sales" style="width:${(hourMap[h]/maxHour)*100}%"></div></div></div>`;
+        document.getElementById('stat-items').innerHTML = iHtml || 'なし';
+
+        let hHtml = '';
+        Object.keys(hMap).sort((a,b)=>parseInt(a)-parseInt(b)).forEach(h => {
+            hHtml += `<div style="margin-bottom:10px;"><div style="display:flex; justify-content:space-between; font-size:0.9rem;"><span>${h}</span><strong>¥${hMap[h].toLocaleString()}</strong></div><div style="background:#eee; height:8px; border-radius:4px; overflow:hidden;"><div style="background:#2196F3; height:100%; width:${(hMap[h]/maxH)*100}%"></div></div></div>`;
         });
+        document.getElementById('stat-time').innerHTML = hHtml || 'なし';
     }
 
     function copyReportToClipboard() {
-        let ev = appData.events.find(e => e.id == appData.currentEventId);
-        let total = 0, itemMap = {};
+        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        let total = 0, iMap = {};
         ev.history.forEach(h => {
             total += h.total;
             h.detail.split(', ').forEach(p => {
-                let m = p.match(/(.+)x([0-9]+)$/), name = m ? m[1] : p, count = m ? parseInt(m[2]) : 1;
-                itemMap[name] = (itemMap[name] || 0) + count;
+                const m = p.match(/(.+)x([0-9]+)$/), name = m ? m[1] : p, count = m ? parseInt(m[2]) : 1;
+                iMap[name] = (iMap[name]||0) + count;
             });
         });
-        if(!ev.history.length) return alert('データがありません');
-        let txt = `【${ev.name} 売上レポート】\n総売上: ¥${total.toLocaleString()}\n会計回数: ${ev.history.length}回\n\n■ 商品別販売数\n` + 
-                  Object.keys(itemMap).sort((a,b) => itemMap[b]-itemMap[a]).map(n => `・${n} : ${itemMap[n]}個`).join("\n") + "\n\n#はづきれじ";
-        navigator.clipboard.writeText(txt).then(() => alert('レポートをコピーしました！\nメモ帳とかに貼り付けれるよ。'));
+        if(!ev.history.length) return alert('履歴なし');
+        const txt = `【${ev.name} 売上レポート】\n総売上: ¥${total.toLocaleString()}\n会計: ${ev.history.length}回\n\n■ 商品別\n` + 
+                  Object.keys(iMap).sort((a,b)=>iMap[b]-iMap[a]).map(n => `・${n} : ${iMap[n]}個`).join('\n') + '\n\n#はづきれじ';
+        navigator.clipboard.writeText(txt).then(() => alert('コピーしたよ！'));
     }
 </script>
 
