@@ -39,7 +39,6 @@
         /* カートバー */
         .bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 10px 15px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 8px; z-index: 90; }
         .cart-status { display: flex; justify-content: space-between; align-items: center; }
-        /* 吸い込まれるアニメーションのアクション用 */
         .checkout-btn { background-color: #2196F3; color: white; border: none; padding: 12px; border-radius: 4px; font-size: 1.1rem; font-weight: bold; width: 100%; cursor: pointer; transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .checkout-btn:disabled { background-color: #ccc; color: #666; }
 
@@ -356,63 +355,76 @@
         window.scrollTo(0, 0);
     }
 
-    // --- ★カート追加処理＆アニメーション ---
-    function addToCart(event, itemId) {
-        let currentEvent = appData.events.find(e => e.id == appData.currentEventId);
-        let item = currentEvent.items.find(i => i.id === itemId);
-        
-        if (item.stock > 0) {
-            cart.push(item);
-            updateCart();
-            flyToCart(event); // ここでアニメーションを実行
-            navigator.vibrate && navigator.vibrate(50);
-        }
-    }
-
-    // カートへ吸い込まれるアニメーション処理
+    // --- ★追加：商品画像を吸い込ませるアニメーション処理 ---
     function flyToCart(event) {
-        if (!event) return;
+        if (!event || !event.target) return;
+        
+        // タップされた要素の枠（親要素）から、表示されている商品画像を探す
+        let itemContainer = event.target.closest('.item');
+        if (!itemContainer) return;
+        
+        let imgEl = itemContainer.querySelector('img');
+        if (!imgEl) return;
+
+        // ゴール地点（「会計へ進む」ボタン）の位置を計算
         let targetBtn = document.getElementById('checkout-btn');
         let targetRect = targetBtn.getBoundingClientRect();
         
-        // タップした要素の中心を計算
-        let rect = event.target.getBoundingClientRect();
+        // スタート地点（商品画像）の位置とサイズを計算
+        let rect = imgEl.getBoundingClientRect();
         let startX = rect.left + rect.width / 2;
         let startY = rect.top + rect.height / 2;
 
-        // 飛んでいく要素（ピンクの丸）を作成
+        // 飛んでいく分身（クローン画像）を作成
         let flier = document.createElement('div');
         flier.style.position = 'fixed';
         flier.style.left = startX + 'px';
         flier.style.top = startY + 'px';
-        flier.style.width = '24px';
-        flier.style.height = '24px';
-        flier.style.background = '#e91e63';
-        flier.style.borderRadius = '50%';
+        flier.style.width = rect.width + 'px';
+        flier.style.height = rect.height + 'px';
+        flier.style.backgroundImage = 'url(' + imgEl.src + ')';
+        flier.style.backgroundSize = 'contain';
+        flier.style.backgroundPosition = 'center';
+        flier.style.backgroundRepeat = 'no-repeat';
+        flier.style.transform = 'translate(-50%, -50%)'; // 中心基準に設定
         flier.style.zIndex = '9999';
         flier.style.pointerEvents = 'none'; // タップの邪魔にならないようにする
-        flier.style.transform = 'translate(-50%, -50%)';
-        // ぬるっと動くようにイージングを設定
-        flier.style.transition = 'left 0.4s ease-in, top 0.4s ease-in, transform 0.4s ease-in, opacity 0.4s ease-in';
+        
+        // ★重要：スローからファースト、スローアウトの動きを作るベジェ曲線
+        flier.style.transition = 'all 0.6s cubic-bezier(0.65, 0, 0.35, 1)';
         
         document.body.appendChild(flier);
 
-        // 次のフレームで移動先（カートボタンの中心）を指定
+        // 少しだけ待ってから（ブラウザに描画させてから）、移動先の座標を指示
         setTimeout(() => {
             flier.style.left = (targetRect.left + targetRect.width / 2) + 'px';
             flier.style.top = (targetRect.top + targetRect.height / 2) + 'px';
-            flier.style.transform = 'translate(-50%, -50%) scale(0.2)'; // 吸い込まれるように小さく
-            flier.style.opacity = '0.3'; // 徐々に消える
+            flier.style.width = '20px';  // 小さく縮小
+            flier.style.height = '20px';
+            flier.style.opacity = '0.3'; // 半透明にしながら
+            flier.style.transform = 'translate(-50%, -50%) rotate(360deg)'; // くるっと回転！
         }, 10);
 
-        // アニメーション完了後の処理（丸を消して、ボタンを揺らす）
+        // 0.6秒後（アニメーション終了後）に分身を消し、カートボタンを「ポヨン」と揺らす
         setTimeout(() => {
             flier.remove();
             targetBtn.style.transform = 'scale(1.05)';
             setTimeout(() => {
                 targetBtn.style.transform = 'scale(1)';
             }, 100);
-        }, 400);
+        }, 600);
+    }
+
+    // --- カートと会計 ---
+    function addToCart(event, itemId) {
+        let currentEvent = appData.events.find(e => e.id == appData.currentEventId);
+        let item = currentEvent.items.find(i => i.id === itemId);
+        if (item.stock > 0) {
+            cart.push(item);
+            updateCart();
+            flyToCart(event); // ここでアニメーションを呼び出す
+            navigator.vibrate && navigator.vibrate(50);
+        }
     }
 
     function updateCart() {
@@ -510,6 +522,7 @@
         renderAll();
     }
 
+    // --- 商品管理・削除処理 ---
     function addNewItem() {
         let nameInput = document.getElementById('itemName');
         let priceInput = document.getElementById('itemPrice');
