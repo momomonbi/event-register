@@ -186,7 +186,7 @@
     <div id="stat-time" class="stat-list"></div>
 
     <button class="copy-report-btn" onclick="copyReportToClipboard()">📝 テキストで結果をコピー</button>
-    <p style="text-align:center; font-size:0.8rem; color:#666; margin-top:10px;">X(Twitter)やメモ帳にそのまま貼り付けられます</p>
+    <p style="text-align:center; font-size:0.8rem; color:#666; margin-top:10px;">メモ帳とかににそのまま貼り付けられるよ</p>
 </div>
 
 <div class="bottom-bar" id="cart-bar">
@@ -735,7 +735,7 @@
         reportText += "\n#はづきれじ";
 
         navigator.clipboard.writeText(reportText).then(() => {
-            alert('レポートをコピーしました！\nメモ帳やSNSに貼り付けて共有できます。');
+            alert('レポートをコピーしました！\nメモ帳とかに貼り付けれるよ。');
         }).catch(err => {
             alert('コピーに失敗しました。');
         });
