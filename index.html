@@ -6,7 +6,6 @@
     <title>はづきれじ</title>
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&family=Noto+Sans+JP:wght@400;700&family=Kiwi+Maru:wght@400;700&family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
     <style>
-        /* テーマ設定 */
         :root {
             --bg-color: #f4f4f9; --header-bg: #222; --tab-bg: #333; --accent-color: #e91e63;
             --tab-active-bg: #e91e63; --tab-active-color: #fff;
@@ -128,9 +127,7 @@
         }
         
         #pins-container.pin-mode .map-pin-wrap {
-            pointer-events: none;
-            opacity: 0.4;
-            filter: grayscale(0.5);
+            pointer-events: none; opacity: 0.4; filter: grayscale(0.5);
         }
 
         .pin-label { 
@@ -146,16 +143,9 @@
         .color-green { background: rgba(144,238,144,0.7); color: #050; }
         .color-yellow { background: rgba(255,255,224,0.7); color: #550; }
 
-        .pin-icon { 
-            font-size: 24px; cursor: pointer; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5)); 
-            line-height: 1; transition: transform 0.1s;
-        }
+        .pin-icon { font-size: 24px; cursor: pointer; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5)); line-height: 1; transition: transform 0.1s; }
         .map-pin-wrap:active .pin-icon { transform: scale(1.2); }
-        
-        .pin-dot {
-            width: 6px; height: 6px; background: #ff1744; border-radius: 50%;
-            margin-top: -3px; border: 1px solid white; box-shadow: 0 1px 2px rgba(0,0,0,0.5);
-        }
+        .pin-dot { width: 6px; height: 6px; background: #ff1744; border-radius: 50%; margin-top: -3px; border: 1px solid white; box-shadow: 0 1px 2px rgba(0,0,0,0.5); }
         
         #pins-container.hide-labels .pin-label { display: none; }
         
@@ -170,6 +160,9 @@
         .icon-radio { display: none; }
         .icon-label { font-size: 1.5rem; padding: 5px; border-radius: 6px; border: 2px solid transparent; cursor: pointer; }
         .icon-radio:checked + .icon-label { border-color: var(--accent-color); background: #f0f0f0; }
+
+        /* 完全リセット用ボタン */
+        .danger-zone { margin-top: 50px; padding-top: 20px; border-top: 2px dashed #f44336; text-align: center; }
     </style>
 </head>
 <body data-theme="default">
@@ -185,8 +178,8 @@
 
 <div class="tabs">
     <div class="tab active" onclick="switchTab('pos')">レジ</div>
-    <div class="tab" onclick="switchTab('settings')">商品設定</div>
-    <div class="tab" onclick="switchTab('analytics')">📊分析・履歴</div>
+    <div class="tab" onclick="switchTab('settings')">設定</div>
+    <div class="tab" onclick="switchTab('analytics')">📊分析</div>
     <div class="tab" onclick="switchTab('map')">🗺マップ</div>
 </div>
 
@@ -231,6 +224,12 @@
 
     <h3 style="margin-top:25px; border-bottom:2px solid #ddd; padding-bottom:5px;">📋 登録済みリスト</h3>
     <div id="settings-list"></div>
+
+    <div class="danger-zone">
+        <h3 style="color:#f44336; margin-top:0;">⚠️ 危険領域</h3>
+        <p style="font-size:0.8rem; color:#666;">動作がおかしい時や、容量エラーが出る場合は、このボタンでアプリ内のすべてのデータ（全イベント・画像・マップ）を完全に消去して初期化してください。</p>
+        <button onclick="hardResetApp()" style="background:#f44336; color:white; padding:15px; width:100%; font-weight:bold; border-radius:8px; font-size:1.1rem;">⚠️ アプリを完全にリセットする</button>
+    </div>
 </div>
 
 <div id="analytics" class="tab-content">
@@ -405,7 +404,7 @@
 
         <div class="form-group"><label>ブース名</label><input type="text" id="pin-booth" placeholder="例：あ-01"></div>
         <div class="form-group"><label>作者名</label><input type="text" id="pin-author" placeholder="例：Momo"></div>
-        <div class="form-group"><label>メモ</label><input type="text" id="pin-memo" placeholder="例：新譜を渡す！"></div>
+        <div class="form-group"><label>メモ（挨拶など）</label><input type="text" id="pin-memo" placeholder="例：新譜を渡す！"></div>
         
         <div style="display:flex; gap:10px; margin-top:15px;">
             <button onclick="deletePin()" style="flex:1; padding:12px; background:#f44336; color:white; font-weight:bold;">削除</button>
@@ -456,12 +455,18 @@
             localStorage.setItem('pos_app_data', JSON.stringify(appData)); 
             return true;
         } catch(e) {
-            if (e.name === 'QuotaExceededError' || e.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
-                alert('⚠️ 【データ容量上限エラー】\nブラウザの保存容量（約5MB）がいっぱいです。\n不要な「イベント」や「マップ画像」を削除して容量を空けてください。');
-            } else {
-                alert('データの保存に失敗しました。');
-            }
+            alert('⚠️ 【データ保存エラー】\nブラウザの保存容量（約5MB）がいっぱいです。\n不要な「イベント」や「マップ画像」を削除するか、アプリをリセットして容量を空けてください。');
             return false;
+        }
+    }
+
+    // ★ 奥の手：アプリ完全リセット
+    function hardResetApp() {
+        if(confirm("【⚠️警告】\n登録した商品、マップ、売上履歴など、すべてのデータを完全に消去して初期状態に戻します。\n\n本当に実行しますか？")) {
+            if(confirm("本当に消去してよろしいですか？（この操作は取り消せません）")) {
+                localStorage.removeItem('pos_app_data');
+                location.reload(); // 画面をリロードして真っさらにする
+            }
         }
     }
     
@@ -540,12 +545,10 @@
     function clearPriceAmount() { document.getElementById('modal-price-input').value = ''; }
     function commitPriceModal() {
         const inputEl = document.getElementById('modal-price-input');
-        inputEl.blur(); // キーボードを閉じる
-        
+        inputEl.blur(); 
         let valStr = inputEl.value || "";
         valStr = valStr.replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0));
         const val = parseInt(valStr);
-        
         if (isNaN(val)) {
             document.getElementById('itemPrice').value = "";
             document.getElementById('itemPriceDisplay').value = "";
@@ -556,7 +559,7 @@
         closePriceModal();
     }
 
-    // --- ★エラー・容量対策を強化した商品登録 ---
+    // --- ★エラー・容量対策を極限まで高めた商品登録 ---
     function addNewItem() {
         try {
             const n = document.getElementById('itemName').value;
@@ -571,7 +574,6 @@
             const f = document.getElementById('itemImage');
             const editId = document.getElementById('edit-item-id').value;
 
-            // アラートで不足を明示
             if (!n) return alert('商品名を入力してください。');
             if (isNaN(p)) return alert('価格を設定してください。（タップして入力）');
             if (isNaN(s)) return alert('在庫数を入力してください。');
@@ -580,20 +582,18 @@
             if(!ev) return alert("イベントが見つかりません。");
 
             const finalize = (img) => {
-                // ロールバック用にバックアップ
-                let backupItems = JSON.stringify(ev.items);
-
+                let backupItems = JSON.stringify(ev.items); // ロールバック用
                 if (editId) {
                     const item = ev.items.find(i => i.id == editId);
                     if(item) { item.name = n; item.price = p; item.stock = s; if(img) item.image = img; }
                 } else {
-                    ev.items.push({ id: Date.now(), name: n, price: p, stock: s, image: img || 'https://placehold.co/200x200/e0e0e0/666666?text=No+Image' });
+                    ev.items.push({ id: Date.now(), name: n, price: p, stock: s, image: img || 'https://placehold.co/150x150/e0e0e0/666666?text=No+Image' });
                 }
                 
                 if (saveData()) {
                     renderAll(); cancelEdit(); alert('保存しました！');
                 } else {
-                    ev.items = JSON.parse(backupItems); // 容量オーバーで保存失敗したら元に戻す
+                    ev.items = JSON.parse(backupItems); // 容量エラーなら元に戻す
                 }
             };
 
@@ -603,11 +603,13 @@
                     const img = new Image();
                     img.onload = () => {
                         const c = document.createElement('canvas'); const ctx = c.getContext('2d');
-                        const max = 200; // 軽量化のため200pxに制限
+                        // ★画像を最大150pxに超圧縮（これなら100個登録しても余裕）
+                        const max = 150; 
                         const scale = max / Math.max(img.width, img.height);
                         c.width = img.width * (scale < 1 ? scale : 1); c.height = img.height * (scale < 1 ? scale : 1);
                         ctx.drawImage(img, 0, 0, c.width, c.height);
-                        finalize(c.toDataURL('image/jpeg', 0.5)); // 品質0.5で超軽量化
+                        // ★画質も0.4に落として極限まで軽量化
+                        finalize(c.toDataURL('image/jpeg', 0.4)); 
                     };
                     img.src = e.target.result;
                 };
@@ -780,14 +782,13 @@
         if(navigator.vibrate) navigator.vibrate([100, 50, 100]); 
     }
 
-    // --- ★ マップ（図面）機能の超進化 ---
+    // --- ★ マップ（図面）機能の超圧縮対応 ---
     let mapScale = 1, mapTx = 0, mapTy = 0;
     let isPanning = false, startTx = 0, startTy = 0;
     let initialDist = null, lastScale = 1;
     let isPinMode = false, showLabels = true;
     let isPlacingPin = false; 
 
-    // ★容量対策版 マップ読み込み
     function loadMapImage(input) {
         if (input.files && input.files[0]) {
             const reader = new FileReader();
@@ -795,19 +796,21 @@
                 const img = new Image();
                 img.onload = () => {
                     const c = document.createElement('canvas'); const ctx = c.getContext('2d');
-                    const max = 1000; // 軽量化のため1000pxに制限
+                    // ★マップ画像を最大800pxに超圧縮（これならエラーにならない）
+                    const max = 800; 
                     const scale = max / Math.max(img.width, img.height);
                     c.width = img.width * (scale < 1 ? scale : 1); c.height = img.height * (scale < 1 ? scale : 1);
                     ctx.drawImage(img, 0, 0, c.width, c.height);
-                    const ev = appData.events.find(e => e.id == appData.currentEventId);
                     
-                    const backupMap = ev.mapImage;
-                    ev.mapImage = c.toDataURL('image/jpeg', 0.4); // 超軽量化
+                    const ev = appData.events.find(e => e.id == appData.currentEventId);
+                    let backupMap = ev.mapImage;
+                    // ★画質も0.3に落として極限まで軽くする
+                    ev.mapImage = c.toDataURL('image/jpeg', 0.3);
                     
                     if(saveData()) {
                         renderMap(); resetMap();
                     } else {
-                        ev.mapImage = backupMap; // 保存失敗したら戻す
+                        ev.mapImage = backupMap; // 保存失敗したら元に戻す
                     }
                 };
                 img.src = e.target.result;
@@ -850,7 +853,6 @@
                 if(p.booth || p.author) {
                     labelHTML = `<div class="pin-label color-${p.color || 'white'}">${p.booth ? p.booth + '<br>' : ''}${p.author}</div>`;
                 }
-                // ★ドット方式でズレを無くし、ラベルを上に配置
                 pinsContainer.innerHTML += `
                     <div class="map-pin-wrap" style="left:${p.x}px; top:${p.y}px;" onclick="openPinModal(${p.id}, ${p.x}, ${p.y}, '${p.booth}', '${p.author}', '${p.memo}', '${p.icon}', '${p.color}')">
                         ${labelHTML}
