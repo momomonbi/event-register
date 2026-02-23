@@ -303,7 +303,7 @@
 </div>
 
 <script>
-    // --- 【超・安定化】データ管理と初期化 ---
+    // --- 【堅牢化】データ管理と初期化 ---
     let appData = { currentEventId: Date.now(), events: [], theme: 'default' };
     try {
         const saved = localStorage.getItem('pos_app_data');
@@ -441,7 +441,7 @@
         closePriceModal();
     }
 
-    // --- ★フリーズを完全に防ぐ商品登録 ---
+    // --- ★ エラー・フリーズを完全に防ぐ商品登録 ---
     function addNewItem() {
         try {
             const n = document.getElementById('itemName').value;
@@ -606,7 +606,7 @@
 
     function syncCartTotalAnimated() { animateTotalValue(cart.reduce((s,i)=>s+i.price, 0)); }
     function syncCartTotalInstant() { const t = cart.reduce((s,i)=>s+i.price, 0); document.getElementById('cart-total').innerText = t.toLocaleString(); displayedTotal = t; }
-    function updateCartButton() { const b = document.getElementById('checkout-btn'); b.disabled = cart.length === 0; b.innerText = cart.length ? "会計へ進む (" + cart.length + "点)" : "会計へ進む"; }
+    function updateCartButton() { const b = document.getElementById('checkout-btn'); b.disabled = cart.length === 0; b.innerText = cart.length ? "会計へ進 (" + cart.length + ")" : "会計へ進む"; }
     function undoLastCartItem() { if(cart.length){ cart.pop(); updateCartButton(); syncCartTotalAnimated(); renderPos(); } }
     
     function openCartModal() { if(cart.length){ renderCartModalItems(); document.getElementById('cart-modal').style.display='flex'; } else alert('カートは空です'); }
@@ -759,10 +759,39 @@
         }
     }
 
-    // --- 全体描画まとめ ---
+    // --- 全体描画関数（これがないとエラーになる） ---
     function renderAll() { 
-        renderPos(); renderSettings(); renderHistory(); 
+        renderPos(); 
+        renderSettings(); 
+        renderHistory(); 
         if(document.getElementById('analytics').classList.contains('active')) renderAnalytics(); 
+    }
+
+    // --- 描画処理関数（追加分） ---
+    function renderPos() {
+        const grid = document.getElementById('pos-grid'); grid.innerHTML = '';
+        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        if(!ev.items.length) { grid.innerHTML = '<p style="grid-column:1/span 2; text-align:center; padding:60px 0; color:#888;">[商品設定]から<br>商品を登録してください</p>'; return; }
+        ev.items.forEach(i => {
+            const avail = getAvailableStock(i.id);
+            grid.innerHTML += `<div class="item"><img src="${i.image}" class="${avail>0?'clickable':''}" ${avail>0?`onclick="addToCart(event,${i.id})"`:''}><h3>${i.name}</h3><p>¥${i.price.toLocaleString()}</p><div class="stock">残り: ${avail}</div>${avail<=0?'<div class="sold-out">完売</div>':''}</div>`;
+        });
+    }
+
+    function renderSettings() {
+        const list = document.getElementById('settings-list'); list.innerHTML = '';
+        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        ev.items.forEach(i => {
+            list.innerHTML += `<div class="list-item"><img src="${i.image}"> <div style="flex-grow:1"><strong>${i.name}</strong><br><span style="color:#666;font-size:0.85rem;">¥${i.price.toLocaleString()} / 在庫:${i.stock}</span></div><button class="list-btn" style="background:#FFC107; color:#333;" onclick="startEdit(${i.id})">✏️編集</button><button class="list-btn" style="background:#f44336;color:white;" onclick="deleteItem(${i.id})">🗑</button></div>`;
+        });
+    }
+
+    function renderHistory() {
+        const list = document.getElementById('history-list'); list.innerHTML = '';
+        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        ev.history.forEach(h => {
+            list.innerHTML += `<div class="history-card"><div class="history-info"><span class="history-time">${h.time}</span><span class="history-detail">${h.detail}</span></div><div class="history-price">¥${h.total.toLocaleString()}</div></div>`;
+        });
     }
 </script>
 
