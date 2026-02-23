@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>はづきれじ</title>
     <style>
-        /* 全体の設定（ズーム防止） */
+        /* 全体の設定 */
         body { font-family: sans-serif; margin: 0; padding: 0; background-color: #f4f4f9; color: #333; padding-bottom: 110px; touch-action: manipulation; }
         button { touch-action: manipulation; }
         
@@ -16,9 +16,9 @@
         .preset-btn { background-color: #555; color: white; border: none; padding: 8px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.9rem; }
         .preset-btn.primary { background-color: #FFC107; color: #333; }
 
-        /* タブメニュー */
+        /* タブメニュー（4つになったので少し幅を調整） */
         .tabs { display: flex; background-color: #333; position: sticky; top: 0; z-index: 100; }
-        .tab { flex: 1; text-align: center; padding: 12px 5px; color: #ccc; cursor: pointer; font-weight: bold; font-size: 0.9rem; transition: 0.2s; }
+        .tab { flex: 1; text-align: center; padding: 12px 2px; color: #ccc; cursor: pointer; font-weight: bold; font-size: 0.85rem; transition: 0.2s; white-space: nowrap;}
         .tab.active { background-color: #e91e63; color: white; }
         .tab-content { display: none; padding: 10px; }
         .tab-content.active { display: block; }
@@ -49,10 +49,7 @@
         .list-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 10px; margin-top: 25px; border-bottom: 2px solid #ddd; padding-bottom: 5px;}
         .list-header h3 { margin: 0; }
         .delete-checked-btn { background-color: #607D8B; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 0.85rem; cursor: pointer; }
-        
-        /* CSV出力ボタン専用スタイル */
         .export-csv-btn { background-color: #4CAF50; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 0.85rem; cursor: pointer; margin-right: 5px; font-weight: bold; }
-        
         .list-item { background: white; padding: 10px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 10px; }
         .custom-checkbox { width: 20px; height: 20px; accent-color: #e91e63; transform: scale(1.2); }
         .item-info { flex-grow: 1; display: flex; align-items: center; }
@@ -64,42 +61,47 @@
         .history-detail { flex-grow: 1; font-size: 0.95rem; margin-right: 10px; }
         .history-price { font-weight:bold; color:#e91e63; white-space: nowrap; font-size: 1.1rem;}
 
-        /* お会計モーダル（お釣り計算機） */
+        /* お会計モーダル */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
         .modal-content { background: white; width: 92%; max-width: 400px; border-radius: 12px; padding: 15px 20px; box-sizing: border-box; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
         .modal-title { text-align: center; font-size: 1.2rem; font-weight: bold; margin-top: 0; margin-bottom: 10px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
         .calc-total { font-size: 1.4rem; text-align: center; margin-bottom: 15px; }
         .calc-total span { font-size: 2rem; font-weight: bold; color: #333; }
-        
-        /* 預かり金入力エリア */
         .quick-money-btns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 15px; }
         .money-btn { background: #e0f7fa; color: #00838f; border: 1px solid #b2ebf2; padding: 10px 5px; border-radius: 6px; font-size: 0.95rem; font-weight: bold; cursor: pointer; }
         .money-btn.clear-btn { background: #f5f5f5; color: #666; border: 1px solid #ddd; }
         .money-btn.exact { background: #fff3e0; color: #e65100; border: 1px solid #ffe0b2; }
-        
         .tender-input-wrap { display: flex; align-items: center; gap: 5px; margin-bottom: 15px; }
         .tender-input-wrap label { font-weight: bold; white-space: nowrap; }
-        .tender-input-wrap input { 
-            flex-grow: 1; 
-            width: 100%;
-            min-width: 0;
-            box-sizing: border-box;
-            padding: 10px; 
-            font-size: 1.5rem; 
-            text-align: right; 
-            border: 2px solid #ccc; 
-            border-radius: 6px; 
-        }
-        
+        .tender-input-wrap input { flex-grow: 1; width: 100%; min-width: 0; box-sizing: border-box; padding: 10px; font-size: 1.5rem; text-align: right; border: 2px solid #ccc; border-radius: 6px; }
         .change-display { background: #f8bbd0; padding: 10px; border-radius: 8px; text-align: center; margin-bottom: 15px; }
         .change-display div { font-size: 1rem; color: #880e4f; font-weight: bold; margin-bottom: 5px;}
         .change-display span { font-size: 2.5rem; font-weight: bold; color: #e91e63; }
-        
         .modal-actions { display: flex; gap: 10px; }
         .modal-btn { flex: 1; padding: 12px; border: none; border-radius: 6px; font-size: 1.1rem; font-weight: bold; cursor: pointer; }
         .btn-cancel { background: #e0e0e0; color: #333; }
         .btn-complete { background: #4CAF50; color: white; }
         .btn-complete:disabled { background: #a5d6a7; cursor: not-allowed; }
+
+        /* --- 追加：分析・レポート画面用スタイル --- */
+        .summary-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .summary-card { background: white; padding: 15px; border-radius: 8px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .summary-card.full-width { grid-column: 1 / span 2; background: #e91e63; color: white;}
+        .summary-card .label { font-size: 0.85rem; margin-bottom: 5px; color: #666; }
+        .summary-card.full-width .label { color: #ffcdd2; }
+        .summary-card .value { font-size: 1.4rem; font-weight: bold; }
+        .summary-card.full-width .value { font-size: 2.2rem; }
+        
+        .stat-list { background: white; border-radius: 8px; padding: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .stat-row { display: flex; flex-direction: column; margin-bottom: 12px; border-bottom: 1px dashed #eee; padding-bottom: 8px;}
+        .stat-row:last-child { margin-bottom: 0; border-bottom: none; padding-bottom: 0;}
+        .stat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+        .stat-name { font-weight: bold; font-size: 0.95rem; }
+        .stat-count { font-weight: bold; color: #e91e63; }
+        .bar-bg { width: 100%; background: #f0f0f0; height: 10px; border-radius: 5px; overflow: hidden; }
+        .bar-fill { height: 100%; background: #2196F3; border-radius: 5px; transition: width 0.5s; }
+        .bar-fill.sales { background: #e91e63; }
+        .copy-report-btn { background-color: #2196F3; color: white; border: none; padding: 15px; width: 100%; border-radius: 4px; font-size: 1.1rem; font-weight: bold; cursor: pointer; box-shadow: 0 2px 5px rgba(33, 150, 243, 0.4);}
     </style>
 </head>
 <body>
@@ -116,6 +118,7 @@
     <div class="tab active" onclick="switchTab('pos')">レジ</div>
     <div class="tab" onclick="switchTab('settings')">商品設定</div>
     <div class="tab" onclick="switchTab('history')">売上履歴</div>
+    <div class="tab" onclick="switchTab('analytics')">📊 分析</div>
 </div>
 
 <div id="pos" class="tab-content active">
@@ -146,11 +149,41 @@
     <div class="list-header">
         <h3>取引履歴</h3>
         <div>
-            <button class="export-csv-btn" onclick="exportCSV()">📊 CSV出力</button>
+            <button class="export-csv-btn" onclick="exportCSV()">📊 CSV</button>
             <button class="delete-checked-btn" onclick="deleteCheckedHistory()">☑ 削除</button>
         </div>
     </div>
     <div id="history-list" style="border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);"></div>
+</div>
+
+<div id="analytics" class="tab-content">
+    <h2 style="text-align:center; font-size:1.3rem; border-bottom:2px solid #ddd; padding-bottom:10px; margin-top:5px;">📋 イベントレポート</h2>
+
+    <div class="summary-cards">
+        <div class="summary-card full-width">
+            <div class="label">本日の総売上</div>
+            <div class="value">¥<span id="stat-total-rev">0</span></div>
+        </div>
+        <div class="summary-card">
+            <div class="label">会計回数</div>
+            <div class="value"><span id="stat-total-tx">0</span>回</div>
+        </div>
+        <div class="summary-card">
+            <div class="label">平均客単価</div>
+            <div class="value">¥<span id="stat-avg-spend">0</span></div>
+        </div>
+    </div>
+
+    <h3>🏆 商品別の販売数</h3>
+    <div id="stat-items" class="stat-list">
+        </div>
+
+    <h3>⏰ 時間帯別の動向</h3>
+    <div id="stat-time" class="stat-list">
+        </div>
+
+    <button class="copy-report-btn" onclick="copyReportToClipboard()">📝 テキストで結果をコピー</button>
+    <p style="text-align:center; font-size:0.8rem; color:#666; margin-top:10px;">X(Twitter)やメモ帳にそのまま貼り付けられます</p>
 </div>
 
 <div class="bottom-bar" id="cart-bar">
@@ -165,7 +198,6 @@
     <div class="modal-content">
         <h2 class="modal-title">はづきれじ お会計</h2>
         <div class="calc-total">合計: ¥<span id="modal-total-amount">0</span></div>
-        
         <div class="quick-money-btns">
             <button class="money-btn" onclick="addTenderAmount(100)">＋100円</button>
             <button class="money-btn" onclick="addTenderAmount(500)">＋500円</button>
@@ -175,18 +207,15 @@
             <button class="money-btn clear-btn" onclick="clearTenderAmount()">クリア</button>
             <button class="money-btn exact" style="grid-column: span 3;" onclick="setTenderExact()">ピッタリ</button>
         </div>
-        
         <div class="tender-input-wrap">
             <label>お預かり</label>
             <input type="number" id="tender-input" inputmode="numeric" pattern="\d*" placeholder="0" oninput="calculateChange()">
             <span style="font-weight:bold; font-size:1.2rem;">円</span>
         </div>
-        
         <div class="change-display">
             <div id="change-label">お釣り</div>
             ¥<span id="change-amount">0</span>
         </div>
-        
         <div class="modal-actions">
             <button class="modal-btn btn-cancel" onclick="closeCheckoutModal()">キャンセル</button>
             <button class="modal-btn btn-complete" id="complete-checkout-btn" onclick="executeCheckout()" disabled>会計完了</button>
@@ -204,11 +233,9 @@
             migratedEvents.push({ id: 1, name: "イベント①", items: appData.presets[1].items || [], history: appData.presets[1].history || [] });
             migratedEvents.push({ id: 2, name: "イベント②", items: appData.presets[2].items || [], history: appData.presets[2].history || [] });
             migratedEvents.push({ id: 3, name: "イベント③", items: appData.presets[3].items || [], history: appData.presets[3].history || [] });
-            // 追加分
             migratedEvents.push({ id: 4, name: "イベント④", items: [], history: [] });
             migratedEvents.push({ id: 5, name: "イベント⑤", items: [], history: [] });
         } else {
-            // 初回起動時の初期セットアップ（5つ用意）
             migratedEvents.push({ id: Date.now(), name: "イベント①", items: [], history: [] });
             migratedEvents.push({ id: Date.now()+1, name: "イベント②", items: [], history: [] });
             migratedEvents.push({ id: Date.now()+2, name: "イベント③", items: [], history: [] });
@@ -222,10 +249,9 @@
         };
         saveData();
     } else if (appData.events.length < 5) {
-        // もしデータは引き継がれているが3つしかない場合は5つに拡張
         let currentLen = appData.events.length;
         for(let i=1; i<=(5-currentLen); i++) {
-            appData.events.push({ id: Date.now()+i, name: `イベント${currentLen+i}`, items: [], history: [] });
+            appData.events.push({ id: Date.now()+i, name: \`イベント\${currentLen+i}\`, items: [], history: [] });
         }
         saveData();
     }
@@ -267,7 +293,7 @@
         let eventName = prompt('新しいイベントの名前を入力してください\n(例: 秋の即売会2026)');
         if (eventName && eventName.trim() !== '') {
             let newEvent = { id: Date.now(), name: eventName.trim(), items: [], history: [] };
-            appData.events.push(newEvent); // 無制限に追加されます
+            appData.events.push(newEvent);
             appData.currentEventId = newEvent.id;
             cart = [];
             saveData();
@@ -291,31 +317,19 @@
     // --- CSV出力機能 ---
     function exportCSV() {
         let currentEvent = appData.events.find(e => e.id == appData.currentEventId);
-        if (!currentEvent || currentEvent.history.length === 0) {
-            alert('出力する売上履歴がありません。');
-            return;
-        }
+        if (!currentEvent || currentEvent.history.length === 0) return alert('出力する売上履歴がありません。');
 
-        // CSVのヘッダー（BOMを付けてExcelでの文字化けを防止）
-        let csvContent = "\uFEFF"; 
-        csvContent += "時間,販売内容,売上金額\n";
-
-        // 履歴データをCSV形式に変換
-        // 古い順に出力したい場合は currentEvent.history.slice().reverse().forEach(...) とします
-        // 今回は表示通り新しいものから順に出力します
+        let csvContent = "\uFEFF時間,販売内容,売上金額\n";
         currentEvent.history.forEach(h => {
             let time = h.time;
-            let detail = h.detail.replace(/"/g, '""'); // 内容にダブルクォーテーションが含まれていても壊れないようにエスケープ
+            let detail = h.detail.replace(/"/g, '""');
             let total = h.total;
             csvContent += `"${time}","${detail}","${total}"\n`;
         });
 
-        // CSVファイルを作成してダウンロード
         let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
         let link = document.createElement("a");
         let url = URL.createObjectURL(blob);
-        
-        // ファイル名を「イベント名_売上記録_日付.csv」にする
         let dateObj = new Date();
         let y = dateObj.getFullYear();
         let m = ('0' + (dateObj.getMonth() + 1)).slice(-2);
@@ -337,10 +351,12 @@
         event.target.classList.add('active');
         document.getElementById(tabId).classList.add('active');
         document.getElementById('cart-bar').style.display = tabId === 'pos' ? 'flex' : 'none';
+        
+        if (tabId === 'analytics') renderAnalytics(); // 分析タブを開いた時に最新データを計算
         window.scrollTo(0, 0);
     }
 
-    // --- カート機能 ---
+    // --- カートと会計 ---
     function addToCart(itemId) {
         let currentEvent = appData.events.find(e => e.id == appData.currentEventId);
         let item = currentEvent.items.find(i => i.id === itemId);
@@ -365,18 +381,15 @@
         updateCart();
     }
 
-    // --- お会計モーダル（お釣り計算） ---
     function openCheckoutModal() {
         if (cart.length === 0) return;
         currentCheckoutTotal = cart.reduce((sum, item) => sum + item.price, 0);
-        
         document.getElementById('modal-total-amount').innerText = currentCheckoutTotal.toLocaleString();
         document.getElementById('tender-input').value = '';
         document.getElementById('change-amount').innerText = '0';
         document.getElementById('change-amount').style.color = '#e91e63';
         document.getElementById('change-label').innerText = 'お釣り';
         document.getElementById('complete-checkout-btn').disabled = true;
-        
         document.getElementById('checkout-modal').style.display = 'flex';
     }
 
@@ -387,7 +400,6 @@
     function addTenderAmount(amount) {
         let inputEl = document.getElementById('tender-input');
         let currentVal = parseInt(inputEl.value.replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))) || 0;
-        
         inputEl.value = currentVal + amount;
         calculateChange();
         navigator.vibrate && navigator.vibrate(50);
@@ -407,27 +419,17 @@
         let inputVal = document.getElementById('tender-input').value;
         let cleanVal = inputVal.replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0));
         let tender = parseInt(cleanVal) || 0;
-        
         let change = tender - currentCheckoutTotal;
         let changeAmountEl = document.getElementById('change-amount');
         let changeLabelEl = document.getElementById('change-label');
         let completeBtn = document.getElementById('complete-checkout-btn');
 
         if (tender === 0 || isNaN(tender)) {
-            changeAmountEl.innerText = '0';
-            changeAmountEl.style.color = '#e91e63';
-            changeLabelEl.innerText = 'お釣り';
-            completeBtn.disabled = true;
+            changeAmountEl.innerText = '0'; changeAmountEl.style.color = '#e91e63'; changeLabelEl.innerText = 'お釣り'; completeBtn.disabled = true;
         } else if (change < 0) {
-            changeAmountEl.innerText = Math.abs(change).toLocaleString();
-            changeAmountEl.style.color = '#f44336';
-            changeLabelEl.innerText = '不足額';
-            completeBtn.disabled = true;
+            changeAmountEl.innerText = Math.abs(change).toLocaleString(); changeAmountEl.style.color = '#f44336'; changeLabelEl.innerText = '不足額'; completeBtn.disabled = true;
         } else {
-            changeAmountEl.innerText = change.toLocaleString();
-            changeAmountEl.style.color = '#e91e63';
-            changeLabelEl.innerText = 'お釣り';
-            completeBtn.disabled = false;
+            changeAmountEl.innerText = change.toLocaleString(); changeAmountEl.style.color = '#e91e63'; changeLabelEl.innerText = 'お釣り'; completeBtn.disabled = false;
         }
     }
 
@@ -455,13 +457,12 @@
         if(change > 0) msg += `\nお釣り: ¥${change.toLocaleString()}`;
         
         alert(msg);
-        
         cart = [];
         updateCart();
         renderAll();
     }
 
-    // --- 商品管理 ---
+    // --- 商品管理・削除処理 ---
     function addNewItem() {
         let nameInput = document.getElementById('itemName');
         let priceInput = document.getElementById('itemPrice');
@@ -472,13 +473,9 @@
         let price = parseInt(priceInput.value.replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0)));
         let stock = parseInt(stockInput.value.replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0)));
 
-        if (!name || isNaN(price) || isNaN(stock)) {
-            alert('商品名、価格、在庫数を正しく入力してください。');
-            return;
-        }
+        if (!name || isNaN(price) || isNaN(stock)) return alert('商品名、価格、在庫数を正しく入力してください。');
 
         let newItem = { id: Date.now(), name, price, stock, image: '' };
-
         const finalizeAddItem = () => {
             let currentEvent = appData.events.find(e => e.id == appData.currentEventId);
             currentEvent.items.push(newItem);
@@ -510,7 +507,6 @@
         }
     }
 
-    // --- 削除機能 ---
     function deleteCheckedItems() {
         let checkboxes = document.querySelectorAll('.item-checkbox:checked');
         if (checkboxes.length === 0) return alert('削除する商品にチェックを入れてください。');
@@ -535,15 +531,15 @@
         }
     }
 
-    function saveData() {
-        localStorage.setItem('pos_app_data', JSON.stringify(appData));
-    }
+    function saveData() { localStorage.setItem('pos_app_data', JSON.stringify(appData)); }
 
-    // --- 描画処理 ---
+    // --- 描画処理まとめ ---
     function renderAll() {
         renderPos();
         renderSettings();
         renderHistory();
+        // 分析タブが開かれている時だけ分析を再描画（パフォーマンスのため）
+        if(document.getElementById('analytics').classList.contains('active')) renderAnalytics();
     }
 
     function renderPos() {
@@ -552,8 +548,7 @@
         let grid = document.getElementById('pos-grid');
         grid.innerHTML = '';
         if (items.length === 0) {
-            grid.innerHTML = '<p style="grid-column: 1 / span 2; text-align: center; color: #666; padding: 20px;">[商品設定]から<br>商品を追加してください。</p>';
-            return;
+            grid.innerHTML = '<p style="grid-column: 1 / span 2; text-align: center; color: #666; padding: 20px;">[商品設定]から<br>商品を追加してください。</p>'; return;
         }
         items.forEach(item => {
             let isSoldOut = item.stock <= 0;
@@ -565,8 +560,7 @@
                     <div class="stock">残り: ${item.stock}</div>
                     <button class="add-btn" onclick="addToCart(${item.id})" ${isSoldOut ? 'disabled style="background:#ccc; color:#666;"' : ''}>追加</button>
                     ${isSoldOut ? '<div class="sold-out">完売</div>' : ''}
-                </div>
-            `;
+                </div>`;
         });
     }
 
@@ -587,8 +581,7 @@
                             <span style="font-size:0.85rem; color:#666;">¥${item.price.toLocaleString()} / 在庫:${item.stock}</span>
                         </div>
                     </div>
-                </div>
-            `;
+                </div>`;
         });
     }
 
@@ -598,9 +591,7 @@
         let list = document.getElementById('history-list');
         list.innerHTML = '';
         let totalSales = 0;
-        
         if (historyData.length === 0) list.innerHTML = '<div style="padding:15px; text-align:center; color:#888;">売上履歴はありません</div>';
-        
         historyData.forEach(h => {
             totalSales += h.total;
             list.innerHTML += `
@@ -611,11 +602,152 @@
                         <div class="history-detail">${h.detail}</div>
                         <div class="history-price">¥${h.total.toLocaleString()}</div>
                     </div>
-                </div>
-            `;
+                </div>`;
         });
         document.getElementById('history-total-price').innerText = totalSales.toLocaleString();
     }
+
+    // --- ★追加：分析・レポート描画機能 ---
+    function renderAnalytics() {
+        let currentEvent = appData.events.find(e => e.id == appData.currentEventId);
+        let history = currentEvent ? currentEvent.history : [];
+        let items = currentEvent ? currentEvent.items : [];
+
+        let totalSales = 0;
+        let totalTx = history.length;
+
+        // 商品ごとの集計箱を作成
+        let itemStats = {};
+        let maxSoldCount = 0;
+
+        // 履歴を解析して集計
+        let hourlyStats = {};
+        let maxHourlySales = 0;
+
+        history.forEach(h => {
+            totalSales += h.total;
+            
+            // 時間帯の集計 (14:30 -> 14時台)
+            let hourStr = h.time.split(':')[0] + '時台';
+            if(!hourlyStats[hourStr]) hourlyStats[hourStr] = { sales: 0, count: 0 };
+            hourlyStats[hourStr].sales += h.total;
+            hourlyStats[hourStr].count += 1;
+            if(hourlyStats[hourStr].sales > maxHourlySales) maxHourlySales = hourlyStats[hourStr].sales;
+
+            // 文字列（例: "新譜CDx2, アクキー"）を分解して商品カウント
+            let parts = h.detail.split(', ');
+            parts.forEach(p => {
+                let name = p;
+                let count = 1;
+                // 後ろに「x数字」がついているか判定
+                let match = p.match(/(.+)x([0-9]+)$/);
+                if(match) {
+                    name = match[1];
+                    count = parseInt(match[2]);
+                }
+                
+                if(!itemStats[name]) itemStats[name] = 0;
+                itemStats[name] += count;
+                if(itemStats[name] > maxSoldCount) maxSoldCount = itemStats[name];
+            });
+        });
+
+        let avgSpend = totalTx > 0 ? Math.floor(totalSales / totalTx) : 0;
+
+        // UIへ反映
+        document.getElementById('stat-total-rev').innerText = totalSales.toLocaleString();
+        document.getElementById('stat-total-tx').innerText = totalTx.toLocaleString();
+        document.getElementById('stat-avg-spend').innerText = avgSpend.toLocaleString();
+
+        // 商品ランキングの描画（売れた数が多い順）
+        let statItemsDiv = document.getElementById('stat-items');
+        statItemsDiv.innerHTML = '';
+        let sortedItems = Object.keys(itemStats).sort((a,b) => itemStats[b] - itemStats[a]);
+        
+        if(sortedItems.length === 0) {
+            statItemsDiv.innerHTML = '<p style="color:#888; text-align:center;">データがありません</p>';
+        } else {
+            sortedItems.forEach(itemName => {
+                let soldCount = itemStats[itemName];
+                let percent = maxSoldCount > 0 ? (soldCount / maxSoldCount) * 100 : 0;
+                statItemsDiv.innerHTML += `
+                    <div class="stat-row">
+                        <div class="stat-header">
+                            <span class="stat-name">${itemName}</span>
+                            <span class="stat-count">${soldCount} 個</span>
+                        </div>
+                        <div class="bar-bg"><div class="bar-fill" style="width: ${percent}%;"></div></div>
+                    </div>`;
+            });
+        }
+
+        // 時間帯別の推移を描画（時間順）
+        let statTimeDiv = document.getElementById('stat-time');
+        statTimeDiv.innerHTML = '';
+        // 時刻順に並び替え
+        let sortedHours = Object.keys(hourlyStats).sort((a, b) => parseInt(a) - parseInt(b));
+        
+        if(sortedHours.length === 0) {
+            statTimeDiv.innerHTML = '<p style="color:#888; text-align:center;">データがありません</p>';
+        } else {
+            sortedHours.forEach(hour => {
+                let sales = hourlyStats[hour].sales;
+                let percent = maxHourlySales > 0 ? (sales / maxHourlySales) * 100 : 0;
+                statTimeDiv.innerHTML += `
+                    <div class="stat-row">
+                        <div class="stat-header">
+                            <span class="stat-name">${hour}</span>
+                            <span class="stat-count">¥${sales.toLocaleString()}</span>
+                        </div>
+                        <div class="bar-bg"><div class="bar-fill sales" style="width: ${percent}%;"></div></div>
+                    </div>`;
+            });
+        }
+    }
+
+    // --- ★追加：レポートテキストをクリップボードにコピー ---
+    function copyReportToClipboard() {
+        let currentEvent = appData.events.find(e => e.id == appData.currentEventId);
+        let history = currentEvent ? currentEvent.history : [];
+        if(history.length === 0) {
+            alert('コピーするデータがありません。');
+            return;
+        }
+
+        let totalSales = 0;
+        let itemStats = {};
+        history.forEach(h => {
+            totalSales += h.total;
+            let parts = h.detail.split(', ');
+            parts.forEach(p => {
+                let name = p; let count = 1;
+                let match = p.match(/(.+)x([0-9]+)$/);
+                if(match) { name = match[1]; count = parseInt(match[2]); }
+                if(!itemStats[name]) itemStats[name] = 0;
+                itemStats[name] += count;
+            });
+        });
+
+        // テキストの組み立て
+        let reportText = `【${currentEvent.name} 売上レポート】\n`;
+        reportText += `総売上: ¥${totalSales.toLocaleString()}\n`;
+        reportText += `会計回数: ${history.length}回\n\n`;
+        reportText += `■ 商品別販売数\n`;
+        
+        let sortedItems = Object.keys(itemStats).sort((a,b) => itemStats[b] - itemStats[a]);
+        sortedItems.forEach(itemName => {
+            reportText += `・${itemName} : ${itemStats[itemName]}個\n`;
+        });
+        reportText += `\n#はづきれじ`;
+
+        // クリップボードへコピー
+        navigator.clipboard.writeText(reportText).then(() => {
+            alert('レポートをコピーしました！\nメモ帳やSNSに貼り付けて共有できます。');
+        }).catch(err => {
+            alert('コピーに失敗しました。');
+        });
+    }
+
 </script>
 
 </body>
