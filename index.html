@@ -32,7 +32,7 @@
         
         .item h3 { margin: 4px 0; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .item p { margin: 0; font-weight: bold; color: #e91e63; font-size: 1rem; }
-        .stock { font-size: 0.75rem; color: #666; margin-bottom: 4px; }
+        .stock { font-size: 0.75rem; color: #666; margin-bottom: 4px; font-weight: bold; }
         .sold-out { position: absolute; top:0; left:0; right:0; bottom:0; background: rgba(255,255,255,0.8); display:flex; align-items:center; justify-content:center; font-weight:bold; color:#f44336; font-size:1.1rem; pointer-events:none; border-radius:8px; border: 2px solid #f44336; }
         button.add-btn { background-color: #4CAF50; color: white; border: none; padding: 8px; width: 100%; border-radius: 4px; font-size: 0.9rem; cursor: pointer; margin-top: 2px;}
         
@@ -40,20 +40,17 @@
         .bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 10px 15px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 8px; z-index: 90; }
         .cart-status { display: flex; justify-content: space-between; align-items: center; width: 100%; }
         
-        /* 追加：「戻す」「空」ボタン周り */
         .cart-controls { display: flex; gap: 8px; }
         .action-btn { padding: 8px 12px; border-radius: 4px; border: 1px solid #ccc; background: #f0f0f0; font-size: 0.9rem; cursor: pointer; color: #333; font-weight: bold; }
         
         .checkout-btn { background-color: #2196F3; color: white; border: none; padding: 12px; border-radius: 4px; font-size: 1.1rem; font-weight: bold; width: 100%; cursor: pointer; transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .checkout-btn:disabled { background-color: #ccc; color: #666; }
 
-        /* 入力フォーム・ボタン */
+        /* 入力フォーム・ボタン・リストスタイル */
         h3 { font-size: 1.1rem; margin-bottom: 10px; margin-top: 20px;}
         .form-group { margin-bottom: 10px; }
         .form-group input { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem; }
         .save-btn { background-color: #e91e63; color: white; border: none; padding: 12px; width: 100%; border-radius: 4px; font-size: 1rem; font-weight: bold; cursor: pointer; }
-        
-        /* リストスタイル */
         .list-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 10px; margin-top: 25px; border-bottom: 2px solid #ddd; padding-bottom: 5px;}
         .list-header h3 { margin: 0; }
         .delete-checked-btn { background-color: #607D8B; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 0.85rem; cursor: pointer; }
@@ -61,18 +58,23 @@
         .list-item { background: white; padding: 10px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 10px; }
         .custom-checkbox { width: 20px; height: 20px; accent-color: #e91e63; transform: scale(1.2); }
         .item-info { flex-grow: 1; display: flex; align-items: center; }
-        
-        /* 履歴カード */
         .history-card { background: white; padding: 12px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 10px;}
         .history-content { flex-grow: 1; display: flex; justify-content: space-between; align-items: center; }
         .history-time { font-size: 0.85rem; color: #888; margin-right: 10px; white-space: nowrap; }
         .history-detail { flex-grow: 1; font-size: 0.95rem; margin-right: 10px; }
         .history-price { font-weight:bold; color:#e91e63; white-space: nowrap; font-size: 1.1rem;}
 
-        /* お会計モーダル */
+        /* モーダル共通設定 */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
         .modal-content { background: white; width: 92%; max-width: 400px; border-radius: 12px; padding: 15px 20px; box-sizing: border-box; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
         .modal-title { text-align: center; font-size: 1.2rem; font-weight: bold; margin-top: 0; margin-bottom: 10px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .modal-actions { display: flex; gap: 10px; }
+        .modal-btn { flex: 1; padding: 12px; border: none; border-radius: 6px; font-size: 1.1rem; font-weight: bold; cursor: pointer; }
+        .btn-cancel { background: #e0e0e0; color: #333; }
+        .btn-complete { background: #4CAF50; color: white; }
+        .btn-complete:disabled { background: #a5d6a7; cursor: not-allowed; }
+
+        /* お会計モーダル用 */
         .calc-total { font-size: 1.4rem; text-align: center; margin-bottom: 15px; }
         .calc-total span { font-size: 2rem; font-weight: bold; color: #333; }
         .quick-money-btns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 15px; }
@@ -85,11 +87,14 @@
         .change-display { background: #f8bbd0; padding: 10px; border-radius: 8px; text-align: center; margin-bottom: 15px; }
         .change-display div { font-size: 1rem; color: #880e4f; font-weight: bold; margin-bottom: 5px;}
         .change-display span { font-size: 2.5rem; font-weight: bold; color: #e91e63; }
-        .modal-actions { display: flex; gap: 10px; }
-        .modal-btn { flex: 1; padding: 12px; border: none; border-radius: 6px; font-size: 1.1rem; font-weight: bold; cursor: pointer; }
-        .btn-cancel { background: #e0e0e0; color: #333; }
-        .btn-complete { background: #4CAF50; color: white; }
-        .btn-complete:disabled { background: #a5d6a7; cursor: not-allowed; }
+
+        /* カート確認モーダル用 */
+        .cart-item-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #ddd; padding: 10px 0; }
+        .cart-item-info { flex-grow: 1; }
+        .cart-item-name { font-weight: bold; font-size: 0.95rem; }
+        .cart-item-controls { display: flex; align-items: center; gap: 8px; }
+        .qty-btn { width: 32px; height: 32px; border-radius: 50%; border: none; background: #e0e0e0; font-size: 1.2rem; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; color: #333; touch-action: manipulation; }
+        .qty-num { font-size: 1.1rem; font-weight: bold; width: 24px; text-align: center; }
 
         /* 分析・レポート画面用スタイル */
         .summary-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
@@ -99,7 +104,6 @@
         .summary-card.full-width .label { color: #ffcdd2; }
         .summary-card .value { font-size: 1.4rem; font-weight: bold; }
         .summary-card.full-width .value { font-size: 2.2rem; }
-        
         .stat-list { background: white; border-radius: 8px; padding: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px; }
         .stat-row { display: flex; flex-direction: column; margin-bottom: 12px; border-bottom: 1px dashed #eee; padding-bottom: 8px;}
         .stat-row:last-child { margin-bottom: 0; border-bottom: none; padding-bottom: 0;}
@@ -166,7 +170,6 @@
 
 <div id="analytics" class="tab-content">
     <h2 style="text-align:center; font-size:1.3rem; border-bottom:2px solid #ddd; padding-bottom:10px; margin-top:5px;">📋 イベントレポート</h2>
-
     <div class="summary-cards">
         <div class="summary-card full-width">
             <div class="label">本日の総売上</div>
@@ -181,13 +184,10 @@
             <div class="value">¥<span id="stat-avg-spend">0</span></div>
         </div>
     </div>
-
     <h3>🏆 商品別の販売数</h3>
     <div id="stat-items" class="stat-list"></div>
-
     <h3>⏰ 時間帯別の動向</h3>
     <div id="stat-time" class="stat-list"></div>
-
     <button class="copy-report-btn" onclick="copyReportToClipboard()">📝 テキストで結果をコピー</button>
     <p style="text-align:center; font-size:0.8rem; color:#666; margin-top:10px;">メモ帳とかに貼り付けれるよ。</p>
 </div>
@@ -196,11 +196,25 @@
     <div class="cart-status">
         <div class="cart-controls">
             <button onclick="undoLastCartItem()" class="action-btn">↩️ 戻す</button>
-            <button onclick="clearCart()" class="action-btn">🗑 空</button>
+            <button onclick="openCartModal()" class="action-btn">🛒 カート</button>
         </div>
         <div style="font-size: 1rem; text-align: right;">小計: <span style="font-weight: bold; font-size: 1.3rem;">¥<span id="cart-total">0</span></span></div>
     </div>
     <button class="checkout-btn" id="checkout-btn" onclick="openCheckoutModal()" disabled>会計へ進む</button>
+</div>
+
+<div class="modal-overlay" id="cart-modal">
+    <div class="modal-content">
+        <h2 class="modal-title">🛒 カートの中身</h2>
+        <div id="cart-items-list" style="max-height: 40vh; overflow-y: auto; margin-bottom: 15px;">
+            </div>
+        <div class="modal-actions" style="margin-bottom: 10px;">
+            <button class="modal-btn" style="background:#f44336; color:white; font-size:1rem;" onclick="clearCart()">🗑 カートを空にする</button>
+        </div>
+        <div class="modal-actions">
+            <button class="modal-btn btn-cancel" onclick="closeCartModal()">閉じる</button>
+        </div>
+    </div>
 </div>
 
 <div class="modal-overlay" id="checkout-modal">
@@ -267,8 +281,6 @@
 
     let cart = [];
     let currentCheckoutTotal = 0;
-    
-    // パラパラアニメーション用の変数
     let displayedTotal = 0;
 
     updateEventSelector();
@@ -363,30 +375,29 @@
         event.target.classList.add('active');
         document.getElementById(tabId).classList.add('active');
         document.getElementById('cart-bar').style.display = tabId === 'pos' ? 'flex' : 'none';
-        
         if (tabId === 'analytics') renderAnalytics();
         window.scrollTo(0, 0);
     }
 
+    // --- ★カート・在庫計算ロジック ---
+    // カートに入っている分を差し引いた、現在の「リアルな残り在庫」を計算する
+    function getAvailableStock(itemId) {
+        let currentEvent = appData.events.find(e => e.id == appData.currentEventId);
+        let item = currentEvent.items.find(i => i.id === itemId);
+        if (!item) return 0;
+        let inCartCount = cart.filter(c => c.id === itemId).length;
+        return item.stock - inCartCount;
+    }
+
     // --- 商品画像を吸い込ませるアニメーション処理 ---
-    // 第2引数 onComplete で、着地した瞬間の処理（数字パラパラ）を指示できるように改造しました
     function flyToCart(event, onComplete) {
-        if (!event || !event.target) {
-            if(onComplete) onComplete();
-            return;
-        }
+        if (!event || !event.target) { if(onComplete) onComplete(); return; }
         
         let itemContainer = event.target.closest('.item');
-        if (!itemContainer) {
-            if(onComplete) onComplete();
-            return;
-        }
+        if (!itemContainer) { if(onComplete) onComplete(); return; }
         
         let imgEl = itemContainer.querySelector('img');
-        if (!imgEl) {
-            if(onComplete) onComplete();
-            return;
-        }
+        if (!imgEl) { if(onComplete) onComplete(); return; }
 
         let targetBtn = document.getElementById('checkout-btn');
         let targetRect = targetBtn.getBoundingClientRect();
@@ -408,8 +419,6 @@
         flier.style.transform = 'translate(-50%, -50%)'; 
         flier.style.zIndex = '9999';
         flier.style.pointerEvents = 'none'; 
-        
-        // スローからファースト、スローアウトのベジェ曲線
         flier.style.transition = 'all 0.5s cubic-bezier(0.65, 0, 0.35, 1)';
         
         document.body.appendChild(flier);
@@ -423,26 +432,21 @@
             flier.style.transform = 'translate(-50%, -50%) rotate(360deg)'; 
         }, 10);
 
-        // 0.5秒後、着地した瞬間にコールバック（数字パラパラ）を呼ぶ
         setTimeout(() => {
             flier.remove();
             targetBtn.style.transform = 'scale(1.05)';
-            setTimeout(() => {
-                targetBtn.style.transform = 'scale(1)';
-            }, 100);
-            
-            if (onComplete) onComplete(); // ここで小計が動く
-            
+            setTimeout(() => { targetBtn.style.transform = 'scale(1)'; }, 100);
+            if (onComplete) onComplete(); 
         }, 500);
     }
 
-    // --- ★パラパラアニメーションのロジック ---
+    // --- パラパラアニメーションのロジック ---
     function animateTotalValue(newTotal) {
         let start = displayedTotal;
         let end = newTotal;
         if (start === end) return;
         
-        let duration = 250; // 0.25秒でパラパラ変化する
+        let duration = 250; 
         let startTime = null;
         let obj = document.getElementById('cart-total');
         
@@ -461,13 +465,11 @@
         window.requestAnimationFrame(step);
     }
 
-    // カートの数字をアニメーションつきで更新する関数
     function syncCartTotalAnimated() {
         let total = cart.reduce((sum, item) => sum + item.price, 0);
         animateTotalValue(total);
     }
 
-    // アニメーションなしで即座に更新する関数（空にした時など）
     function syncCartTotalInstant() {
         let total = cart.reduce((sum, item) => sum + item.price, 0);
         document.getElementById('cart-total').innerText = total.toLocaleString();
@@ -484,24 +486,29 @@
     function addToCart(event, itemId) {
         let currentEvent = appData.events.find(e => e.id == appData.currentEventId);
         let item = currentEvent.items.find(i => i.id === itemId);
-        if (item.stock > 0) {
+        
+        // ★修正：リアルタイムの残り在庫をチェック
+        if (getAvailableStock(itemId) > 0) {
             cart.push(item);
-            updateCartButton(); // ボタンの「(1点)」などの文字はすぐに変わる
+            updateCartButton();
             
-            // 画像が飛んでいって、着地したら数字をパラパラさせる
+            // アニメーションを開始し、着地時にパラパラさせる
             flyToCart(event, () => {
                 syncCartTotalAnimated();
             });
+            
+            // ★追加：アニメーション発射後、すぐに表示上の在庫を減らす（完売ならタップできなくなる）
+            renderPos();
             navigator.vibrate && navigator.vibrate(50);
         }
     }
 
-    // ★追加：「1つ戻す」機能
     function undoLastCartItem() {
         if (cart.length > 0) {
-            cart.pop(); // 一番最後に入れた商品を削除
+            cart.pop(); 
             updateCartButton();
-            syncCartTotalAnimated(); // 数字がパラパラと戻る
+            syncCartTotalAnimated(); 
+            renderPos(); // ★在庫の表示を復活させる
             navigator.vibrate && navigator.vibrate(50);
         }
     }
@@ -510,9 +517,90 @@
         if(cart.length > 0 && !confirm('カートの中身を空にしますか？')) return;
         cart = [];
         updateCartButton();
-        syncCartTotalInstant(); // 空にする時は即座に0にする
+        syncCartTotalInstant(); 
+        renderPos(); // ★在庫の表示を完全に復活させる
+        closeCartModal(); // カートモーダルが開いていれば閉じる
     }
 
+    // --- ★新設：カート確認モーダル関連 ---
+    function openCartModal() {
+        if (cart.length === 0) {
+            alert("カートは空です。");
+            return;
+        }
+        renderCartModalItems();
+        document.getElementById('cart-modal').style.display = 'flex';
+    }
+
+    function closeCartModal() {
+        document.getElementById('cart-modal').style.display = 'none';
+    }
+
+    function renderCartModalItems() {
+        let listDiv = document.getElementById('cart-items-list');
+        listDiv.innerHTML = '';
+        
+        // カート内のアイテムを集計
+        let cartMap = {};
+        cart.forEach(item => {
+            if(!cartMap[item.id]) { cartMap[item.id] = { ...item, count: 0 }; }
+            cartMap[item.id].count++;
+        });
+
+        Object.values(cartMap).forEach(cartItem => {
+            let available = getAvailableStock(cartItem.id);
+            // これ以上追加できない場合は「＋」を半透明にして無効化
+            let plusDisabled = available <= 0 ? 'disabled style="opacity:0.3"' : '';
+            
+            listDiv.innerHTML += 
+                '<div class="cart-item-row">' +
+                    '<div class="cart-item-info">' +
+                        '<div class="cart-item-name">' + cartItem.name + '</div>' +
+                        '<div style="font-size: 0.8rem; color: #666;">¥' + cartItem.price.toLocaleString() + '</div>' +
+                    '</div>' +
+                    '<div class="cart-item-controls">' +
+                        '<button class="qty-btn" onclick="decreaseCartItem(' + cartItem.id + ')">－</button>' +
+                        '<div class="qty-num">' + cartItem.count + '</div>' +
+                        '<button class="qty-btn" onclick="increaseCartItem(' + cartItem.id + ')" ' + plusDisabled + '>＋</button>' +
+                    '</div>' +
+                '</div>';
+        });
+    }
+
+    function increaseCartItem(itemId) {
+        let currentEvent = appData.events.find(e => e.id == appData.currentEventId);
+        let item = currentEvent.items.find(i => i.id === itemId);
+        if (getAvailableStock(itemId) > 0) {
+            cart.push(item);
+            renderPos();
+            renderCartModalItems(); // モーダルの数字を更新
+            updateCartButton();
+            syncCartTotalInstant(); // 即時更新
+            navigator.vibrate && navigator.vibrate(50);
+        }
+    }
+
+    function decreaseCartItem(itemId) {
+        // カート配列の後ろから探し、対象の商品を1つだけ消す
+        for (let i = cart.length - 1; i >= 0; i--) {
+            if (cart[i].id === itemId) {
+                cart.splice(i, 1);
+                break;
+            }
+        }
+        renderPos();
+        updateCartButton();
+        syncCartTotalInstant();
+        navigator.vibrate && navigator.vibrate(50);
+        
+        if (cart.length === 0) {
+            closeCartModal();
+        } else {
+            renderCartModalItems();
+        }
+    }
+
+    // --- お会計・お釣り計算関連 ---
     function openCheckoutModal() {
         if (cart.length === 0) return;
         currentCheckoutTotal = cart.reduce((sum, item) => sum + item.price, 0);
@@ -575,6 +663,7 @@
 
         currentEvent.history.unshift({ id: Date.now(), time: timeString, detail: detailString, total: currentCheckoutTotal });
 
+        // ★ここで初めてデータベース上の本当の在庫を減らす
         cart.forEach(cartItem => {
             let item = currentEvent.items.find(i => i.id === cartItem.id);
             if(item && item.stock > 0) item.stock--;
@@ -592,7 +681,7 @@
         cart = [];
         updateCartButton();
         syncCartTotalInstant();
-        renderAll();
+        renderAll(); // 会計が終わって画面をリセット
     }
 
     // --- 商品管理・削除処理 ---
@@ -684,7 +773,10 @@
         }
         
         items.forEach(item => {
-            let isSoldOut = item.stock <= 0;
+            // ★修正：リアルタイムの残り在庫を計算して表示する
+            let availableStock = getAvailableStock(item.id);
+            let isSoldOut = availableStock <= 0;
+            
             let imageClickEvent = isSoldOut ? '' : 'onclick="addToCart(event, ' + item.id + ')"';
             let imageClass = isSoldOut ? '' : 'class="clickable"';
             let buttonStatus = isSoldOut ? 'disabled style="background:#ccc; color:#666;"' : '';
@@ -695,7 +787,7 @@
                     '<img src="' + item.image + '" alt="' + item.name + '" ' + imageClass + ' ' + imageClickEvent + '>' +
                     '<h3>' + item.name + '</h3>' +
                     '<p>¥' + item.price.toLocaleString() + '</p>' +
-                    '<div class="stock">残り: ' + item.stock + '</div>' +
+                    '<div class="stock">残り: ' + availableStock + '</div>' + // リアルタイムの数を表示
                     '<button class="add-btn" onclick="addToCart(event, ' + item.id + ')" ' + buttonStatus + '>追加</button>' +
                     soldOutOverlay +
                 '</div>';
