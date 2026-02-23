@@ -3,214 +3,296 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>かんたんレジ - 高機能版</title>
+    <title>はづきレジ</title>
     <style>
-        body { font-family: sans-serif; margin: 0; padding: 0; background-color: #f4f4f9; color: #333; padding-bottom: 100px; }
+        /* 全体の設定 */
+        body { font-family: sans-serif; margin: 0; padding: 0; background-color: #f4f4f9; color: #333; padding-bottom: 110px; /* カートバーの分空ける */ }
+        
+        /* タブメニュー */
         .tabs { display: flex; background-color: #333; position: sticky; top: 0; z-index: 100; }
-        .tab { flex: 1; text-align: center; padding: 15px; color: white; cursor: pointer; font-weight: bold; }
-        .tab.active { background-color: #e91e63; }
-        .tab-content { display: none; padding: 15px; }
+        .tab { flex: 1; text-align: center; padding: 15px 10px; color: #ccc; cursor: pointer; font-weight: bold; font-size: 0.9rem; transition: background-color 0.2s, color 0.2s; }
+        .tab.active { background-color: #e91e63; color: white; }
+        .tab-content { display: none; padding: 10px; }
         .tab-content.active { display: block; }
         
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .item { background: white; border-radius: 8px; padding: 10px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: relative; }
-        .item img { width: 100%; height: 100px; object-fit: cover; border-radius: 4px; background-color: #e0e0e0; }
-        .item h3 { margin: 5px 0; font-size: 1rem; }
-        .item p { margin: 0; font-weight: bold; color: #e91e63; }
-        .stock { font-size: 0.8rem; color: #666; margin-bottom: 5px; }
-        .sold-out { position: absolute; top:0; left:0; right:0; bottom:0; background: rgba(255,255,255,0.7); display:flex; align-items:center; justify-content:center; font-weight:bold; color:red; font-size:1.2rem; pointer-events:none; border-radius:8px;}
-        button.add-btn { background-color: #4CAF50; color: white; border: none; padding: 10px; width: 100%; border-radius: 4px; font-size: 1rem; cursor: pointer; margin-top: 5px;}
+        /* レジ画面 (コンパクト化) */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .item { background: white; border-radius: 8px; padding: 8px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); position: relative; }
         
-        .bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 15px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 10px; z-index: 100; }
+        /* 画像の全体表示設定 */
+        .item img {
+            width: 100%;
+            height: 90px; /* 固定の高さを少し小さく */
+            object-fit: contain; /* 全体が表示されるように収める */
+            border-radius: 4px;
+            background-color: #f0f0f0; /* 余白部分の背景色 */
+            margin-bottom: 5px;
+        }
+        
+        /* 文字サイズを少し小さく調整 */
+        .item h3 { margin: 4px 0; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .item p { margin: 0; font-weight: bold; color: #e91e63; font-size: 1rem; }
+        .stock { font-size: 0.75rem; color: #666; margin-bottom: 4px; }
+        
+        /* 完売表示 */
+        .sold-out { position: absolute; top:0; left:0; right:0; bottom:0; background: rgba(255,255,255,0.8); display:flex; align-items:center; justify-content:center; font-weight:bold; color:#f44336; font-size:1.1rem; pointer-events:none; border-radius:8px; border: 2px solid #f44336; }
+        
+        /* 追加ボタン */
+        button.add-btn { background-color: #4CAF50; color: white; border: none; padding: 8px; width: 100%; border-radius: 4px; font-size: 0.9rem; cursor: pointer; margin-top: 2px;}
+        
+        /* 下部カートバー */
+        .bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 10px 15px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 8px; z-index: 100; }
         .cart-status { display: flex; justify-content: space-between; align-items: center; }
-        .checkout-btn { background-color: #2196F3; color: white; border: none; padding: 15px; border-radius: 4px; font-size: 1.2rem; font-weight: bold; width: 100%; cursor: pointer; }
-        .checkout-btn:disabled { background-color: #ccc; }
+        .checkout-btn { background-color: #2196F3; color: white; border: none; padding: 12px; border-radius: 4px; font-size: 1.1rem; font-weight: bold; width: 100%; cursor: pointer; }
+        .checkout-btn:disabled { background-color: #ccc; color: #666; }
 
-        .form-group { margin-bottom: 10px; }
-        .form-group input { width: 100%; padding: 8px; box-sizing: border-box; }
-        .save-btn { background-color: #e91e63; color: white; border: none; padding: 10px; width: 100%; border-radius: 4px; font-size: 1rem; margin-bottom: 20px; }
-        .list-item { background: white; padding: 10px; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; align-items: center;}
-        .delete-btn { background-color: #f44336; color: white; border: none; padding: 5px 10px; border-radius: 4px; }
+        /* 設定・履歴画面の共通スタイル */
+        h3 { font-size: 1.1rem; margin-bottom: 15px; }
+        .form-group { margin-bottom: 12px; }
+        .form-group input { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem; }
+        .save-btn { background-color: #e91e63; color: white; border: none; padding: 12px; width: 100%; border-radius: 4px; font-size: 1rem; font-weight: bold; margin-bottom: 25px; cursor: pointer; }
         
-        .history-card { background: white; padding: 10px; margin-bottom: 10px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        .history-time { font-size: 0.8rem; color: #666; }
+        /* リスト表示スタイル */
+        .list-item { background: white; padding: 12px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;}
+        .delete-btn { background-color: #f44336; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 0.9rem;}
+        
+        /* 履歴カードスタイル */
+        .history-card { background: white; padding: 12px; margin-bottom: 10px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; }
+        .history-time { font-size: 0.85rem; color: #888; margin-right: 10px; white-space: nowrap; }
+        .history-detail { flex-grow: 1; font-size: 0.95rem; margin-right: 10px; overflow-wrap: break-word; }
+        .history-price { font-weight:bold; color:#e91e63; white-space: nowrap; font-size: 1.1rem;}
+
+        /* 全データ削除エリア */
+        .danger-zone { margin-top: 40px; padding-top: 20px; border-top: 2px dashed #ffcdd2; }
     </style>
 </head>
 <body>
 
 <div class="tabs">
-    <div class="tab active" onclick="switchTab('pos')">レジ</div>
+    <div class="tab active" onclick="switchTab('pos')">レジ画面</div>
     <div class="tab" onclick="switchTab('settings')">商品設定</div>
     <div class="tab" onclick="switchTab('history')">売上履歴</div>
 </div>
 
 <div id="pos" class="tab-content active">
-    <div class="grid" id="pos-grid"></div>
+    <div class="grid" id="pos-grid">
+        </div>
 </div>
 
 <div id="settings" class="tab-content">
-    <h3>新しい商品を追加</h3>
+    <h3>商品を追加</h3>
     <div class="form-group"><input type="text" id="itemName" placeholder="商品名 (例: 新譜CD)"></div>
-    <div class="form-group"><input type="number" id="itemPrice" placeholder="価格 (例: 1000)" inputmode="numeric" pattern="\d*"></div>
-    <div class="form-group"><input type="number" id="itemStock" placeholder="持ち込み在庫数 (例: 50)" inputmode="numeric" pattern="\d*"></div>
-    <div class="form-group"><input type="file" id="itemImage" accept="image/*"></div>
-    <button class="save-btn" onclick="addNewItem()">＋ 商品を追加する</button>
+    <div class="form-group"><input type="number" id="itemPrice" placeholder="価格 (数字のみ)" inputmode="numeric" pattern="\d*"></div>
+    <div class="form-group"><input type="number" id="itemStock" placeholder="在庫数 (数字のみ)" inputmode="numeric" pattern="\d*"></div>
+    <div class="form-group" style="background: white; padding: 10px; border-radius: 4px;"><input type="file" id="itemImage" accept="image/*"></div>
+    <button class="save-btn" onclick="addNewItem()">＋ 商品を登録</button>
 
-    <h3>登録済みの商品</h3>
-    <div id="settings-list"></div>
+    <h3>登録済み商品リスト</h3>
+    <div id="settings-list" style="background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);"></div>
+
+    <div class="danger-zone">
+        <h3 style="color: #f44336; margin-bottom: 5px;">⚠️ データ管理エリア</h3>
+        <p style="font-size: 0.9rem; color: #666; margin-bottom: 15px;">イベント終了後などに、登録した商品と売上履歴をすべて削除してリセットします。</p>
+        <button class="delete-btn" style="width: 100%; padding: 15px; font-size: 1rem; font-weight: bold; background-color: #d32f2f;" onclick="resetAllData()">全データを初期化する</button>
+    </div>
 </div>
 
 <div id="history" class="tab-content">
-    <h3>本日の売上</h3>
-    <p>合計売上: ¥<span id="history-total-price">0</span></p>
+    <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center;">
+        <h3 style="margin: 0 0 10px 0; font-size: 1rem; color: #666;">本日の売上合計</h3>
+        <div style="font-size: 2rem; font-weight: bold; color: #e91e63;">¥<span id="history-total-price">0</span></div>
+    </div>
+    <h3 style="font-size: 1rem; color: #666;">取引履歴</h3>
     <div id="history-list"></div>
 </div>
 
 <div class="bottom-bar" id="cart-bar">
     <div class="cart-status">
-        <button onclick="clearCart()" style="padding: 5px; border-radius: 4px;">クリア</button>
-        <div style="font-size: 1.2rem; font-weight: bold;">合計: ¥<span id="cart-total">0</span></div>
+        <button onclick="clearCart()" style="padding: 8px 15px; border-radius: 4px; background:#f0f0f0; border:1px solid #ccc; font-size:0.9rem;">カートを空にする</button>
+        <div style="font-size: 1.1rem;">小計: <span style="font-weight: bold; font-size: 1.3rem;">¥<span id="cart-total">0</span></span></div>
     </div>
     <button class="checkout-btn" id="checkout-btn" onclick="checkout()" disabled>会計を確定する</button>
 </div>
 
 <script>
+    // ローカルストレージからデータを読み込み
     let items = JSON.parse(localStorage.getItem('pos_items')) || [];
     let historyData = JSON.parse(localStorage.getItem('pos_history')) || [];
     let cart = [];
 
+    // 初期描画
     renderAll();
 
+    // --- タブ切り替え ---
     function switchTab(tabId) {
         document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
         event.target.classList.add('active');
         document.getElementById(tabId).classList.add('active');
+        // レジ画面以外ではカートバーを隠す
         document.getElementById('cart-bar').style.display = tabId === 'pos' ? 'flex' : 'none';
+        window.scrollTo(0, 0); // タブ切り替え時に上までスクロール
     }
 
+    // --- カート機能 ---
     function addToCart(itemId) {
         let item = items.find(i => i.id === itemId);
         if (item.stock > 0) {
             cart.push(item);
             updateCart();
+            // ボタンを押した感触
+            navigator.vibrate && navigator.vibrate(50);
         }
     }
 
     function updateCart() {
         let total = cart.reduce((sum, item) => sum + item.price, 0);
         document.getElementById('cart-total').innerText = total.toLocaleString();
-        document.getElementById('checkout-btn').disabled = cart.length === 0;
-        document.getElementById('checkout-btn').innerText = `会計を確定 (${cart.length}点)`;
+        let checkoutBtn = document.getElementById('checkout-btn');
+        checkoutBtn.disabled = cart.length === 0;
+        checkoutBtn.innerText = cart.length > 0 ? `会計を確定 (${cart.length}点)` : '会計を確定する';
     }
 
     function clearCart() {
+        if(cart.length > 0 && !confirm('カートの中身を空にしますか？')) return;
         cart = [];
         updateCart();
     }
 
+    // --- 会計処理 ---
     function checkout() {
         if (cart.length === 0) return;
 
         let total = cart.reduce((sum, item) => sum + item.price, 0);
-        let timeString = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        let now = new Date();
+        let timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
         
-        let itemNames = cart.map(i => i.name).join(', ');
-        historyData.unshift({ time: timeString, detail: itemNames, total: total });
+        // 履歴データの作成（同じ商品が複数ある場合はまとめる）
+        let detailMap = {};
+        cart.forEach(item => { detailMap[item.name] = (detailMap[item.name] || 0) + 1; });
+        let detailString = Object.entries(detailMap).map(([name, count]) => count > 1 ? `${name}x${count}` : name).join(', ');
+
+        // データを保存
+        historyData.unshift({ id: Date.now(), time: timeString, detail: detailString, total: total });
         localStorage.setItem('pos_history', JSON.stringify(historyData));
 
+        // 在庫を減らす
         cart.forEach(cartItem => {
             let item = items.find(i => i.id === cartItem.id);
             if(item && item.stock > 0) item.stock--;
         });
         localStorage.setItem('pos_items', JSON.stringify(items));
 
-        alert(`会計が完了しました！\n¥${total.toLocaleString()}`);
-        clearCart();
+        alert(`会計完了！\n合計: ¥${total.toLocaleString()}`);
+        cart = [];
+        updateCart();
         renderAll();
+        window.scrollTo(0, 0);
     }
 
+    // --- 商品管理 ---
     function addNewItem() {
-        let name = document.getElementById('itemName').value;
-        let priceStr = document.getElementById('itemPrice').value;
-        let stockStr = document.getElementById('itemStock').value;
-        
-        // 全角数字を半角に変換する安全対策
-        priceStr = priceStr.replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0));
-        stockStr = stockStr.replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0));
-
-        let price = parseInt(priceStr);
-        let stock = parseInt(stockStr);
+        let nameInput = document.getElementById('itemName');
+        let priceInput = document.getElementById('itemPrice');
+        let stockInput = document.getElementById('itemStock');
         let fileInput = document.getElementById('itemImage');
 
+        let name = nameInput.value;
+        // 全角数字対策
+        let price = parseInt(priceInput.value.replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0)));
+        let stock = parseInt(stockInput.value.replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0)));
+
         if (!name || isNaN(price) || isNaN(stock)) {
-            alert('商品名、価格、在庫数を正しく入力してください。（数字は半角にしてください）');
+            alert('商品名、価格、在庫数を正しく入力してください。');
             return;
         }
 
         let newItem = { id: Date.now(), name, price, stock, image: '' };
 
+        // 登録処理完了後のコールバック
+        const finalizeAddItem = () => {
+            items.push(newItem);
+            saveData();
+            renderAll();
+            // 入力欄をクリア
+            nameInput.value = '';
+            priceInput.value = '';
+            stockInput.value = '';
+            fileInput.value = '';
+            alert(`「${name}」を登録しました！`);
+        };
+
         if (fileInput.files.length > 0) {
+            // 画像ありの場合：圧縮処理
             let reader = new FileReader();
             reader.onload = function(e) {
-                // 画像をリサイズ（圧縮）して容量オーバーを防ぐ処理
                 let img = new Image();
                 img.onload = function() {
                     let canvas = document.createElement('canvas');
                     let ctx = canvas.getContext('2d');
-                    let MAX_WIDTH = 300; // 最大幅を300pxに制限
+                    let MAX_WIDTH = 300; // 幅を300pxにリサイズ
                     let scaleSize = MAX_WIDTH / img.width;
                     canvas.width = MAX_WIDTH;
                     canvas.height = img.height * scaleSize;
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    
-                    // 画質を少し落として保存 (0.7)
+                    // JPEG形式、品質0.7で保存
                     newItem.image = canvas.toDataURL('image/jpeg', 0.7);
-                    
-                    try {
-                        items.push(newItem);
-                        saveAndRender();
-                        alert(`「${name}」を追加しました！`);
-                    } catch (error) {
-                        alert('エラー：画像のデータ容量が大きすぎます。別の画像を選ぶか、画像を無しにして登録してください。');
-                    }
+                    finalizeAddItem();
                 };
                 img.src = e.target.result;
             };
             reader.readAsDataURL(fileInput.files[0]);
         } else {
-            newItem.image = 'https://via.placeholder.com/150?text=No+Image';
-            items.push(newItem);
-            saveAndRender();
-            alert(`「${name}」を追加しました！`);
+            // 画像なしの場合：ダミー画像を設定
+            newItem.image = 'https://placehold.co/300x300/e0e0e0/666666?text=No+Image';
+            finalizeAddItem();
         }
     }
 
     function deleteItem(itemId) {
         if(confirm('この商品を削除しますか？')) {
             items = items.filter(i => i.id !== itemId);
-            saveAndRender();
+            saveData();
+            renderAll();
         }
     }
 
-    function saveAndRender() {
-        localStorage.setItem('pos_items', JSON.stringify(items));
-        document.getElementById('itemName').value = '';
-        document.getElementById('itemPrice').value = '';
-        document.getElementById('itemStock').value = '';
-        document.getElementById('itemImage').value = '';
-        renderAll();
+    // --- 全データ初期化 ---
+    function resetAllData() {
+        if (confirm('【警告】\n本当に全てのデータを削除して初期化しますか？\n\n※登録した商品、売上履歴がすべて消去されます。\n※この操作は取り消せません。')) {
+            if(confirm('念のための再確認です。\n本当に初期化してよろしいですか？')) {
+                localStorage.removeItem('pos_items');
+                localStorage.removeItem('pos_history');
+                items = [];
+                historyData = [];
+                cart = [];
+                renderAll();
+                updateCart();
+                alert('全てのデータを初期化しました。');
+                window.scrollTo(0,0);
+            }
+        }
     }
 
+    function saveData() {
+        localStorage.setItem('pos_items', JSON.stringify(items));
+    }
+
+    // --- 描画処理まとめ ---
     function renderAll() {
         renderPos();
         renderSettings();
         renderHistory();
     }
 
+    // レジ画面の描画
     function renderPos() {
         let grid = document.getElementById('pos-grid');
         grid.innerHTML = '';
+        if (items.length === 0) {
+            grid.innerHTML = '<p style="grid-column: 1 / span 2; text-align: center; color: #666; padding: 20px;">[商品設定]タブから<br>商品を追加してください。</p>';
+            return;
+        }
         items.forEach(item => {
             let isSoldOut = item.stock <= 0;
             grid.innerHTML += `
@@ -218,23 +300,27 @@
                     <img src="${item.image}" alt="${item.name}">
                     <h3>${item.name}</h3>
                     <p>¥${item.price.toLocaleString()}</p>
-                    <div class="stock">残り: ${item.stock}個</div>
-                    <button class="add-btn" onclick="addToCart(${item.id})" ${isSoldOut ? 'disabled style="background:#ccc;"' : ''}>追加</button>
+                    <div class="stock">残り: ${item.stock}</div>
+                    <button class="add-btn" onclick="addToCart(${item.id})" ${isSoldOut ? 'disabled style="background:#ccc; color:#666;"' : ''}>追加</button>
                     ${isSoldOut ? '<div class="sold-out">完売</div>' : ''}
                 </div>
             `;
         });
     }
 
+    // 設定画面リストの描画
     function renderSettings() {
         let list = document.getElementById('settings-list');
         list.innerHTML = '';
         items.forEach(item => {
             list.innerHTML += `
                 <div class="list-item">
-                    <div>
-                        <strong>${item.name}</strong> (¥${item.price})<br>
-                        <span style="font-size:0.8rem; color:#666;">在庫: ${item.stock}</span>
+                    <div style="display: flex; align-items: center;">
+                        <img src="${item.image}" style="width: 40px; height: 40px; object-fit: contain; background: #f0f0f0; border-radius: 4px; margin-right: 10px;">
+                        <div>
+                            <strong>${item.name}</strong><br>
+                            <span style="font-size:0.85rem; color:#666;">¥${item.price.toLocaleString()} / 在庫:${item.stock}</span>
+                        </div>
                     </div>
                     <button class="delete-btn" onclick="deleteItem(${item.id})">削除</button>
                 </div>
@@ -242,6 +328,7 @@
         });
     }
 
+    // 履歴画面の描画
     function renderHistory() {
         let list = document.getElementById('history-list');
         list.innerHTML = '';
@@ -251,8 +338,8 @@
             list.innerHTML += `
                 <div class="history-card">
                     <div class="history-time">${h.time}</div>
-                    <div>${h.detail}</div>
-                    <div style="font-weight:bold; color:#e91e63; text-align:right;">¥${h.total.toLocaleString()}</div>
+                    <div class="history-detail">${h.detail}</div>
+                    <div class="history-price">¥${h.total.toLocaleString()}</div>
                 </div>
             `;
         });
