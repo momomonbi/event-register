@@ -221,7 +221,7 @@
         <div class="form-group" style="background: #f9f9f9; padding: 10px; border-radius: 4px; border:1px solid #ddd;">
             <label>商品画像を選択：</label>
             <img id="edit-image-preview" style="display:none; width: 60px; height: 60px; object-fit: contain; margin-bottom: 5px; border-radius:4px; background:#fff;">
-            <input type="file" id="itemImage" accept="image/*" style="border:none; padding:5px 0; background:transparent;">
+            <input type="file" id="itemImage" accept="image/*" style="border:none; padding:5px 0; background:transparent;" onclick="this.value=null;">
             <div id="image-hint" style="display:none; font-size:0.8rem; color:#888;">※変更しない場合は選択不要です</div>
         </div>
         
@@ -271,7 +271,8 @@
 <div id="map" class="tab-content">
     <div style="display:flex; justify-content:space-between; align-items:center; gap:5px; margin-bottom:5px;">
         <label style="background:var(--btn-checkout); color:white; padding:10px; border-radius:6px; font-size:0.9rem; font-weight:bold; flex-grow:1; text-align:center;">
-            🗺 図面読込 <input type="file" style="display:none;" accept="image/*" onchange="loadMapImage(this)">
+            🗺 図面読込 
+            <input type="file" style="display:none;" accept="image/*" onclick="this.value=null;" onchange="loadMapImage(this)">
         </label>
         <button onclick="deleteMapImage()" style="background:#f44336; color:white; padding:10px; border-radius:6px; font-weight:bold;">🗑 削除</button>
         <button onclick="toggleLabels()" id="label-toggle-btn" style="background:var(--accent-color); color:white; padding:10px; border-radius:6px; font-weight:bold;">👁 文字</button>
@@ -415,7 +416,7 @@
 </div>
 
 <script>
-    // --- データ管理 ---
+    // --- 【堅牢化】データ管理と初期化 ---
     let appData = { currentEventId: Date.now(), events: [], theme: 'default' };
     try {
         const saved = localStorage.getItem('pos_app_data');
@@ -423,7 +424,7 @@
             const parsed = JSON.parse(saved);
             if (parsed && parsed.events && parsed.events.length > 0) appData = parsed;
         }
-    } catch(e) { console.error("データ読み込みエラー"); }
+    } catch(e) { console.error("データ読み込みエラー:", e); }
 
     if (appData.events.length === 0) {
         const initialId = Date.now();
@@ -449,7 +450,21 @@
     renderAll();
     setupMapGestures();
 
-    function saveData() { localStorage.setItem('pos_app_data', JSON.stringify(appData)); }
+    // ★容量上限エラー対策付きの保存関数
+    function saveData() { 
+        try {
+            localStorage.setItem('pos_app_data', JSON.stringify(appData)); 
+            return true;
+        } catch(e) {
+            if (e.name === 'QuotaExceededError' || e.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
+                alert('⚠️ 【データ容量上限エラー】\nブラウザの保存容量（約5MB）がいっぱいです。\n不要な「イベント」や「マップ画像」を削除して容量を空けてください。');
+            } else {
+                alert('データの保存に失敗しました。');
+            }
+            return false;
+        }
+    }
+    
     function changeTheme(name) { appData.theme = name; document.body.setAttribute('data-theme', name); saveData(); }
     
     function updateEventSelector() {
@@ -507,28 +522,25 @@
             if (id === 'analytics') renderAnalytics();
             if (id === 'map') renderMap();
             window.scrollTo(0, 0);
-        } catch(e) {}
+        } catch(e) { console.error("Tab switch error:", e); }
     }
 
-    // --- 【修正】価格入力 ---
+    // --- 価格入力ポップアップ ---
     function openPriceModal() {
         const current = document.getElementById('itemPrice').value;
         document.getElementById('modal-price-input').value = current || '';
         document.getElementById('price-modal').style.display = 'flex';
     }
     function closePriceModal() { document.getElementById('price-modal').style.display = 'none'; }
-    
     function addPriceAmount(amount) {
         const el = document.getElementById('modal-price-input');
         let current = parseInt((el.value||"").replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0))) || 0;
         el.value = current + amount;
     }
-    
     function clearPriceAmount() { document.getElementById('modal-price-input').value = ''; }
-    
     function commitPriceModal() {
         const inputEl = document.getElementById('modal-price-input');
-        inputEl.blur(); // スマホのキーボードを確実に閉じて値を確定させる
+        inputEl.blur(); // キーボードを閉じる
         
         let valStr = inputEl.value || "";
         valStr = valStr.replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0));
@@ -544,39 +556,45 @@
         closePriceModal();
     }
 
-    // --- 【修正】商品登録・編集 ---
+    // --- ★エラー・容量対策を強化した商品登録 ---
     function addNewItem() {
         try {
             const n = document.getElementById('itemName').value;
             let pStr = document.getElementById('itemPrice').value;
             let sStr = document.getElementById('itemStock').value;
             
-            // 全角数字を半角に変換（安全策）
             pStr = (pStr||"").replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0));
             sStr = (sStr||"").replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0));
             
             const p = parseInt(pStr);
             const s = parseInt(sStr);
-            
             const f = document.getElementById('itemImage');
             const editId = document.getElementById('edit-item-id').value;
 
-            // ★不足しているものを的確にアラート
+            // アラートで不足を明示
             if (!n) return alert('商品名を入力してください。');
             if (isNaN(p)) return alert('価格を設定してください。（タップして入力）');
             if (isNaN(s)) return alert('在庫数を入力してください。');
 
             const ev = appData.events.find(e => e.id == appData.currentEventId);
-            if(!ev) return alert("イベントが見つかりません。画面を更新してください。");
+            if(!ev) return alert("イベントが見つかりません。");
 
             const finalize = (img) => {
+                // ロールバック用にバックアップ
+                let backupItems = JSON.stringify(ev.items);
+
                 if (editId) {
                     const item = ev.items.find(i => i.id == editId);
                     if(item) { item.name = n; item.price = p; item.stock = s; if(img) item.image = img; }
                 } else {
-                    ev.items.push({ id: Date.now(), name: n, price: p, stock: s, image: img || 'https://placehold.co/300x300/e0e0e0/666666?text=No+Image' });
+                    ev.items.push({ id: Date.now(), name: n, price: p, stock: s, image: img || 'https://placehold.co/200x200/e0e0e0/666666?text=No+Image' });
                 }
-                saveData(); renderAll(); cancelEdit(); alert('保存しました！');
+                
+                if (saveData()) {
+                    renderAll(); cancelEdit(); alert('保存しました！');
+                } else {
+                    ev.items = JSON.parse(backupItems); // 容量オーバーで保存失敗したら元に戻す
+                }
             };
 
             if (f.files && f.files[0]) {
@@ -585,16 +603,18 @@
                     const img = new Image();
                     img.onload = () => {
                         const c = document.createElement('canvas'); const ctx = c.getContext('2d');
-                        const max = 300; const scale = max / Math.max(img.width, img.height);
+                        const max = 200; // 軽量化のため200pxに制限
+                        const scale = max / Math.max(img.width, img.height);
                         c.width = img.width * (scale < 1 ? scale : 1); c.height = img.height * (scale < 1 ? scale : 1);
                         ctx.drawImage(img, 0, 0, c.width, c.height);
-                        finalize(c.toDataURL('image/jpeg', 0.7));
+                        finalize(c.toDataURL('image/jpeg', 0.5)); // 品質0.5で超軽量化
                     };
                     img.src = e.target.result;
                 };
                 r.readAsDataURL(f.files[0]);
-            } else { finalize(null); }
-            
+            } else {
+                finalize(null); 
+            }
         } catch (error) {
             console.error(error);
             alert("エラーが発生しました。入力を確認してください。");
@@ -760,13 +780,14 @@
         if(navigator.vibrate) navigator.vibrate([100, 50, 100]); 
     }
 
-    // --- マップ機能 ---
+    // --- ★ マップ（図面）機能の超進化 ---
     let mapScale = 1, mapTx = 0, mapTy = 0;
     let isPanning = false, startTx = 0, startTy = 0;
     let initialDist = null, lastScale = 1;
     let isPinMode = false, showLabels = true;
     let isPlacingPin = false; 
 
+    // ★容量対策版 マップ読み込み
     function loadMapImage(input) {
         if (input.files && input.files[0]) {
             const reader = new FileReader();
@@ -774,12 +795,20 @@
                 const img = new Image();
                 img.onload = () => {
                     const c = document.createElement('canvas'); const ctx = c.getContext('2d');
-                    const max = 1500; const scale = max / Math.max(img.width, img.height);
+                    const max = 1000; // 軽量化のため1000pxに制限
+                    const scale = max / Math.max(img.width, img.height);
                     c.width = img.width * (scale < 1 ? scale : 1); c.height = img.height * (scale < 1 ? scale : 1);
                     ctx.drawImage(img, 0, 0, c.width, c.height);
                     const ev = appData.events.find(e => e.id == appData.currentEventId);
-                    ev.mapImage = c.toDataURL('image/jpeg', 0.6);
-                    saveData(); renderMap(); resetMap();
+                    
+                    const backupMap = ev.mapImage;
+                    ev.mapImage = c.toDataURL('image/jpeg', 0.4); // 超軽量化
+                    
+                    if(saveData()) {
+                        renderMap(); resetMap();
+                    } else {
+                        ev.mapImage = backupMap; // 保存失敗したら戻す
+                    }
                 };
                 img.src = e.target.result;
             };
@@ -821,6 +850,7 @@
                 if(p.booth || p.author) {
                     labelHTML = `<div class="pin-label color-${p.color || 'white'}">${p.booth ? p.booth + '<br>' : ''}${p.author}</div>`;
                 }
+                // ★ドット方式でズレを無くし、ラベルを上に配置
                 pinsContainer.innerHTML += `
                     <div class="map-pin-wrap" style="left:${p.x}px; top:${p.y}px;" onclick="openPinModal(${p.id}, ${p.x}, ${p.y}, '${p.booth}', '${p.author}', '${p.memo}', '${p.icon}', '${p.color}')">
                         ${labelHTML}
@@ -926,8 +956,8 @@
             if(!img.src) return;
 
             mag.style.display = 'block';
-            mag.style.left = (touch.clientX - 60) + 'px';
-            mag.style.top = (touch.clientY - 140) + 'px'; 
+            mag.style.left = (touch.clientX - 50) + 'px';
+            mag.style.top = (touch.clientY - 130) + 'px'; 
 
             const rect = img.getBoundingClientRect();
             mag.style.backgroundImage = `url(${img.src})`;
