@@ -16,7 +16,7 @@
         .preset-btn { background-color: #555; color: white; border: none; padding: 8px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.9rem; }
         .preset-btn.primary { background-color: #FFC107; color: #333; }
 
-        /* タブメニュー（4つになったので少し幅を調整） */
+        /* タブメニュー */
         .tabs { display: flex; background-color: #333; position: sticky; top: 0; z-index: 100; }
         .tab { flex: 1; text-align: center; padding: 12px 2px; color: #ccc; cursor: pointer; font-weight: bold; font-size: 0.85rem; transition: 0.2s; white-space: nowrap;}
         .tab.active { background-color: #e91e63; color: white; }
@@ -83,7 +83,7 @@
         .btn-complete { background: #4CAF50; color: white; }
         .btn-complete:disabled { background: #a5d6a7; cursor: not-allowed; }
 
-        /* --- 追加：分析・レポート画面用スタイル --- */
+        /* 分析・レポート画面用スタイル */
         .summary-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
         .summary-card { background: white; padding: 15px; border-radius: 8px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .summary-card.full-width { grid-column: 1 / span 2; background: #e91e63; color: white;}
@@ -175,12 +175,10 @@
     </div>
 
     <h3>🏆 商品別の販売数</h3>
-    <div id="stat-items" class="stat-list">
-        </div>
+    <div id="stat-items" class="stat-list"></div>
 
     <h3>⏰ 時間帯別の動向</h3>
-    <div id="stat-time" class="stat-list">
-        </div>
+    <div id="stat-time" class="stat-list"></div>
 
     <button class="copy-report-btn" onclick="copyReportToClipboard()">📝 テキストで結果をコピー</button>
     <p style="text-align:center; font-size:0.8rem; color:#666; margin-top:10px;">X(Twitter)やメモ帳にそのまま貼り付けられます</p>
@@ -251,7 +249,7 @@
     } else if (appData.events.length < 5) {
         let currentLen = appData.events.length;
         for(let i=1; i<=(5-currentLen); i++) {
-            appData.events.push({ id: Date.now()+i, name: \`イベント\${currentLen+i}\`, items: [], history: [] });
+            appData.events.push({ id: Date.now()+i, name: `イベント${currentLen+i}`, items: [], history: [] });
         }
         saveData();
     }
@@ -352,7 +350,7 @@
         document.getElementById(tabId).classList.add('active');
         document.getElementById('cart-bar').style.display = tabId === 'pos' ? 'flex' : 'none';
         
-        if (tabId === 'analytics') renderAnalytics(); // 分析タブを開いた時に最新データを計算
+        if (tabId === 'analytics') renderAnalytics();
         window.scrollTo(0, 0);
     }
 
@@ -538,7 +536,6 @@
         renderPos();
         renderSettings();
         renderHistory();
-        // 分析タブが開かれている時だけ分析を再描画（パフォーマンスのため）
         if(document.getElementById('analytics').classList.contains('active')) renderAnalytics();
     }
 
@@ -607,45 +604,34 @@
         document.getElementById('history-total-price').innerText = totalSales.toLocaleString();
     }
 
-    // --- ★追加：分析・レポート描画機能 ---
+    // --- 分析・レポート描画機能 ---
     function renderAnalytics() {
         let currentEvent = appData.events.find(e => e.id == appData.currentEventId);
         let history = currentEvent ? currentEvent.history : [];
-        let items = currentEvent ? currentEvent.items : [];
-
         let totalSales = 0;
         let totalTx = history.length;
-
-        // 商品ごとの集計箱を作成
         let itemStats = {};
         let maxSoldCount = 0;
-
-        // 履歴を解析して集計
         let hourlyStats = {};
         let maxHourlySales = 0;
 
         history.forEach(h => {
             totalSales += h.total;
-            
-            // 時間帯の集計 (14:30 -> 14時台)
             let hourStr = h.time.split(':')[0] + '時台';
             if(!hourlyStats[hourStr]) hourlyStats[hourStr] = { sales: 0, count: 0 };
             hourlyStats[hourStr].sales += h.total;
             hourlyStats[hourStr].count += 1;
             if(hourlyStats[hourStr].sales > maxHourlySales) maxHourlySales = hourlyStats[hourStr].sales;
 
-            // 文字列（例: "新譜CDx2, アクキー"）を分解して商品カウント
             let parts = h.detail.split(', ');
             parts.forEach(p => {
                 let name = p;
                 let count = 1;
-                // 後ろに「x数字」がついているか判定
                 let match = p.match(/(.+)x([0-9]+)$/);
                 if(match) {
                     name = match[1];
                     count = parseInt(match[2]);
                 }
-                
                 if(!itemStats[name]) itemStats[name] = 0;
                 itemStats[name] += count;
                 if(itemStats[name] > maxSoldCount) maxSoldCount = itemStats[name];
@@ -653,13 +639,10 @@
         });
 
         let avgSpend = totalTx > 0 ? Math.floor(totalSales / totalTx) : 0;
-
-        // UIへ反映
         document.getElementById('stat-total-rev').innerText = totalSales.toLocaleString();
         document.getElementById('stat-total-tx').innerText = totalTx.toLocaleString();
         document.getElementById('stat-avg-spend').innerText = avgSpend.toLocaleString();
 
-        // 商品ランキングの描画（売れた数が多い順）
         let statItemsDiv = document.getElementById('stat-items');
         statItemsDiv.innerHTML = '';
         let sortedItems = Object.keys(itemStats).sort((a,b) => itemStats[b] - itemStats[a]);
@@ -681,10 +664,8 @@
             });
         }
 
-        // 時間帯別の推移を描画（時間順）
         let statTimeDiv = document.getElementById('stat-time');
         statTimeDiv.innerHTML = '';
-        // 時刻順に並び替え
         let sortedHours = Object.keys(hourlyStats).sort((a, b) => parseInt(a) - parseInt(b));
         
         if(sortedHours.length === 0) {
@@ -705,14 +686,11 @@
         }
     }
 
-    // --- ★追加：レポートテキストをクリップボードにコピー ---
+    // --- レポートテキストコピー機能 ---
     function copyReportToClipboard() {
         let currentEvent = appData.events.find(e => e.id == appData.currentEventId);
         let history = currentEvent ? currentEvent.history : [];
-        if(history.length === 0) {
-            alert('コピーするデータがありません。');
-            return;
-        }
+        if(history.length === 0) return alert('コピーするデータがありません。');
 
         let totalSales = 0;
         let itemStats = {};
@@ -728,7 +706,6 @@
             });
         });
 
-        // テキストの組み立て
         let reportText = `【${currentEvent.name} 売上レポート】\n`;
         reportText += `総売上: ¥${totalSales.toLocaleString()}\n`;
         reportText += `会計回数: ${history.length}回\n\n`;
@@ -740,7 +717,6 @@
         });
         reportText += `\n#はづきれじ`;
 
-        // クリップボードへコピー
         navigator.clipboard.writeText(reportText).then(() => {
             alert('レポートをコピーしました！\nメモ帳やSNSに貼り付けて共有できます。');
         }).catch(err => {
