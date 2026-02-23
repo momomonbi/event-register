@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>はづきれじ</title>
-    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&family=Noto+Sans+JP:wght@400;700&family=Kiwi+Maru:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&family=Noto+Sans+JP:wght@400;700&family=Kiwi+Maru:wght@400;700&family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
     <style>
         /* テーマ設定 */
         :root {
@@ -17,7 +17,7 @@
             --bg-color: #fff0f5; --header-bg: #ffb6c1; --tab-bg: #ffe4e1; --accent-color: #ff69b4;
             --tab-active-bg: #ff69b4; --tab-active-color: #fff;
             --card-bg: #ffffff; --text-color: #5d4037; --btn-checkout: #ff69b4;
-            --app-font: 'M PLUS Rounded 1c', sans-serif; /* 丸みを強調 */
+            --app-font: 'Zen Maru Gothic', sans-serif; /* 最高に丸いフォント */
         }
         [data-theme="chocolate"] {
             --bg-color: #f3e5f5; --header-bg: #3e2723; --tab-bg: #5d4037; --accent-color: #795548;
@@ -115,21 +115,31 @@
         .qty-btn { width: 32px; height: 32px; border-radius: 50%; border: none; background: #eee; font-size: 1.2rem; font-weight: bold; color: #333;}
         .modal-large-btn { width: 100%; padding: 16px; font-size: 1.1rem; font-weight: bold; margin-bottom: 10px; border-radius: 8px;}
 
-        /* マップ関連 */
-        #map-container { width: 100%; height: 60vh; background: #ddd; overflow: hidden; position: relative; border-radius: 8px; touch-action: none; margin-top: 10px; border: 2px solid #ccc;}
+        /* マップ関連のCSS完全最適化 */
+        #map-container { 
+            width: 100%; height: 60vh; background: #ddd; overflow: hidden; position: relative; 
+            border-radius: 8px; margin-top: 10px; border: 2px solid #ccc;
+            -webkit-touch-callout: none; /* iOSメニュー防止 */
+            -webkit-user-select: none;
+            user-select: none;
+        }
         #map-wrapper { position: absolute; transform-origin: 0 0; }
-        .map-pin-wrap { position: absolute; transform: translate(-50%, -100%); cursor: pointer; text-align: center; z-index: 10; }
-        .pin-icon { font-size: 28px; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5)); transition: transform 0.1s; }
-        .map-pin-wrap:active .pin-icon { transform: scale(1.2); }
-        .pin-label { background: rgba(255,255,255,0.95); padding: 3px 6px; border-radius: 4px; font-size: 0.8rem; color: #333; font-weight: bold; white-space: nowrap; border: 1px solid #ccc; margin-top: 2px; box-shadow: 0 1px 3px rgba(0,0,0,0.2); pointer-events: none;}
+        #map-image { pointer-events: none; } /* 画像保存ポップアップ防止 */
         
-        #magnifier {
-            position: fixed; width: 120px; height: 120px; border: 3px solid var(--accent-color); border-radius: 50%;
-            background-color: white; background-repeat: no-repeat; pointer-events: none; display: none; z-index: 2000; box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        .map-pin-wrap { position: absolute; z-index: 10; }
+        .pin-icon { 
+            position: absolute; bottom: 0; left: 50%; transform: translate(-50%, 0); 
+            font-size: 32px; cursor: pointer; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.4)); line-height: 1;
         }
-        #magnifier::after {
-            content: '+'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--accent-color); font-size: 24px; font-weight: bold; text-shadow: 0 0 2px white;
+        .pin-label { 
+            position: absolute; top: 2px; left: 50%; transform: translate(-50%, 0); 
+            background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(3px); /* 半透明＆ぼかし */
+            padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; color: #111; font-weight: bold; 
+            white-space: nowrap; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+            pointer-events: none; /* ★重要：文字はタップをすり抜ける（重なり対策） */
+            line-height: 1.2; text-align: center;
         }
+        #pins-container.hide-labels .pin-label { display: none; }
     </style>
 </head>
 <body data-theme="default">
@@ -233,14 +243,15 @@
         <label style="background:var(--btn-checkout); color:white; padding:10px; border-radius:6px; font-size:0.9rem; font-weight:bold; flex-grow:1; text-align:center;">
             🗺 図面を読込む <input type="file" style="display:none;" accept="image/*" onchange="loadMapImage(this)">
         </label>
-        <button onclick="resetMap()" style="background:#555; color:white; padding:10px; border-radius:6px; font-weight:bold;">視点リセット</button>
+        <button onclick="toggleLabels()" id="label-toggle-btn" style="background:var(--accent-color); color:white; padding:10px; border-radius:6px; font-weight:bold; width:80px;">👁 文字</button>
+        <button onclick="resetMap()" style="background:#555; color:white; padding:10px; border-radius:6px; font-weight:bold;">リセット</button>
     </div>
     <div style="margin-top:10px;">
         <button id="pin-mode-btn" onclick="togglePinMode()" style="width:100%; padding:12px; background:#f0f0f0; border:2px solid #ccc; font-weight:bold; font-size:1rem; color:#333; border-radius:8px;">
             📍 ピン追加モード：【OFF】（地図移動）
         </button>
     </div>
-    <p style="font-size:0.75rem; color:#666; margin:5px 0; line-height:1.3;">※2本指で拡大縮小。ピン追加ONにして地図をタッチして動かすとルーペが出ます。指を離した場所にピンが立ちます。</p>
+    <p style="font-size:0.75rem; color:#666; margin:5px 0; line-height:1.3;">※1本指で移動、2本指で拡大縮小。ピン追加ONの時、マップをタップでピンを立てられます。</p>
     
     <div id="map-container">
         <div id="map-wrapper">
@@ -249,8 +260,6 @@
         </div>
     </div>
 </div>
-
-<div id="magnifier"></div>
 
 <div class="bottom-bar" id="cart-bar">
     <div class="cart-status">
@@ -368,14 +377,12 @@
         }
     } catch(e) { console.error("データ読み込みエラー:", e); }
 
-    // データが空なら初期化
     if (appData.events.length === 0) {
         const initialId = Date.now();
         appData.events.push({ id: initialId, name: "イベント①", items: [], history: [], mapImage: null, pins: [] });
         appData.currentEventId = initialId;
     }
     
-    // データ移行処理（安全策）
     appData.events.forEach(ev => {
         if (!ev.history) ev.history = [];
         if (!ev.items) ev.items = [];
@@ -439,7 +446,6 @@
         }
     }
 
-    // --- 【安全化】タブ切り替え処理 ---
     function switchTab(id) {
         try {
             document.querySelectorAll('.tab, .tab-content').forEach(el => el.classList.remove('active'));
@@ -453,9 +459,7 @@
             if (id === 'analytics') renderAnalytics();
             if (id === 'map') renderMap();
             window.scrollTo(0, 0);
-        } catch(e) {
-            console.error("Tab switch error:", e);
-        }
+        } catch(e) { console.error("Tab switch error:", e); }
     }
 
     // --- 価格入力ポップアップ ---
@@ -482,7 +486,6 @@
         const n = document.getElementById('itemName').value;
         const p = parseInt(document.getElementById('itemPrice').value);
         const sStr = document.getElementById('itemStock').value;
-        // 全角数字対応
         const s = parseInt((sStr||"").replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0)));
         const f = document.getElementById('itemImage');
         const editId = document.getElementById('edit-item-id').value;
@@ -496,7 +499,7 @@
                 const item = ev.items.find(i => i.id == editId);
                 if(item) {
                     item.name = n; item.price = p; item.stock = s; 
-                    if(img) item.image = img; // 新しい画像があれば上書き
+                    if(img) item.image = img; 
                 }
             } else {
                 ev.items.push({ id: Date.now(), name: n, price: p, stock: s, image: img || 'https://placehold.co/300x300/e0e0e0/666666?text=No+Image' });
@@ -519,7 +522,7 @@
             };
             r.readAsDataURL(f.files[0]);
         } else {
-            finalize(null); // 画像変更なし
+            finalize(null); 
         }
     }
 
@@ -533,7 +536,6 @@
         document.getElementById('itemStock').value = item.stock;
         document.getElementById('edit-item-id').value = item.id;
         
-        // 以前の画像を表示
         const preview = document.getElementById('edit-image-preview');
         preview.src = item.image;
         preview.style.display = 'block';
@@ -648,7 +650,7 @@
         currentCheckoutTotal = cart.reduce((s,i)=>s+i.price, 0);
         document.getElementById('modal-total-amount').innerText = currentCheckoutTotal.toLocaleString();
         document.getElementById('tender-input').value = ''; 
-        calculateChange(); // 開いた直後に未入力状態として計算
+        calculateChange(); 
         document.getElementById('checkout-modal').style.display = 'flex';
     }
     function closeCheckoutModal() { document.getElementById('checkout-modal').style.display = 'none'; }
@@ -665,7 +667,7 @@
     function calculateChange() {
         const inputStr = document.getElementById('tender-input').value;
         let t = 0;
-        // 未入力（空欄）の場合はピッタリ預かったものとみなす
+        // 未入力の場合はピッタリ
         if (inputStr === '') {
             t = currentCheckoutTotal; 
         } else {
@@ -683,7 +685,6 @@
             changeEl.innerText = (c < 0 ? Math.abs(c) : c).toLocaleString();
             changeEl.style.color = c < 0 ? '#f44336' : 'var(--accent-color)';
         }
-        // 足りない時だけ disabled
         btn.disabled = (c < 0);
     }
     
@@ -695,15 +696,15 @@
         ev.history.unshift({ id:Date.now(), time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}), detail, total:currentCheckoutTotal });
         cart.forEach(ci => { const i = ev.items.find(x=>x.id==ci.id); if(i) i.stock--; });
         saveData(); closeCheckoutModal(); cart=[]; updateCartButton(); syncCartTotalInstant(); renderAll();
-        if(navigator.vibrate) navigator.vibrate([100, 50, 100]); // 完了のバイブレーション
+        if(navigator.vibrate) navigator.vibrate([100, 50, 100]); 
     }
 
-    // --- マップ（図面）機能：ピンチズーム・ルーペの超改善 ---
+    // --- ★ マップ（図面）機能の超改善 ---
     let mapScale = 1, mapTx = 0, mapTy = 0;
     let isPanning = false, startTx = 0, startTy = 0;
     let initialDist = null, lastScale = 1;
     let isPinMode = false;
-    let isPlacingPin = false;
+    let showLabels = true; // ラベル表示状態
 
     function loadMapImage(input) {
         if (input.files && input.files[0]) {
@@ -725,6 +726,19 @@
         }
     }
 
+    function toggleLabels() {
+        showLabels = !showLabels;
+        const btn = document.getElementById('label-toggle-btn');
+        const container = document.getElementById('pins-container');
+        if(showLabels) {
+            btn.style.background = 'var(--accent-color)'; btn.innerText = '👁 文字';
+            container.classList.remove('hide-labels');
+        } else {
+            btn.style.background = '#888'; btn.innerText = 'ー 隠す';
+            container.classList.add('hide-labels');
+        }
+    }
+
     function renderMap() {
         const ev = appData.events.find(e => e.id == appData.currentEventId);
         const imgEl = document.getElementById('map-image');
@@ -739,9 +753,10 @@
                 if(p.booth || p.author) {
                     labelHTML = `<div class="pin-label">${p.booth ? p.booth + '<br>' : ''}${p.author}</div>`;
                 }
+                // ★ 修正：ピンの先端が x, y に合うようにCSSを調整
                 pinsContainer.innerHTML += `
-                    <div class="map-pin-wrap" style="left:${p.x}px; top:${p.y}px;" onclick="openPinModal(${p.id}, ${p.x}, ${p.y}, '${p.booth}', '${p.author}', '${p.memo}')">
-                        <div class="pin-icon">📍</div>
+                    <div class="map-pin-wrap" style="left:${p.x}px; top:${p.y}px;">
+                        <div class="pin-icon" onclick="openPinModal(${p.id}, ${p.x}, ${p.y}, '${p.booth}', '${p.author}', '${p.memo}')">📍</div>
                         ${labelHTML}
                     </div>`;
             });
@@ -762,103 +777,79 @@
         const btn = document.getElementById('pin-mode-btn');
         if (isPinMode) {
             btn.style.background = '#ffeb3b'; btn.style.borderColor = '#fbc02d';
-            btn.innerText = '📍 ピン追加モード：【ON】（ドラッグで配置）';
+            btn.innerText = '📍 ピン追加モード：【ON】（タップで追加）';
         } else {
             btn.style.background = '#f0f0f0'; btn.style.borderColor = '#ccc';
             btn.innerText = '📍 ピン追加モード：【OFF】（地図移動）';
-            document.getElementById('magnifier').style.display = 'none';
         }
     }
 
     function setupMapGestures() {
         const container = document.getElementById('map-container');
-        const wrapper = document.getElementById('map-wrapper');
-        let lastTouch = null;
+        let touchStartX = 0, touchStartY = 0;
+        let isDrag = false;
 
         container.addEventListener('touchstart', e => {
             if (e.touches.length === 2) {
-                // 2本指ズーム開始
-                isPlacingPin = false;
-                document.getElementById('magnifier').style.display = 'none';
+                isDrag = true;
                 initialDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
                 lastScale = mapScale;
             } else if (e.touches.length === 1) {
-                if (isPinMode) {
-                    if (e.target.closest('.map-pin-wrap')) return; 
-                    isPlacingPin = true;
-                    updateMagnifier(e.touches[0]);
-                } else {
-                    isPanning = true;
-                    startTx = e.touches[0].clientX - mapTx;
-                    startTy = e.touches[0].clientY - mapTy;
-                }
+                isDrag = false;
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+                // 移動の準備
+                isPanning = true;
+                startTx = touchStartX - mapTx;
+                startTy = touchStartY - mapTy;
             }
         }, {passive: false});
 
         container.addEventListener('touchmove', e => {
-            e.preventDefault(); // スクロール防止
+            e.preventDefault(); 
             if (e.touches.length === 2 && initialDist) {
-                // 指の中心を計算
+                isDrag = true;
+                const currentDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+                const newScale = Math.max(0.2, Math.min(lastScale * (currentDist / initialDist), 5));
+                
+                // 指の中心を基準に拡大縮小
                 const cx = (e.touches[0].clientX + e.touches[1].clientX) / 2;
                 const cy = (e.touches[0].clientY + e.touches[1].clientY) / 2;
                 const rect = container.getBoundingClientRect();
                 const pinchX = cx - rect.left;
                 const pinchY = cy - rect.top;
-
-                const currentDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
-                const newScale = Math.max(0.2, Math.min(lastScale * (currentDist / initialDist), 5));
                 
-                // 指の中心を基準に拡大縮小（超改善部分）
                 const ratio = newScale / mapScale;
                 mapTx -= (pinchX - mapTx) * (ratio - 1);
                 mapTy -= (pinchY - mapTy) * (ratio - 1);
                 mapScale = newScale;
-                
                 updateMapTransform();
             } else if (e.touches.length === 1 && isPanning) {
+                const dx = e.touches[0].clientX - touchStartX;
+                const dy = e.touches[0].clientY - touchStartY;
+                if (Math.abs(dx) > 5 || Math.abs(dy) > 5) isDrag = true; // 少しでも動いたらドラッグと判定
+
                 mapTx = e.touches[0].clientX - startTx;
                 mapTy = e.touches[0].clientY - startTy;
                 updateMapTransform();
-            } else if (e.touches.length === 1 && isPlacingPin) {
-                updateMagnifier(e.touches[0]);
             }
         }, {passive: false});
 
         container.addEventListener('touchend', e => {
             if (e.touches.length < 2) initialDist = null;
-            if (e.touches.length === 0) isPanning = false;
+            isPanning = false;
 
-            if (isPlacingPin && lastTouch) {
-                isPlacingPin = false;
-                document.getElementById('magnifier').style.display = 'none';
-                
+            // タップ判定（ドラッグせず、ピン追加モードONの時）
+            if (isPinMode && !isDrag && e.changedTouches.length === 1) {
+                if (e.target.closest('.pin-icon')) return; // 既存ピンのタップは除外
+
+                const touch = e.changedTouches[0];
                 const imgRect = document.getElementById('map-image').getBoundingClientRect();
-                const realX = (lastTouch.clientX - imgRect.left) / mapScale;
-                const realY = (lastTouch.clientY - imgRect.top) / mapScale;
+                const realX = (touch.clientX - imgRect.left) / mapScale;
+                const realY = (touch.clientY - imgRect.top) / mapScale;
                 openPinModal(Date.now(), realX, realY, '', '', '');
-                lastTouch = null;
             }
         });
-
-        function updateMagnifier(touch) {
-            lastTouch = touch;
-            const mag = document.getElementById('magnifier');
-            const img = document.getElementById('map-image');
-            if(!img.src) return;
-
-            mag.style.display = 'block';
-            mag.style.left = (touch.clientX - 60) + 'px';
-            mag.style.top = (touch.clientY - 150) + 'px'; // 指の少し上に表示
-
-            const rect = img.getBoundingClientRect();
-            mag.style.backgroundImage = `url(${img.src})`;
-            const magZoom = 2; // ルーペ内の倍率
-            mag.style.backgroundSize = `${rect.width * magZoom}px ${rect.height * magZoom}px`;
-
-            const relX = touch.clientX - rect.left;
-            const relY = touch.clientY - rect.top;
-            mag.style.backgroundPosition = `-${relX * magZoom - 60}px -${relY * magZoom - 60}px`;
-        }
     }
 
     function openPinModal(id, x, y, booth, author, memo) {
@@ -921,7 +912,7 @@
         const list = document.getElementById('settings-list'); list.innerHTML = '';
         const ev = appData.events.find(e => e.id == appData.currentEventId);
         ev.items.forEach(i => {
-            list.innerHTML += `<div class="list-item"><img src="${i.image}"> <div style="flex-grow:1"><strong>${i.name}</strong><br><span style="color:#666;font-size:0.85rem;">¥${i.price.toLocaleString()} / 在庫:${i.stock}</span></div><button class="list-btn" style="background:#FFC107;" onclick="startEdit(${i.id})">✏️編集</button><button class="list-btn" style="background:#f44336;color:white;" onclick="deleteItem(${i.id})">🗑</button></div>`;
+            list.innerHTML += `<div class="list-item"><img src="${i.image}"> <div style="flex-grow:1"><strong>${i.name}</strong><br><span style="color:#666;font-size:0.85rem;">¥${i.price.toLocaleString()} / 在庫:${i.stock}</span></div><button class="list-btn" style="background:#FFC107; color:#333;" onclick="startEdit(${i.id})">✏️編集</button><button class="list-btn" style="background:#f44336;color:white;" onclick="deleteItem(${i.id})">🗑</button></div>`;
         });
     }
 
@@ -933,7 +924,7 @@
         });
     }
 
-    // --- 【堅牢化】分析バグ修正版 ---
+    // --- 【堅牢化】分析の計算と描画 ---
     function renderAnalytics() {
         const ev = appData.events.find(e => e.id == appData.currentEventId);
         if(!ev) return;
@@ -941,26 +932,23 @@
         
         ev.history.forEach(h => {
             total += h.total;
-            let timeParts = (h.time || "").split(':');
+            let timeParts = String(h.time || "").split(':');
             if(timeParts.length > 0 && timeParts[0]) {
                 const hour = timeParts[0] + '時台';
                 hourMap[hour] = (hourMap[hour]||0) + h.total;
                 if(hourMap[hour] > maxHour) maxHour = hourMap[hour];
             }
             
-            let parts = (h.detail || "").split(',');
+            let parts = String(h.detail || "").split(',');
             parts.forEach(p => {
                 p = p.trim();
                 if(!p) return;
                 let name = p;
                 let count = 1;
-                let lastX = p.lastIndexOf('x');
-                if(lastX !== -1 && lastX < p.length - 1) {
-                    let countStr = p.substring(lastX + 1);
-                    if(!isNaN(countStr)) {
-                        name = p.substring(0, lastX);
-                        count = parseInt(countStr);
-                    }
+                let m = p.match(/(.+)x([0-9]+)$/);
+                if(m) {
+                    name = m[1];
+                    count = parseInt(m[2]);
                 }
                 itemMap[name] = (itemMap[name] || 0) + count;
                 if(itemMap[name] > maxItem) maxItem = itemMap[name];
@@ -971,7 +959,6 @@
         document.getElementById('stat-total-tx').innerText = ev.history.length;
         document.getElementById('stat-avg-spend').innerText = ev.history.length ? Math.floor(total/ev.history.length).toLocaleString() : 0;
         
-        // 履歴タブの売上合計も連動して更新
         if(document.getElementById('history-total-price')) {
             document.getElementById('history-total-price').innerText = total.toLocaleString();
         }
@@ -996,13 +983,11 @@
         let total = 0, itemMap = {};
         ev.history.forEach(h => { 
             total += h.total; 
-            (h.detail || "").split(',').forEach(p => {
+            String(h.detail || "").split(',').forEach(p => {
                 p = p.trim(); if(!p) return;
-                let n = p, c = 1, lastX = p.lastIndexOf('x');
-                if(lastX !== -1 && lastX < p.length - 1) {
-                    let countStr = p.substring(lastX + 1);
-                    if(!isNaN(countStr)) { n = p.substring(0, lastX); c = parseInt(countStr); }
-                }
+                let n = p, c = 1;
+                let m = p.match(/(.+)x([0-9]+)$/);
+                if(m) { n = m[1]; c = parseInt(m[2]); }
                 itemMap[n] = (itemMap[n]||0)+c;
             }); 
         });
