@@ -49,6 +49,10 @@
         .list-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 10px; margin-top: 25px; border-bottom: 2px solid #ddd; padding-bottom: 5px;}
         .list-header h3 { margin: 0; }
         .delete-checked-btn { background-color: #607D8B; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 0.85rem; cursor: pointer; }
+        
+        /* CSV出力ボタン専用スタイル */
+        .export-csv-btn { background-color: #4CAF50; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 0.85rem; cursor: pointer; margin-right: 5px; font-weight: bold; }
+        
         .list-item { background: white; padding: 10px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 10px; }
         .custom-checkbox { width: 20px; height: 20px; accent-color: #e91e63; transform: scale(1.2); }
         .item-info { flex-grow: 1; display: flex; align-items: center; }
@@ -141,7 +145,10 @@
     
     <div class="list-header">
         <h3>取引履歴</h3>
-        <button class="delete-checked-btn" onclick="deleteCheckedHistory()">☑ チェックを削除</button>
+        <div>
+            <button class="export-csv-btn" onclick="exportCSV()">📊 CSV出力</button>
+            <button class="delete-checked-btn" onclick="deleteCheckedHistory()">☑ 削除</button>
+        </div>
     </div>
     <div id="history-list" style="border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);"></div>
 </div>
@@ -197,14 +204,29 @@
             migratedEvents.push({ id: 1, name: "イベント①", items: appData.presets[1].items || [], history: appData.presets[1].history || [] });
             migratedEvents.push({ id: 2, name: "イベント②", items: appData.presets[2].items || [], history: appData.presets[2].history || [] });
             migratedEvents.push({ id: 3, name: "イベント③", items: appData.presets[3].items || [], history: appData.presets[3].history || [] });
+            // 追加分
+            migratedEvents.push({ id: 4, name: "イベント④", items: [], history: [] });
+            migratedEvents.push({ id: 5, name: "イベント⑤", items: [], history: [] });
         } else {
-            migratedEvents.push({ id: Date.now(), name: "最初のイベント", items: [], history: [] });
+            // 初回起動時の初期セットアップ（5つ用意）
+            migratedEvents.push({ id: Date.now(), name: "イベント①", items: [], history: [] });
+            migratedEvents.push({ id: Date.now()+1, name: "イベント②", items: [], history: [] });
+            migratedEvents.push({ id: Date.now()+2, name: "イベント③", items: [], history: [] });
+            migratedEvents.push({ id: Date.now()+3, name: "イベント④", items: [], history: [] });
+            migratedEvents.push({ id: Date.now()+4, name: "イベント⑤", items: [], history: [] });
         }
         
         appData = {
             currentEventId: migratedEvents[0].id,
             events: migratedEvents
         };
+        saveData();
+    } else if (appData.events.length < 5) {
+        // もしデータは引き継がれているが3つしかない場合は5つに拡張
+        let currentLen = appData.events.length;
+        for(let i=1; i<=(5-currentLen); i++) {
+            appData.events.push({ id: Date.now()+i, name: `イベント${currentLen+i}`, items: [], history: [] });
+        }
         saveData();
     }
 
@@ -214,7 +236,7 @@
     updateEventSelector();
     renderAll();
 
-    // --- イベント（プリセット）管理機能 ---
+    // --- イベント管理機能 ---
     function updateEventSelector() {
         let selector = document.getElementById('event-selector');
         selector.innerHTML = '';
@@ -242,27 +264,70 @@
     }
 
     function createNewEvent() {
-        let eventName = prompt('新しいイベントの名前を入力してください\n(例: 春の即売会2026)');
+        let eventName = prompt('新しいイベントの名前を入力してください\n(例: 秋の即売会2026)');
         if (eventName && eventName.trim() !== '') {
             let newEvent = { id: Date.now(), name: eventName.trim(), items: [], history: [] };
-            appData.events.push(newEvent);
+            appData.events.push(newEvent); // 無制限に追加されます
             appData.currentEventId = newEvent.id;
             cart = [];
             saveData();
             updateEventSelector();
             updateCart();
             renderAll();
+            alert(`「${eventName.trim()}」を作成しました！`);
         }
     }
 
     function renameCurrentEvent() {
         let currentEvent = appData.events.find(e => e.id == appData.currentEventId);
-        let newName = prompt('イベント名を変更します', currentEvent.name);
+        let newName = prompt('現在のイベントの名前を変更します', currentEvent.name);
         if (newName && newName.trim() !== '') {
             currentEvent.name = newName.trim();
             saveData();
             updateEventSelector();
         }
+    }
+
+    // --- CSV出力機能 ---
+    function exportCSV() {
+        let currentEvent = appData.events.find(e => e.id == appData.currentEventId);
+        if (!currentEvent || currentEvent.history.length === 0) {
+            alert('出力する売上履歴がありません。');
+            return;
+        }
+
+        // CSVのヘッダー（BOMを付けてExcelでの文字化けを防止）
+        let csvContent = "\uFEFF"; 
+        csvContent += "時間,販売内容,売上金額\n";
+
+        // 履歴データをCSV形式に変換
+        // 古い順に出力したい場合は currentEvent.history.slice().reverse().forEach(...) とします
+        // 今回は表示通り新しいものから順に出力します
+        currentEvent.history.forEach(h => {
+            let time = h.time;
+            let detail = h.detail.replace(/"/g, '""'); // 内容にダブルクォーテーションが含まれていても壊れないようにエスケープ
+            let total = h.total;
+            csvContent += `"${time}","${detail}","${total}"\n`;
+        });
+
+        // CSVファイルを作成してダウンロード
+        let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        let link = document.createElement("a");
+        let url = URL.createObjectURL(blob);
+        
+        // ファイル名を「イベント名_売上記録_日付.csv」にする
+        let dateObj = new Date();
+        let y = dateObj.getFullYear();
+        let m = ('0' + (dateObj.getMonth() + 1)).slice(-2);
+        let d = ('0' + dateObj.getDate()).slice(-2);
+        let fileName = `${currentEvent.name}_売上記録_${y}${m}${d}.csv`;
+
+        link.setAttribute("href", url);
+        link.setAttribute("download", fileName);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     }
 
     // --- タブ切り替え ---
