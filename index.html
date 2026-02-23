@@ -7,92 +7,81 @@
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&family=Noto+Sans+JP:wght@400;700&family=Kiwi+Maru:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
-        /* --- テーマ変数定義 --- */
         :root {
-            --bg-color: #f4f4f9;
-            --header-bg: #222;
-            --tab-bg: #333;
-            --accent-color: #e91e63;
-            --card-bg: #ffffff;
-            --text-color: #333;
-            --btn-add: #4CAF50;
-            --btn-checkout: #2196F3;
+            --bg-color: #f4f4f9; --header-bg: #222; --tab-bg: #333; --accent-color: #e91e63;
+            --card-bg: #ffffff; --text-color: #333; --btn-add: #4CAF50; --btn-checkout: #2196F3;
             --app-font: 'Noto Sans JP', sans-serif;
         }
-
         [data-theme="cute"] {
             --bg-color: #fff0f5; --header-bg: #ffb6c1; --tab-bg: #ffc0cb; --accent-color: #ff69b4;
             --card-bg: #ffffff; --text-color: #5d4037; --btn-add: #ff8fb1; --btn-checkout: #ffb7c5;
             --app-font: 'M PLUS Rounded 1c', sans-serif;
         }
-
         [data-theme="chocolate"] {
             --bg-color: #f3e5f5; --header-bg: #3e2723; --tab-bg: #5d4037; --accent-color: #795548;
             --card-bg: #fff8e1; --text-color: #3e2723; --btn-add: #8d6e63; --btn-checkout: #a1887f;
             --app-font: 'Kiwi Maru', serif;
         }
-
         [data-theme="matcha"] {
             --bg-color: #f1f8e9; --header-bg: #33691e; --tab-bg: #558b2f; --accent-color: #689f38;
             --card-bg: #ffffff; --text-color: #1b5e20; --btn-add: #8bc34a; --btn-checkout: #aed581;
             --app-font: 'Noto Sans JP', sans-serif;
         }
-
         [data-theme="visibility"] {
             --bg-color: #ffffff; --header-bg: #000000; --tab-bg: #1a1a1a; --accent-color: #ffeb3b;
             --card-bg: #ffffff; --text-color: #000000; --btn-add: #000000; --btn-checkout: #0000ff;
             --app-font: sans-serif;
         }
 
-        body { font-family: var(--app-font); margin: 0; padding: 0; background-color: var(--bg-color); color: var(--text-color); padding-bottom: 120px; touch-action: manipulation; transition: background-color 0.3s; }
-        button { touch-action: manipulation; font-family: inherit; cursor: pointer; }
+        body { font-family: var(--app-font); margin: 0; padding: 0; background-color: var(--bg-color); color: var(--text-color); padding-bottom: 120px; touch-action: manipulation; }
         
-        .preset-header { background-color: var(--header-bg); padding: 10px; display: flex; justify-content: space-between; align-items: center; gap: 5px; }
-        .preset-header select { flex-grow: 1; padding: 10px; border-radius: 4px; font-size: 1rem; border: none; font-weight: bold; background: #fff; }
-        .preset-btns { display: flex; gap: 5px; }
-        .preset-btn { background-color: #555; color: white; border: none; padding: 10px 12px; border-radius: 4px; font-weight: bold; font-size: 0.9rem; }
-        .preset-btn.primary { background-color: #FFC107; color: #333; }
-
+        /* ヘッダー・タブ */
+        .preset-header { background-color: var(--header-bg); padding: 8px; display: flex; gap: 5px; align-items: center; }
+        .preset-header select { flex-grow: 1; padding: 10px; border-radius: 6px; font-size: 1rem; border: none; font-weight: bold; }
+        .preset-btn { background-color: #555; color: white; border: none; padding: 10px; border-radius: 6px; font-weight: bold; font-size: 0.8rem; }
+        
         .tabs { display: flex; background-color: var(--tab-bg); position: sticky; top: 0; z-index: 100; }
-        .tab { flex: 1; text-align: center; padding: 15px 2px; color: #ccc; font-weight: bold; font-size: 0.9rem; transition: 0.2s; white-space: nowrap;}
+        .tab { flex: 1; text-align: center; padding: 15px 2px; color: #ccc; cursor: pointer; font-weight: bold; font-size: 0.9rem; white-space: nowrap;}
         .tab.active { background-color: var(--accent-color); color: white; }
-        .tab-content { display: none; padding: 12px; }
+        .tab-content { display: none; padding: 10px; }
         .tab-content.active { display: block; }
-        
+
+        /* レジ画面 */
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .item { background: var(--card-bg); border-radius: 8px; padding: 10px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); position: relative; overflow: hidden; }
-        .item img { width: 100%; height: 100px; object-fit: contain; border-radius: 4px; background-color: #f0f0f0; margin-bottom: 8px; }
-        .item img.clickable { cursor: pointer; }
-        .item h3 { margin: 4px 0; font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .item p { margin: 2px 0; font-weight: bold; color: var(--accent-color); font-size: 1.1rem; }
-        .stock { font-size: 0.8rem; color: #666; margin-bottom: 5px; }
-        .sold-out { position: absolute; top:0; left:0; right:0; bottom:0; background: rgba(255,255,255,0.8); display:flex; align-items:center; justify-content:center; font-weight:bold; color:#f44336; font-size:1.2rem; pointer:none; z-index:5; }
-        button.add-btn { background-color: var(--btn-add); color: white; border: none; padding: 12px; width: 100%; border-radius: 4px; font-size: 1rem; font-weight:bold; }
+        .item { background: var(--card-bg); border-radius: 10px; padding: 10px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: relative; overflow: hidden; }
+        .item img { width: 100%; height: 100px; object-fit: contain; border-radius: 6px; background-color: #f0f0f0; margin-bottom: 5px; }
+        .item h3 { margin: 5px 0; font-size: 0.95rem; }
+        .item p { margin: 0; font-weight: bold; color: var(--accent-color); font-size: 1.1rem; }
+        .stock { font-size: 0.8rem; color: #666; margin-bottom: 6px; }
+        .add-btn { background-color: var(--btn-add); color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; font-size: 1rem; font-weight: bold; }
+        .sold-out { position: absolute; top:0; left:0; right:0; bottom:0; background: rgba(255,255,255,0.8); display:flex; align-items:center; justify-content:center; font-weight:bold; color:red; font-size:1.2rem; pointer-events:none; z-index:5; }
+
+        /* 下部固定バー */
+        .bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 12px 15px; box-shadow: 0 -3px 15px rgba(0,0,0,0.15); z-index: 90; }
+        .cart-status { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .checkout-btn { background-color: var(--btn-checkout); color: white; border: none; padding: 16px; border-radius: 8px; font-size: 1.2rem; font-weight: bold; width: 100%; box-shadow: 0 4px 0 #1976D2; }
+        .checkout-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #1976D2; }
+        .checkout-btn:disabled { background-color: #ccc; box-shadow: none; transform: none; color: #888; }
+
+        /* モーダル */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+        .modal-content { background: white; width: 94%; max-width: 450px; border-radius: 16px; padding: 20px; box-sizing: border-box; max-height: 90vh; overflow-y: auto; }
+        .modal-title { text-align: center; margin: 0 0 15px 0; font-size: 1.3rem; border-bottom: 2px solid #eee; padding-bottom: 10px; }
         
-        .bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 10px 15px; box-shadow: 0 -3px 15px rgba(0,0,0,0.15); display: flex; flex-direction: column; gap: 10px; z-index: 90; }
-        .cart-status { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-        .cart-controls { display: flex; gap: 10px; }
-        .action-btn { padding: 12px 18px; border-radius: 6px; border: 1px solid #ccc; background: #f8f8f8; font-size: 1rem; color: #333; font-weight: bold; }
-        .checkout-btn { background-color: var(--btn-checkout); color: white; border: none; padding: 18px; border-radius: 8px; font-size: 1.2rem; font-weight: bold; width: 100%; transition: transform 0.1s; }
-        .checkout-btn:active { transform: scale(0.98); }
-        .checkout-btn:disabled { background-color: #ccc; color: #888; }
+        /* お会計UI強化 */
+        .money-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .money-btn { background: #e3f2fd; color: #1565c0; border: 1px solid #bbdefb; padding: 18px 5px; border-radius: 10px; font-size: 1.1rem; font-weight: bold; }
+        .tender-wrap { display: flex; align-items: center; gap: 10px; background: #f5f5f5; padding: 10px; border-radius: 10px; margin-bottom: 20px; width: 100%; box-sizing: border-box; }
+        .tender-wrap input { flex-grow: 1; border: none; background: transparent; font-size: 2rem; text-align: right; width: 50%; outline: none; }
+        
+        /* 履歴・リストの調整 */
+        .history-card { background: #fff; padding: 8px 12px; border-radius: 8px; border: 1px solid #eee; display: flex; align-items: center; gap: 10px; margin-bottom: 5px; }
+        .list-item { background: #fff; padding: 10px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 10px; }
+        .edit-btn { background: #FF9800; color: white; border: none; padding: 6px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
 
-        /* リスト・履歴の間隔を修正 */
-        .history-card { background: white; padding: 8px 12px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 10px; color: #333; margin-bottom: 0; }
-        .history-card small { display: block; margin-bottom: 2px; }
-        .history-price { margin-left: auto; font-weight:bold; color:var(--accent-color); font-size: 1.1rem; }
-
-        /* 入力フォーム */
-        .form-group { margin-bottom: 12px; }
-        .form-group input, .form-group select { width: 100%; padding: 14px; box-sizing: border-box; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem; }
-        .save-btn { background-color: var(--accent-color); color: white; border: none; padding: 18px; width: 100%; border-radius: 8px; font-size: 1.1rem; font-weight: bold; }
-
-        /* モーダル関連（はみ出し防止と巨大化） */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; }
-        .modal-content { background: white; width: 95%; max-width: 450px; border-radius: 16px; padding: 20px; box-sizing: border-box; max-height: 90vh; overflow-y: auto; }
-        .money-btn { background: #e0f7fa; color: #00838f; border: 1px solid #b2ebf2; padding: 18px 5px; border-radius: 8px; font-size: 1.1rem; font-weight: bold; }
-        .tender-input-wrap { display: flex; align-items: center; gap: 10px; margin: 15px 0; width: 100%; }
-        .tender-input-wrap input { flex-grow: 1; min-width: 0; padding: 15px; font-size: 2rem; text-align: right; border: 2px solid #ccc; border-radius: 8px; width: 100%; box-sizing: border-box; }
+        /* 分析 */
+        .stat-bar-container { background: #eee; height: 12px; border-radius: 6px; overflow: hidden; margin-top: 4px; }
+        .stat-bar-fill { height: 100%; background: var(--accent-color); transition: width 0.5s; }
     </style>
 </head>
 <body data-theme="default">
@@ -100,16 +89,16 @@
 <div class="preset-header">
     <select id="event-selector" onchange="changeEvent(this.value)"></select>
     <div class="preset-btns">
-        <button class="preset-btn" onclick="renameCurrentEvent()">✏️ 名前</button>
-        <button class="preset-btn primary" onclick="createNewEvent()">➕ 新規</button>
+        <button class="preset-btn" onclick="renameCurrentEvent()">✏️名変</button>
+        <button class="preset-btn primary" onclick="createNewEvent()" style="background:#FFC107; color:#333;">➕新規</button>
     </div>
 </div>
 
 <div class="tabs">
     <div class="tab active" onclick="switchTab('pos')">レジ</div>
     <div class="tab" onclick="switchTab('settings')">商品設定</div>
-    <div class="tab" onclick="switchTab('history')">売上履歴</div>
-    <div class="tab" onclick="switchTab('analytics')">📊 分析</div>
+    <div class="tab" onclick="switchTab('history')">履歴</div>
+    <div class="tab" onclick="switchTab('analytics')">📊分析</div>
 </div>
 
 <div id="pos" class="tab-content active">
@@ -117,129 +106,136 @@
 </div>
 
 <div id="settings" class="tab-content">
-    <h3 style="margin-top:0;">🎨 テーマ切り替え</h3>
     <div class="form-group">
+        <label style="font-size:0.8rem; font-weight:bold;">🎨 テーマ</label>
         <select id="theme-selector" onchange="changeTheme(this.value)">
-            <option value="default">デフォルト（ピンク）</option>
-            <option value="cute">かわいい（パステルピンク）</option>
-            <option value="chocolate">チョコレート（ブラウン）</option>
-            <option value="matcha">抹茶（グリーン）</option>
-            <option value="visibility">見やすさ重視（白黒黄）</option>
+            <option value="default">デフォルト</option>
+            <option value="cute">かわいい</option>
+            <option value="chocolate">チョコレート</option>
+            <option value="matcha">抹茶</option>
+            <option value="visibility">見やすさ重視</option>
         </select>
     </div>
-    <h3>📦 商品の追加</h3>
+    <h3>📦 新規登録</h3>
     <div class="form-group"><input type="text" id="itemName" placeholder="商品名"></div>
     <div class="form-group"><input type="number" id="itemPrice" placeholder="価格" inputmode="numeric"></div>
-    <div class="form-group"><input type="number" id="itemStock" placeholder="持ち込み在庫数" inputmode="numeric"></div>
-    <div class="form-group"><input type="file" id="itemImage" accept="image/*"></div>
-    <button class="save-btn" onclick="addNewItem()">✨ 商品を登録する</button>
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:30px; border-bottom:2px solid #ddd; padding-bottom:10px;">
-        <h3 style="margin:0;">📋 登録済み</h3>
-        <button onclick="deleteCheckedItems()" style="background:#607D8B; color:white; border:none; padding:8px 15px; border-radius:4px;">☑ 削除</button>
+    <div class="form-group"><input type="number" id="itemStock" placeholder="在庫数" inputmode="numeric"></div>
+    <div class="form-group" style="background:#fff; padding:10px; border-radius:8px; border:1px solid #ddd;">
+        <input type="file" id="itemImage" accept="image/*">
+    </div>
+    <button class="save-btn" onclick="addNewItem()">✨ 登録する</button>
+
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:25px; border-bottom:2px solid #ddd;">
+        <h3>📋 商品リスト</h3>
+        <button onclick="deleteCheckedItems()" style="background:#f44336; color:white; border:none; padding:5px 10px; border-radius:4px; font-size:0.8rem;">☑削除</button>
     </div>
     <div id="settings-list" style="margin-top:10px;"></div>
 </div>
 
 <div id="history" class="tab-content">
-    <div style="background: white; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-        <div style="font-size: 0.9rem; color: #666;">このイベントの総売上</div>
+    <div style="background: white; padding: 15px; border-radius: 12px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        <div style="color: #666; font-size: 0.9rem;">現在の売上合計</div>
         <div style="font-size: 2.2rem; font-weight: bold; color: var(--accent-color);">¥<span id="history-total-price">0</span></div>
     </div>
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 25px; border-bottom: 2px solid #ddd; padding-bottom: 10px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px;">
         <h3 style="margin:0;">取引履歴</h3>
-        <div>
-            <button onclick="exportCSV()" style="background:#4CAF50; color:white; border:none; padding:8px 15px; border-radius:4px; font-weight:bold;">📊 CSV</button>
-            <button onclick="deleteCheckedHistory()" style="background:#607D8B; color:white; border:none; padding:8px 15px; border-radius:4px;">☑ 削除</button>
-        </div>
+        <button onclick="exportCSV()" style="background:#4CAF50; color:white; border:none; padding:8px 15px; border-radius:6px; font-weight:bold;">📊 CSV出力</button>
     </div>
-    <div id="history-list" style="margin-top:10px; border-radius:8px; overflow:hidden; background:white;"></div>
+    <div id="history-list" style="margin-top:10px;"></div>
 </div>
 
 <div id="analytics" class="tab-content">
-    <div style="background: var(--accent-color); color:white; padding:25px; border-radius:12px; text-align:center; margin-bottom:20px;">
-        <div style="opacity:0.8; font-size:1rem;">総売上</div>
-        <div style="font-size:2.8rem; font-weight:bold;">¥<span id="stat-total-rev">0</span></div>
+    <div style="background:var(--accent-color); color:white; padding:20px; border-radius:12px; text-align:center; margin-bottom:15px;">
+        <div style="opacity:0.8; font-size:0.9rem;">イベント総売上</div>
+        <div style="font-size:2.5rem; font-weight:bold;">¥<span id="stat-total-rev">0</span></div>
     </div>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:20px;">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
         <div style="background:white; padding:15px; border-radius:10px; text-align:center;">
-            <div style="font-size:0.85rem; color:#666;">会計数</div>
+            <div style="font-size:0.8rem; color:#666;">会計数</div>
             <div style="font-size:1.4rem; font-weight:bold;"><span id="stat-total-tx">0</span>回</div>
         </div>
         <div style="background:white; padding:15px; border-radius:10px; text-align:center;">
-            <div style="font-size:0.85rem; color:#666;">客単価</div>
+            <div style="font-size:0.8rem; color:#666;">客単価</div>
             <div style="font-size:1.4rem; font-weight:bold;">¥<span id="stat-avg-spend">0</span></div>
         </div>
     </div>
-    <h3>🏆 商品別</h3>
-    <div id="stat-items" style="background:white; padding:15px; border-radius:10px; margin-bottom:20px;"></div>
-    <h3>⏰ 時間帯別</h3>
-    <div id="stat-time" style="background:white; padding:15px; border-radius:10px; margin-bottom:20px;"></div>
+    <h3 style="margin-top:25px;">🏆 商品別販売ランキング</h3>
+    <div id="stat-items" style="background:white; padding:15px; border-radius:10px;"></div>
     
-    <button onclick="copyReportToClipboard()" style="background:var(--btn-checkout); color:white; border:none; padding:20px; width:100%; border-radius:10px; font-weight:bold; font-size:1.2rem; margin-bottom:15px;">📝 レポートをコピー</button>
-    <button onclick="clearAnalyticsHistory()" style="background:#f44336; color:white; border:none; padding:15px; width:100%; border-radius:10px; font-weight:bold;">⚠️ このイベントの売上を全消去</button>
-    <p style="text-align:center; font-size:0.85rem; color:#666; margin-top:10px;">メモ帳とかに貼り付けれるよ。</p>
+    <button onclick="clearEventHistory()" style="width:100%; margin-top:30px; padding:15px; background:#f44336; color:white; border:none; border-radius:8px; font-weight:bold;">⚠️ このイベントの全履歴をクリア</button>
+    <button onclick="copyReportToClipboard()" style="width:100%; margin-top:10px; padding:15px; background:var(--btn-checkout); color:white; border:none; border-radius:8px; font-weight:bold;">📝 レポートをコピー</button>
+    <p style="text-align:center; font-size:0.8rem; color:#666; margin-top:8px;">メモ帳とかに貼り付けれるよ。</p>
 </div>
 
 <div class="bottom-bar" id="cart-bar">
     <div class="cart-status">
         <div class="cart-controls">
-            <button onclick="undoLastCartItem()" class="action-btn">↩️ 戻す</button>
-            <button onclick="openCartModal()" class="action-btn">🛒 カート</button>
+            <button onclick="undoLastCartItem()" class="action-btn">↩️戻す</button>
+            <button onclick="openCartModal()" class="action-btn" style="background:var(--accent-color); color:white; border:none;">🛒カート</button>
         </div>
-        <div style="font-size: 1.1rem; text-align: right;">小計: <span style="font-weight: bold; font-size: 1.4rem;">¥<span id="cart-total">0</span></span></div>
+        <div style="text-align: right;">
+            <span style="font-size: 0.8rem; color:#666;">小計</span><br>
+            <span style="font-weight: bold; font-size: 1.4rem; color:var(--accent-color);">¥<span id="cart-total">0</span></span>
+        </div>
     </div>
     <button class="checkout-btn" id="checkout-btn" onclick="openCheckoutModal()" disabled>会計へ進む</button>
 </div>
 
 <div class="modal-overlay" id="cart-modal">
     <div class="modal-content">
-        <h2 style="text-align:center; margin-top:0;">🛒 カートの中身</h2>
-        <div id="cart-items-list" style="margin-bottom: 20px;"></div>
-        <button onclick="openCheckoutModalFromCart()" style="width:100%; padding:18px; background:var(--btn-checkout); color:white; border:none; border-radius:8px; font-size:1.2rem; font-weight:bold; margin-bottom:12px;">💳 お会計へ進む</button>
-        <button onclick="clearCart()" style="width:100%; padding:15px; background:#f44336; color:white; border:none; border-radius:8px; margin-bottom:12px; font-weight:bold;">🗑 カートを空にする</button>
-        <button onclick="closeCartModal()" style="width:100%; padding:15px; background:#ddd; border:none; border-radius:8px; font-weight:bold;">閉じる</button>
+        <h2 class="modal-title">🛒 カートの中身</h2>
+        <div id="cart-items-list" style="margin-bottom:20px;"></div>
+        <button onclick="openCheckoutModal()" class="checkout-btn" style="margin-bottom:10px;">そのままお会計へ</button>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <button onclick="clearCart()" style="padding:15px; background:#ffebee; color:#c62828; border:1px solid #ffcdd2; border-radius:8px; font-weight:bold;">🗑空にする</button>
+            <button onclick="closeCartModal()" style="padding:15px; background:#eee; border:none; border-radius:8px; font-weight:bold;">閉じる</button>
+        </div>
     </div>
 </div>
 
 <div class="modal-overlay" id="checkout-modal">
     <div class="modal-content">
-        <h2 style="text-align:center; margin-top:0;">はづきれじ お会計</h2>
-        <div style="text-align:center; font-size:1.6rem; margin-bottom:20px;">合計: <strong style="font-size:2.2rem;">¥<span id="modal-total-amount">0</span></strong></div>
-        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:20px;">
-            <button class="money-btn" onclick="addTenderAmount(100)">＋100</button>
-            <button class="money-btn" onclick="addTenderAmount(500)">＋500</button>
-            <button class="money-btn" onclick="addTenderAmount(1000)">＋1000</button>
-            <button class="money-btn" onclick="addTenderAmount(5000)">＋5000</button>
-            <button class="money-btn" onclick="addTenderAmount(10000)">＋1万</button>
-            <button class="money-btn" onclick="clearTenderAmount()" style="background:#eee; color:#333;">クリア</button>
-            <button class="money-btn" onclick="setTenderExact()" style="grid-column:span 3; background:#fff3e0; color:#e65100; font-size:1.3rem;">ピッタリお預かり</button>
+        <h2 class="modal-title">はづきれじ お会計</h2>
+        <div style="text-align:center; margin-bottom:20px;">
+            <span style="font-size:1rem; color:#666;">お支払い合計</span><br>
+            <span style="font-size:2.5rem; font-weight:bold;">¥<span id="modal-total-amount">0</span></span>
         </div>
-        <div class="tender-input-wrap">
-            <span style="font-weight:bold;">預かり</span>
+        
+        <div class="money-grid">
+            <button class="money-btn" onclick="addTenderAmount(100)">+100</button>
+            <button class="money-btn" onclick="addTenderAmount(500)">+500</button>
+            <button class="money-btn" onclick="addTenderAmount(1000)">+1000</button>
+            <button class="money-btn" onclick="addTenderAmount(5000)">+5000</button>
+            <button class="money-btn" onclick="addTenderAmount(10000)">+1万</button>
+            <button class="money-btn" onclick="clearTenderAmount()" style="background:#eee; color:#333; border:none;">クリア</button>
+            <button class="money-btn" onclick="setTenderExact()" style="grid-column:span 3; background:#fff3e0; color:#e65100; border-color:#ffe0b2;">ピッタリお預かり</button>
+        </div>
+
+        <div class="tender-wrap">
+            <span style="font-weight:bold; color:#666;">預かり</span>
             <input type="number" id="tender-input" oninput="calculateChange()" inputmode="numeric" placeholder="0">
             <span style="font-weight:bold;">円</span>
         </div>
-        <div style="background:#f8bbd0; padding:20px; border-radius:12px; text-align:center; margin-bottom:20px;">
-            <div style="font-size:1rem; font-weight:bold; margin-bottom:5px;">お釣り</div>
+
+        <div style="background:#fce4ec; padding:15px; border-radius:12px; text-align:center; margin-bottom:20px; border:2px solid var(--accent-color);">
+            <div style="font-size:0.9rem; font-weight:bold; color:var(--accent-color);">お釣り</div>
             <div style="font-size:2.5rem; font-weight:bold; color:var(--accent-color);">¥<span id="change-amount">0</span></div>
         </div>
-        <div style="display:flex; gap:12px;">
-            <button onclick="closeCheckoutModal()" style="flex:1; padding:18px; border:none; background:#ddd; border-radius:8px; font-weight:bold;">やめる</button>
-            <button id="complete-checkout-btn" onclick="executeCheckout()" disabled style="flex:1; padding:18px; border:none; background:#4CAF50; color:white; border-radius:8px; font-weight:bold; font-size:1.1rem;">会計完了</button>
+
+        <div style="display:grid; grid-template-columns:1fr 2fr; gap:10px;">
+            <button onclick="closeCheckoutModal()" style="padding:18px; background:#eee; border:none; border-radius:10px; font-weight:bold;">やめる</button>
+            <button id="complete-checkout-btn" onclick="executeCheckout()" disabled style="padding:18px; background:#4CAF50; color:white; border:none; border-radius:10px; font-weight:bold; font-size:1.2rem;">会計完了！</button>
         </div>
     </div>
 </div>
 
 <script>
-    // --- 初期設定とデータ修復 ---
-    let appData;
-    try { appData = JSON.parse(localStorage.getItem('pos_app_data')); } catch(e){}
-    if (!appData || !appData.events) {
-        const id = Date.now();
-        appData = { currentEventId: id, events: [{ id: id, name: "イベント①", items: [], history: [] }], theme: 'default' };
-        for(let i=1; i<5; i++) appData.events.push({ id: id+i, name: "イベント"+(i+1), items: [], history: [] });
-        saveData();
-    }
+    // --- データ初期化 ---
+    let appData = JSON.parse(localStorage.getItem('pos_app_data')) || {
+        currentEventId: Date.now(),
+        events: [{ id: Date.now(), name: "イベント①", items: [], history: [] }],
+        theme: 'default'
+    };
 
     let cart = [];
     let displayedTotal = 0;
@@ -250,109 +246,164 @@
     renderAll();
 
     function saveData() { localStorage.setItem('pos_app_data', JSON.stringify(appData)); }
-    function changeTheme(n) { appData.theme = n; document.body.setAttribute('data-theme', n); saveData(); }
-    
+
+    // --- 商品編集機能 ---
+    function editItem(itemId) {
+        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        const item = ev.items.find(i => i.id === itemId);
+        if(!item) return;
+
+        const newName = prompt("商品名を変更:", item.name);
+        if(newName === null) return;
+        const newPrice = prompt("価格を変更:", item.price);
+        if(newPrice === null) return;
+        const newStock = prompt("現在の在庫数を入力:", item.stock);
+        if(newStock === null) return;
+
+        item.name = newName || item.name;
+        item.price = parseInt(newPrice) || 0;
+        item.stock = parseInt(newStock) || 0;
+        
+        saveData();
+        renderAll();
+        alert("変更しました！");
+    }
+
+    // --- 履歴クリア ---
+    function clearEventHistory() {
+        if(confirm("このイベントの売上履歴をすべて削除しますか？（在庫数は戻りません）")){
+            const ev = appData.events.find(e => e.id == appData.currentEventId);
+            ev.history = [];
+            saveData();
+            renderAll();
+            alert("クリアしました");
+        }
+    }
+
+    // --- 基本ロジック ---
     function updateEventSelector() {
-        const sel = document.getElementById('event-selector'); sel.innerHTML = '';
+        const sel = document.getElementById('event-selector');
+        sel.innerHTML = '';
         appData.events.forEach(ev => {
-            const opt = document.createElement('option'); opt.value = ev.id; opt.text = ev.name;
-            if(ev.id == appData.currentEventId) opt.selected = true; sel.appendChild(opt);
+            const opt = document.createElement('option');
+            opt.value = ev.id; opt.text = ev.name;
+            if (ev.id == appData.currentEventId) opt.selected = true;
+            sel.appendChild(opt);
         });
     }
 
     function changeEvent(id) {
-        if(cart.length && !confirm('カートを空にして移動しますか？')){ updateEventSelector(); return; }
-        appData.currentEventId = parseInt(id); cart = []; saveData(); syncCartTotalInstant(); updateCartButton(); renderAll();
+        if (cart.length > 0 && !confirm('カートを空にして移動しますか？')) { updateEventSelector(); return; }
+        appData.currentEventId = parseInt(id);
+        cart = []; saveData(); syncCartTotalInstant(); updateCartButton(); renderAll();
     }
 
     function createNewEvent() {
-        const n = prompt('名前を入力');
-        if(n && n.trim()){
-            const ev = { id: Date.now(), name: n.trim(), items: [], history: [] };
-            appData.events.push(ev); appData.currentEventId = ev.id;
-            cart = []; saveData(); updateEventSelector(); syncCartTotalInstant(); updateCartButton(); renderAll();
+        const name = prompt('イベント名を入力');
+        if (name && name.trim()) {
+            const newEv = { id: Date.now(), name: name.trim(), items: [], history: [] };
+            appData.events.push(newEv); appData.currentEventId = newEv.id;
+            cart = []; saveData(); updateEventSelector(); renderAll();
         }
     }
 
     function renameCurrentEvent() {
         const ev = appData.events.find(e => e.id == appData.currentEventId);
-        const n = prompt('名前を変更', ev.name); if(n && n.trim()){ ev.name = n.trim(); saveData(); updateEventSelector(); }
+        const name = prompt('名前を変更', ev.name);
+        if (name && name.trim()) { ev.name = name.trim(); saveData(); updateEventSelector(); }
     }
 
-    function getAvailableStock(id) {
+    function getAvailableStock(itemId) {
         const ev = appData.events.find(e => e.id == appData.currentEventId);
-        const i = ev.items.find(x => x.id === id);
-        return i ? i.stock - cart.filter(c => c.id === id).length : 0;
+        const item = ev.items.find(i => i.id === itemId);
+        return item ? item.stock - cart.filter(c => c.id === itemId).length : 0;
     }
 
     function addNewItem() {
-        const n = document.getElementById('itemName').value, pInput = document.getElementById('itemPrice').value, sInput = document.getElementById('itemStock').value, f = document.getElementById('itemImage');
-        const p = parseInt(pInput.replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))), s = parseInt(sInput.replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0)));
-        if(!n || isNaN(p) || isNaN(s)) return alert('入力を確認してください');
+        const n = document.getElementById('itemName').value;
+        const p = parseInt(document.getElementById('itemPrice').value) || 0;
+        const s = parseInt(document.getElementById('itemStock').value) || 0;
+        const f = document.getElementById('itemImage');
+        if (!n) return alert('名前を入力してください');
+        const ev = appData.events.find(e => e.id == appData.currentEventId);
         const finalize = (img) => {
-            appData.events.find(e => e.id == appData.currentEventId).items.push({ id: Date.now(), name: n, price: p, stock: s, image: img });
-            saveData(); renderAll(); document.getElementById('itemName').value=''; document.getElementById('itemPrice').value=''; document.getElementById('itemStock').value=''; document.getElementById('itemImage').value='';
-            alert('登録完了！');
+            ev.items.push({ id: Date.now(), name: n, price: p, stock: s, image: img });
+            saveData(); renderAll(); document.getElementById('itemName').value='';
         };
-        if(f.files[0]){
-            const reader = new FileReader(); reader.onload = (e) => {
-                const img = new Image(); img.onload = () => {
-                    const canvas = document.createElement('canvas'), ctx = canvas.getContext('2d'), max = 300, scale = max / Math.max(img.width, img.height);
-                    canvas.width = img.width * scale; canvas.height = img.height * scale; ctx.drawImage(img,0,0,canvas.width,canvas.height); finalize(canvas.toDataURL('image/jpeg', 0.7));
-                }; img.src = e.target.result;
-            }; reader.readAsDataURL(f.files[0]);
-        } else finalize('https://placehold.co/300x300/e0e0e0/666666?text=No+Image');
+        if (f.files[0]) {
+            const r = new FileReader();
+            r.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = 300; canvas.height = img.height * (300/img.width);
+                    ctx.drawImage(img,0,0,300,canvas.height);
+                    finalize(canvas.toDataURL('image/jpeg', 0.7));
+                };
+                img.src = e.target.result;
+            };
+            r.readAsDataURL(f.files[0]);
+        } else { finalize('https://placehold.co/300x300/e0e0e0/666666?text=No+Image'); }
     }
 
-    function addToCart(event, id) {
-        if(getAvailableStock(id) <= 0) return;
-        const ev = appData.events.find(e => e.id == appData.currentEventId);
-        const item = ev.items.find(x => x.id === id);
-        cart.push(item); updateCartButton(); flyToCart(event, () => syncCartTotalAnimated()); renderPos();
-        if(navigator.vibrate) navigator.vibrate(50);
+    function addToCart(event, itemId) {
+        if (getAvailableStock(itemId) <= 0) return;
+        const item = appData.events.find(e => e.id == appData.currentEventId).items.find(i => i.id === itemId);
+        cart.push(item); updateCartButton();
+        flyToCart(event, () => syncCartTotalAnimated());
+        renderPos();
     }
 
     function flyToCart(event, callback) {
-        const item = event.target.closest('.item'), img = item ? item.querySelector('img') : null, btn = document.getElementById('checkout-btn');
-        if(!img || !btn){ if(callback) callback(); return; }
-        const rect = img.getBoundingClientRect(), target = btn.getBoundingClientRect();
+        const img = event.target.closest('.item').querySelector('img');
+        const btn = document.getElementById('checkout-btn');
+        const rect = img.getBoundingClientRect();
+        const target = btn.getBoundingClientRect();
         const flier = document.createElement('div');
-        flier.style.cssText = `position:fixed; left:${rect.left}px; top:${rect.top}px; width:${rect.width}px; height:${rect.height}px; background:url(${img.src}) center/contain no-repeat; z-index:9999; pointer-events:none; transition:all 0.5s cubic-bezier(0.65, 0, 0.35, 1);`;
+        flier.style.cssText = `position:fixed; left:${rect.left}px; top:${rect.top}px; width:${rect.width}px; height:${rect.height}px; background-image:url(${img.src}); background-size:contain; background-repeat:no-repeat; z-index:9999; transition:all 0.5s cubic-bezier(0.65, 0, 0.35, 1); pointer-events:none;`;
         document.body.appendChild(flier);
-        setTimeout(() => { flier.style.left = (target.left + target.width/2) + 'px'; flier.style.top = (target.top + target.height/2) + 'px'; flier.style.width='20px'; flier.style.height='20px'; flier.style.opacity='0'; flier.style.transform='translate(-50%,-50%) rotate(360deg)'; }, 10);
-        setTimeout(() => { flier.remove(); btn.style.transform='scale(1.1)'; setTimeout(()=>btn.style.transform='scale(1)',100); if(callback) callback(); }, 500);
+        setTimeout(() => {
+            flier.style.left = (target.left + target.width/2) + 'px';
+            flier.style.top = (target.top + target.height/2) + 'px';
+            flier.style.width = '20px'; flier.style.height = '20px'; flier.style.opacity = '0';
+        }, 10);
+        setTimeout(() => { flier.remove(); if(callback) callback(); }, 500);
     }
 
     function animateTotalValue(end) {
-        const start = displayedTotal, duration = 250, obj = document.getElementById('cart-total'); let startTime = null;
-        const step = (t) => { if(!startTime) startTime = t; const prog = Math.min((t-startTime)/duration, 1); const val = Math.floor(prog*(end-start)+start); obj.innerText = val.toLocaleString(); if(prog<1) window.requestAnimationFrame(step); else { obj.innerText=end.toLocaleString(); displayedTotal=end; } };
+        const start = displayedTotal; const duration = 250; let startTime = null;
+        const step = (t) => {
+            if(!startTime) startTime = t;
+            const progress = Math.min((t - startTime) / duration, 1);
+            const val = Math.floor(progress * (end - start) + start);
+            document.getElementById('cart-total').innerText = val.toLocaleString();
+            if(progress < 1) window.requestAnimationFrame(step);
+            else { document.getElementById('cart-total').innerText = end.toLocaleString(); displayedTotal = end; }
+        };
         window.requestAnimationFrame(step);
     }
 
     function syncCartTotalAnimated() { animateTotalValue(cart.reduce((s,i)=>s+i.price, 0)); }
     function syncCartTotalInstant() { const t = cart.reduce((s,i)=>s+i.price, 0); document.getElementById('cart-total').innerText = t.toLocaleString(); displayedTotal = t; }
-    function updateCartButton() { const b = document.getElementById('checkout-btn'); b.disabled = !cart.length; b.innerText = cart.length ? "会計へ進む ("+cart.length+"点)" : "会計へ進む"; }
+    function updateCartButton() { const b = document.getElementById('checkout-btn'); b.disabled = !cart.length; b.innerText = cart.length ? `会計へ進む (${cart.length}点)` : "会計へ進む"; }
+
     function undoLastCartItem() { if(cart.length){ cart.pop(); updateCartButton(); syncCartTotalAnimated(); renderPos(); } }
-    
     function openCartModal() { if(cart.length){ renderCartModalItems(); document.getElementById('cart-modal').style.display='flex'; } }
     function closeCartModal() { document.getElementById('cart-modal').style.display='none'; }
-    function openCheckoutModalFromCart() { closeCartModal(); setTimeout(openCheckoutModal, 300); }
-
+    
     function renderCartModalItems() {
         const list = document.getElementById('cart-items-list'); list.innerHTML = '';
         const map = {}; cart.forEach(i => { if(!map[i.id]) map[i.id] = {...i, count:0}; map[i.id].count++; });
         Object.values(map).forEach(i => {
-            const avail = getAvailableStock(i.id);
-            list.innerHTML += `<div style="display:flex; justify-content:space-between; align-items:center; padding:15px 0; border-bottom:1px dashed #ccc;"><div><strong>${i.name}</strong><br>¥${i.price.toLocaleString()}</div><div style="display:flex; align-items:center; gap:15px;"><button onclick="modifyQty(${i.id},-1)" style="width:40px;height:40px;border-radius:50%;border:none;font-size:1.5rem;">-</button><b style="font-size:1.2rem;">${i.count}</b><button onclick="modifyQty(${i.id},1)" ${avail<=0?'disabled style="opacity:0.3"':''} style="width:40px;height:40px;border-radius:50%;border:none;font-size:1.5rem;">+</button></div></div>`;
+            list.innerHTML += `<div style="display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid #eee;"><div><b>${i.name}</b><br>¥${i.price}</div><div style="display:flex; align-items:center; gap:12px;"><button onclick="modifyQty(${i.id},-1)" style="width:35px;height:35px;border-radius:50%; border:1px solid #ddd;">-</button><b>${i.count}</b><button onclick="modifyQty(${i.id},1)" ${getAvailableStock(i.id)<=0?'disabled':''} style="width:35px;height:35px;border-radius:50%; border:1px solid #ddd;">+</button></div></div>`;
         });
     }
-
     function modifyQty(id, delta) {
         if(delta > 0) cart.push(appData.events.find(e=>e.id==appData.currentEventId).items.find(x=>x.id==id));
         else { for(let i=cart.length-1; i>=0; i--) if(cart[i].id==id){ cart.splice(i,1); break; } }
         renderPos(); updateCartButton(); syncCartTotalInstant(); if(!cart.length) closeCartModal(); else renderCartModalItems();
     }
-
     function clearCart() { if(confirm('空にしますか？')){ cart=[]; updateCartButton(); syncCartTotalInstant(); renderPos(); closeCartModal(); } }
 
     function openCheckoutModal() {
@@ -360,12 +411,12 @@
         document.getElementById('modal-total-amount').innerText = currentCheckoutTotal.toLocaleString();
         document.getElementById('tender-input').value = ''; calculateChange();
         document.getElementById('checkout-modal').style.display = 'flex';
+        closeCartModal();
     }
     function closeCheckoutModal() { document.getElementById('checkout-modal').style.display = 'none'; }
     function addTenderAmount(a) { const el = document.getElementById('tender-input'); el.value = (parseInt(el.value) || 0) + a; calculateChange(); }
     function clearTenderAmount() { document.getElementById('tender-input').value = ''; calculateChange(); }
     function setTenderExact() { document.getElementById('tender-input').value = currentCheckoutTotal; calculateChange(); }
-    
     function calculateChange() {
         const t = parseInt(document.getElementById('tender-input').value) || 0;
         const c = t - currentCheckoutTotal;
@@ -380,57 +431,57 @@
         const detail = Object.entries(map).map(([n,c]) => c>1 ? n+"x"+c : n).join(', ');
         ev.history.unshift({ id:Date.now(), time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}), detail, total:currentCheckoutTotal });
         cart.forEach(ci => { const i = ev.items.find(x=>x.id==ci.id); if(i) i.stock--; });
-        saveData(); closeCheckoutModal(); alert('完了！'); cart=[]; updateCartButton(); syncCartTotalInstant(); renderAll();
+        saveData(); closeCheckoutModal(); alert('会計完了！'); cart=[]; updateCartButton(); syncCartTotalInstant(); renderAll();
     }
 
     function renderPos() {
-        const grid = document.getElementById('pos-grid'), ev = appData.events.find(e => e.id == appData.currentEventId);
-        grid.innerHTML = '';
-        if(!ev.items.length) { grid.innerHTML = '<p style="grid-column:1/span 2; text-align:center; padding:40px; color:#666;">[商品設定]から<br>商品を登録してください</p>'; return; }
+        const grid = document.getElementById('pos-grid'); grid.innerHTML = '';
+        const ev = appData.events.find(e => e.id == appData.currentEventId);
         ev.items.forEach(i => {
             const avail = getAvailableStock(i.id);
             grid.innerHTML += `<div class="item"><img src="${i.image}" class="${avail>0?'clickable':''}" ${avail>0?`onclick="addToCart(event,${i.id})"`:''}><h3>${i.name}</h3><p>¥${i.price.toLocaleString()}</p><div class="stock">残り: ${avail}</div><button class="add-btn" onclick="addToCart(event,${i.id})" ${avail<=0?'disabled':''}>追加</button>${avail<=0?'<div class="sold-out">完売</div>':''}</div>`;
         });
     }
-
     function renderSettings() {
-        const list = document.getElementById('settings-list'), ev = appData.events.find(e => e.id == appData.currentEventId);
-        list.innerHTML = '';
-        ev.items.forEach(i => { list.innerHTML += `<div class="list-item"><input type="checkbox" class="item-checkbox" value="${i.id}"><img src="${i.image}" style="width:50px;height:50px;object-fit:contain;border-radius:4px;background:#eee;"><div><strong>${i.name}</strong><br><small>¥${i.price} / 在庫:${i.stock}</small></div></div>`; });
-    }
-
-    function renderHistory() {
-        const list = document.getElementById('history-list'), ev = appData.events.find(e => e.id == appData.currentEventId);
-        list.innerHTML = ''; let t = 0;
-        ev.history.forEach(h => {
-            t += h.total;
-            list.innerHTML += `<div class="history-card"><input type="checkbox" class="history-checkbox" value="${h.id}"><div><small style="color:#888;">${h.time}</small><div>${h.detail}</div></div><div class="history-price">¥${h.total.toLocaleString()}</div></div>`;
+        const list = document.getElementById('settings-list'); list.innerHTML = '';
+        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        ev.items.forEach(i => {
+            list.innerHTML += `<div class="list-item"><input type="checkbox" class="item-checkbox" value="${i.id}"><img src="${i.image}" style="width:40px;height:40px;object-fit:contain;border-radius:4px;background:#eee;"><div style="flex-grow:1;"><b>${i.name}</b><br><small>¥${i.price} / 在庫:${i.stock}</small></div><button class="edit-btn" onclick="editItem(${i.id})">編集</button></div>`;
         });
-        document.getElementById('history-total-price').innerText = t.toLocaleString();
     }
-
+    function renderHistory() {
+        const list = document.getElementById('history-list'); list.innerHTML = '';
+        let total = 0;
+        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        ev.history.forEach(h => {
+            total += h.total;
+            list.innerHTML += `<div class="history-card"><input type="checkbox" class="history-checkbox" value="${h.id}"><div><small style="color:#888;">${h.time}</small><div>${h.detail}</div></div><div style="margin-left:auto; font-weight:bold; color:var(--accent-color);">¥${h.total.toLocaleString()}</div></div>`;
+        });
+        document.getElementById('history-total-price').innerText = total.toLocaleString();
+    }
     function renderAnalytics() {
         const ev = appData.events.find(e => e.id == appData.currentEventId);
-        let rev = 0, itemMap = {}, hourMap = {}, maxI = 0, maxH = 0;
+        let total = 0, itemMap = {}, hourMap = {}, maxItem = 0, maxHour = 0;
         ev.history.forEach(h => {
-            rev += h.total; const hour = h.time.split(':')[0] + '時台'; hourMap[hour] = (hourMap[hour]||0) + h.total; if(hourMap[hour]>maxH) maxH = hourMap[hour];
-            h.detail.split(', ').forEach(p => { const m = p.match(/(.+)x([0-9]+)$/), n = m?m[1]:p, c = m?parseInt(m[2]):1; itemMap[n] = (itemMap[n]||0)+c; if(itemMap[n]>maxI) maxI = itemMap[n]; });
+            total += h.total;
+            const hour = h.time.split(':')[0] + '時';
+            hourMap[hour] = (hourMap[hour]||0) + h.total;
+            if(hourMap[hour] > maxHour) maxHour = hourMap[hour];
+            h.detail.split(', ').forEach(p => {
+                const m = p.match(/(.+)x([0-9]+)$/), n = m?m[1]:p, c = m?parseInt(m[2]):1;
+                itemMap[n] = (itemMap[n]||0)+c; if(itemMap[n]>maxItem) maxItem = itemMap[n];
+            });
         });
-        document.getElementById('stat-total-rev').innerText = rev.toLocaleString();
+        document.getElementById('stat-total-rev').innerText = total.toLocaleString();
         document.getElementById('stat-total-tx').innerText = ev.history.length;
-        document.getElementById('stat-avg-spend').innerText = ev.history.length ? Math.floor(rev/ev.history.length).toLocaleString() : 0;
+        document.getElementById('stat-avg-spend').innerText = ev.history.length ? Math.floor(total/ev.history.length).toLocaleString() : 0;
         const idiv = document.getElementById('stat-items'); idiv.innerHTML = '';
-        Object.keys(itemMap).sort((a,b)=>itemMap[b]-itemMap[a]).forEach(n => { idiv.innerHTML += `<div style="margin-bottom:12px;">${n} (${itemMap[n]}個)<div style="background:#eee; height:10px; border-radius:5px; overflow:hidden; margin-top:4px;"><div style="background:var(--accent-color); height:100%; width:${(itemMap[n]/maxI)*100}%"></div></div></div>`; });
-        const hdiv = document.getElementById('stat-time'); hdiv.innerHTML = '';
-        Object.keys(hourMap).sort((a,b)=>parseInt(a)-parseInt(b)).forEach(h => { hdiv.innerHTML += `<div style="margin-bottom:12px;">${h} (¥${hourMap[h].toLocaleString()})<div style="background:#eee; height:10px; border-radius:5px; overflow:hidden; margin-top:4px;"><div style="background:var(--btn-checkout); height:100%; width:${(hourMap[h]/maxH)*100}%"></div></div></div>`; });
+        Object.keys(itemMap).sort((a,b)=>itemMap[b]-itemMap[a]).forEach(n => {
+            idiv.innerHTML += `<div style="margin-bottom:12px;"><div style="display:flex;justify-content:space-between;"><span>${n}</span><b>${itemMap[n]}個</b></div><div class="stat-bar-container"><div class="stat-bar-fill" style="width:${(itemMap[n]/maxItem)*100}%"></div></div></div>`;
+        });
     }
 
-    function clearAnalyticsHistory() {
-        if(confirm('このイベントの売上履歴を完全に削除しますか？（商品データは残ります）')){
-            const ev = appData.events.find(e => e.id == appData.currentEventId);
-            ev.history = []; saveData(); renderAll(); alert('削除しました');
-        }
-    }
+    function renderAll() { renderPos(); renderSettings(); renderHistory(); if(document.getElementById('analytics').classList.contains('active')) renderAnalytics(); }
 
     function switchTab(id) {
         document.querySelectorAll('.tab, .tab-content').forEach(el => el.classList.remove('active'));
@@ -462,6 +513,7 @@
         const link = document.createElement('a'); link.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
         link.download = `${ev.name}_売上.csv`; link.click();
     }
+    function changeTheme(name) { appData.theme = name; document.body.setAttribute('data-theme', name); saveData(); }
     function copyReportToClipboard() {
         const ev = appData.events.find(e => e.id == appData.currentEventId);
         let total = 0, itemMap = {};
@@ -472,7 +524,7 @@
         if(!ev.history.length) return alert('データがありません');
         let txt = `【${ev.name} 売上レポート】\n総売上: ¥${total.toLocaleString()}\n会計回数: ${ev.history.length}回\n\n■ 商品別販売数\n` + 
                   Object.keys(itemMap).sort((a,b) => itemMap[b]-itemMap[a]).map(n=>`・${n} : ${itemMap[n]}個`).join("\n") + "\n\n#はづきれじ";
-        navigator.clipboard.writeText(txt).then(()=>alert('レポートをコピーしました！\nメモ帳とかに貼り付けれるよ。'));
+        navigator.clipboard.writeText(txt).then(()=>alert('レポートをコピーしました！'));
     }
 </script>
 
