@@ -38,7 +38,12 @@
         
         /* カートバー */
         .bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 10px 15px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 8px; z-index: 90; }
-        .cart-status { display: flex; justify-content: space-between; align-items: center; }
+        .cart-status { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        
+        /* 追加：「戻す」「空」ボタン周り */
+        .cart-controls { display: flex; gap: 8px; }
+        .action-btn { padding: 8px 12px; border-radius: 4px; border: 1px solid #ccc; background: #f0f0f0; font-size: 0.9rem; cursor: pointer; color: #333; font-weight: bold; }
+        
         .checkout-btn { background-color: #2196F3; color: white; border: none; padding: 12px; border-radius: 4px; font-size: 1.1rem; font-weight: bold; width: 100%; cursor: pointer; transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .checkout-btn:disabled { background-color: #ccc; color: #666; }
 
@@ -189,8 +194,11 @@
 
 <div class="bottom-bar" id="cart-bar">
     <div class="cart-status">
-        <button onclick="clearCart()" style="padding: 8px 15px; border-radius: 4px; background:#f0f0f0; border:1px solid #ccc; font-size:0.9rem;">空にする</button>
-        <div style="font-size: 1.1rem;">小計: <span style="font-weight: bold; font-size: 1.3rem;">¥<span id="cart-total">0</span></span></div>
+        <div class="cart-controls">
+            <button onclick="undoLastCartItem()" class="action-btn">↩️ 戻す</button>
+            <button onclick="clearCart()" class="action-btn">🗑 空</button>
+        </div>
+        <div style="font-size: 1rem; text-align: right;">小計: <span style="font-weight: bold; font-size: 1.3rem;">¥<span id="cart-total">0</span></span></div>
     </div>
     <button class="checkout-btn" id="checkout-btn" onclick="openCheckoutModal()" disabled>会計へ進む</button>
 </div>
@@ -259,6 +267,9 @@
 
     let cart = [];
     let currentCheckoutTotal = 0;
+    
+    // パラパラアニメーション用の変数
+    let displayedTotal = 0;
 
     updateEventSelector();
     renderAll();
@@ -286,7 +297,8 @@
         appData.currentEventId = parseInt(eventId);
         cart = [];
         saveData();
-        updateCart();
+        updateCartButton();
+        syncCartTotalInstant();
         renderAll();
     }
 
@@ -299,7 +311,8 @@
             cart = [];
             saveData();
             updateEventSelector();
-            updateCart();
+            updateCartButton();
+            syncCartTotalInstant();
             renderAll();
             alert("「" + eventName.trim() + "」を作成しました！");
         }
@@ -355,27 +368,33 @@
         window.scrollTo(0, 0);
     }
 
-    // --- ★追加：商品画像を吸い込ませるアニメーション処理 ---
-    function flyToCart(event) {
-        if (!event || !event.target) return;
+    // --- 商品画像を吸い込ませるアニメーション処理 ---
+    // 第2引数 onComplete で、着地した瞬間の処理（数字パラパラ）を指示できるように改造しました
+    function flyToCart(event, onComplete) {
+        if (!event || !event.target) {
+            if(onComplete) onComplete();
+            return;
+        }
         
-        // タップされた要素の枠（親要素）から、表示されている商品画像を探す
         let itemContainer = event.target.closest('.item');
-        if (!itemContainer) return;
+        if (!itemContainer) {
+            if(onComplete) onComplete();
+            return;
+        }
         
         let imgEl = itemContainer.querySelector('img');
-        if (!imgEl) return;
+        if (!imgEl) {
+            if(onComplete) onComplete();
+            return;
+        }
 
-        // ゴール地点（「会計へ進む」ボタン）の位置を計算
         let targetBtn = document.getElementById('checkout-btn');
         let targetRect = targetBtn.getBoundingClientRect();
         
-        // スタート地点（商品画像）の位置とサイズを計算
         let rect = imgEl.getBoundingClientRect();
         let startX = rect.left + rect.width / 2;
         let startY = rect.top + rect.height / 2;
 
-        // 飛んでいく分身（クローン画像）を作成
         let flier = document.createElement('div');
         flier.style.position = 'fixed';
         flier.style.left = startX + 'px';
@@ -386,59 +405,112 @@
         flier.style.backgroundSize = 'contain';
         flier.style.backgroundPosition = 'center';
         flier.style.backgroundRepeat = 'no-repeat';
-        flier.style.transform = 'translate(-50%, -50%)'; // 中心基準に設定
+        flier.style.transform = 'translate(-50%, -50%)'; 
         flier.style.zIndex = '9999';
-        flier.style.pointerEvents = 'none'; // タップの邪魔にならないようにする
+        flier.style.pointerEvents = 'none'; 
         
-        // ★重要：スローからファースト、スローアウトの動きを作るベジェ曲線
-        flier.style.transition = 'all 0.6s cubic-bezier(0.65, 0, 0.35, 1)';
+        // スローからファースト、スローアウトのベジェ曲線
+        flier.style.transition = 'all 0.5s cubic-bezier(0.65, 0, 0.35, 1)';
         
         document.body.appendChild(flier);
 
-        // 少しだけ待ってから（ブラウザに描画させてから）、移動先の座標を指示
         setTimeout(() => {
             flier.style.left = (targetRect.left + targetRect.width / 2) + 'px';
             flier.style.top = (targetRect.top + targetRect.height / 2) + 'px';
-            flier.style.width = '20px';  // 小さく縮小
+            flier.style.width = '20px'; 
             flier.style.height = '20px';
-            flier.style.opacity = '0.3'; // 半透明にしながら
-            flier.style.transform = 'translate(-50%, -50%) rotate(360deg)'; // くるっと回転！
+            flier.style.opacity = '0.3'; 
+            flier.style.transform = 'translate(-50%, -50%) rotate(360deg)'; 
         }, 10);
 
-        // 0.6秒後（アニメーション終了後）に分身を消し、カートボタンを「ポヨン」と揺らす
+        // 0.5秒後、着地した瞬間にコールバック（数字パラパラ）を呼ぶ
         setTimeout(() => {
             flier.remove();
             targetBtn.style.transform = 'scale(1.05)';
             setTimeout(() => {
                 targetBtn.style.transform = 'scale(1)';
             }, 100);
-        }, 600);
+            
+            if (onComplete) onComplete(); // ここで小計が動く
+            
+        }, 500);
     }
 
-    // --- カートと会計 ---
-    function addToCart(event, itemId) {
-        let currentEvent = appData.events.find(e => e.id == appData.currentEventId);
-        let item = currentEvent.items.find(i => i.id === itemId);
-        if (item.stock > 0) {
-            cart.push(item);
-            updateCart();
-            flyToCart(event); // ここでアニメーションを呼び出す
-            navigator.vibrate && navigator.vibrate(50);
-        }
+    // --- ★パラパラアニメーションのロジック ---
+    function animateTotalValue(newTotal) {
+        let start = displayedTotal;
+        let end = newTotal;
+        if (start === end) return;
+        
+        let duration = 250; // 0.25秒でパラパラ変化する
+        let startTime = null;
+        let obj = document.getElementById('cart-total');
+        
+        const step = (timestamp) => {
+            if (!startTime) startTime = timestamp;
+            let progress = Math.min((timestamp - startTime) / duration, 1);
+            let currentVal = Math.floor(progress * (end - start) + start);
+            obj.innerText = currentVal.toLocaleString();
+            if (progress < 1) {
+                window.requestAnimationFrame(step);
+            } else {
+                obj.innerText = end.toLocaleString();
+                displayedTotal = end;
+            }
+        };
+        window.requestAnimationFrame(step);
     }
 
-    function updateCart() {
+    // カートの数字をアニメーションつきで更新する関数
+    function syncCartTotalAnimated() {
+        let total = cart.reduce((sum, item) => sum + item.price, 0);
+        animateTotalValue(total);
+    }
+
+    // アニメーションなしで即座に更新する関数（空にした時など）
+    function syncCartTotalInstant() {
         let total = cart.reduce((sum, item) => sum + item.price, 0);
         document.getElementById('cart-total').innerText = total.toLocaleString();
+        displayedTotal = total;
+    }
+
+    function updateCartButton() {
         let checkoutBtn = document.getElementById('checkout-btn');
         checkoutBtn.disabled = cart.length === 0;
         checkoutBtn.innerText = cart.length > 0 ? "会計へ進む (" + cart.length + "点)" : "会計へ進む";
     }
 
+    // --- カート追加・戻す・空にする処理 ---
+    function addToCart(event, itemId) {
+        let currentEvent = appData.events.find(e => e.id == appData.currentEventId);
+        let item = currentEvent.items.find(i => i.id === itemId);
+        if (item.stock > 0) {
+            cart.push(item);
+            updateCartButton(); // ボタンの「(1点)」などの文字はすぐに変わる
+            
+            // 画像が飛んでいって、着地したら数字をパラパラさせる
+            flyToCart(event, () => {
+                syncCartTotalAnimated();
+            });
+            navigator.vibrate && navigator.vibrate(50);
+        }
+    }
+
+    // ★追加：「1つ戻す」機能
+    function undoLastCartItem() {
+        if (cart.length > 0) {
+            cart.pop(); // 一番最後に入れた商品を削除
+            updateCartButton();
+            syncCartTotalAnimated(); // 数字がパラパラと戻る
+            navigator.vibrate && navigator.vibrate(50);
+        }
+    }
+
     function clearCart() {
         if(cart.length > 0 && !confirm('カートの中身を空にしますか？')) return;
         cart = [];
-        updateCart();
+        updateCartButton();
+        syncCartTotalInstant(); // 空にする時は即座に0にする
     }
 
     function openCheckoutModal() {
@@ -518,7 +590,8 @@
         
         alert(msg);
         cart = [];
-        updateCart();
+        updateCartButton();
+        syncCartTotalInstant();
         renderAll();
     }
 
@@ -612,7 +685,6 @@
         
         items.forEach(item => {
             let isSoldOut = item.stock <= 0;
-            // onclickに event を渡すように変更
             let imageClickEvent = isSoldOut ? '' : 'onclick="addToCart(event, ' + item.id + ')"';
             let imageClass = isSoldOut ? '' : 'class="clickable"';
             let buttonStatus = isSoldOut ? 'disabled style="background:#ccc; color:#666;"' : '';
