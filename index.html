@@ -3,17 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>はづきの簡単レジ</title>
+    <title>かんたんレジ - 高機能版</title>
     <style>
         body { font-family: sans-serif; margin: 0; padding: 0; background-color: #f4f4f9; color: #333; padding-bottom: 100px; }
-        /* タブメニュー */
         .tabs { display: flex; background-color: #333; position: sticky; top: 0; z-index: 100; }
         .tab { flex: 1; text-align: center; padding: 15px; color: white; cursor: pointer; font-weight: bold; }
         .tab.active { background-color: #e91e63; }
         .tab-content { display: none; padding: 15px; }
         .tab-content.active { display: block; }
         
-        /* レジ画面 */
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .item { background: white; border-radius: 8px; padding: 10px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: relative; }
         .item img { width: 100%; height: 100px; object-fit: cover; border-radius: 4px; background-color: #e0e0e0; }
@@ -23,13 +21,11 @@
         .sold-out { position: absolute; top:0; left:0; right:0; bottom:0; background: rgba(255,255,255,0.7); display:flex; align-items:center; justify-content:center; font-weight:bold; color:red; font-size:1.2rem; pointer-events:none; border-radius:8px;}
         button.add-btn { background-color: #4CAF50; color: white; border: none; padding: 10px; width: 100%; border-radius: 4px; font-size: 1rem; cursor: pointer; margin-top: 5px;}
         
-        /* 下部カートバー */
         .bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 15px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 10px; z-index: 100; }
         .cart-status { display: flex; justify-content: space-between; align-items: center; }
         .checkout-btn { background-color: #2196F3; color: white; border: none; padding: 15px; border-radius: 4px; font-size: 1.2rem; font-weight: bold; width: 100%; cursor: pointer; }
         .checkout-btn:disabled { background-color: #ccc; }
 
-        /* 商品設定・履歴画面 */
         .form-group { margin-bottom: 10px; }
         .form-group input { width: 100%; padding: 8px; box-sizing: border-box; }
         .save-btn { background-color: #e91e63; color: white; border: none; padding: 10px; width: 100%; border-radius: 4px; font-size: 1rem; margin-bottom: 20px; }
@@ -55,8 +51,8 @@
 <div id="settings" class="tab-content">
     <h3>新しい商品を追加</h3>
     <div class="form-group"><input type="text" id="itemName" placeholder="商品名 (例: 新譜CD)"></div>
-    <div class="form-group"><input type="number" id="itemPrice" placeholder="価格 (例: 1000)"></div>
-    <div class="form-group"><input type="number" id="itemStock" placeholder="持ち込み在庫数 (例: 50)"></div>
+    <div class="form-group"><input type="number" id="itemPrice" placeholder="価格 (例: 1000)" inputmode="numeric" pattern="\d*"></div>
+    <div class="form-group"><input type="number" id="itemStock" placeholder="持ち込み在庫数 (例: 50)" inputmode="numeric" pattern="\d*"></div>
     <div class="form-group"><input type="file" id="itemImage" accept="image/*"></div>
     <button class="save-btn" onclick="addNewItem()">＋ 商品を追加する</button>
 
@@ -79,26 +75,20 @@
 </div>
 
 <script>
-    // データの読み込み（なければ空の配列）
     let items = JSON.parse(localStorage.getItem('pos_items')) || [];
     let historyData = JSON.parse(localStorage.getItem('pos_history')) || [];
     let cart = [];
 
-    // 初期化
     renderAll();
 
-    // タブ切り替え機能
     function switchTab(tabId) {
         document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
         event.target.classList.add('active');
         document.getElementById(tabId).classList.add('active');
-        
-        // レジ画面以外ではカートを隠す
         document.getElementById('cart-bar').style.display = tabId === 'pos' ? 'flex' : 'none';
     }
 
-    // 商品をカートに追加
     function addToCart(itemId) {
         let item = items.find(i => i.id === itemId);
         if (item.stock > 0) {
@@ -107,7 +97,6 @@
         }
     }
 
-    // カートの更新
     function updateCart() {
         let total = cart.reduce((sum, item) => sum + item.price, 0);
         document.getElementById('cart-total').innerText = total.toLocaleString();
@@ -115,25 +104,21 @@
         document.getElementById('checkout-btn').innerText = `会計を確定 (${cart.length}点)`;
     }
 
-    // カートを空にする
     function clearCart() {
         cart = [];
         updateCart();
     }
 
-    // 会計処理（在庫を減らし、履歴に残す）
     function checkout() {
         if (cart.length === 0) return;
 
         let total = cart.reduce((sum, item) => sum + item.price, 0);
         let timeString = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
         
-        // 履歴用データの作成
         let itemNames = cart.map(i => i.name).join(', ');
         historyData.unshift({ time: timeString, detail: itemNames, total: total });
         localStorage.setItem('pos_history', JSON.stringify(historyData));
 
-        // 在庫を減らす
         cart.forEach(cartItem => {
             let item = items.find(i => i.id === cartItem.id);
             if(item && item.stock > 0) item.stock--;
@@ -145,38 +130,62 @@
         renderAll();
     }
 
-    // 新しい商品の追加
     function addNewItem() {
         let name = document.getElementById('itemName').value;
-        let price = parseInt(document.getElementById('itemPrice').value);
-        let stock = parseInt(document.getElementById('itemStock').value);
+        let priceStr = document.getElementById('itemPrice').value;
+        let stockStr = document.getElementById('itemStock').value;
+        
+        // 全角数字を半角に変換する安全対策
+        priceStr = priceStr.replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0));
+        stockStr = stockStr.replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0));
+
+        let price = parseInt(priceStr);
+        let stock = parseInt(stockStr);
         let fileInput = document.getElementById('itemImage');
 
         if (!name || isNaN(price) || isNaN(stock)) {
-            alert('商品名、価格、在庫数を正しく入力してください。');
+            alert('商品名、価格、在庫数を正しく入力してください。（数字は半角にしてください）');
             return;
         }
 
         let newItem = { id: Date.now(), name, price, stock, image: '' };
 
-        // 画像をBase64に変換して保存（スマホの写真を選択可能）
         if (fileInput.files.length > 0) {
             let reader = new FileReader();
             reader.onload = function(e) {
-                newItem.image = e.target.result;
-                items.push(newItem);
-                saveAndRender();
+                // 画像をリサイズ（圧縮）して容量オーバーを防ぐ処理
+                let img = new Image();
+                img.onload = function() {
+                    let canvas = document.createElement('canvas');
+                    let ctx = canvas.getContext('2d');
+                    let MAX_WIDTH = 300; // 最大幅を300pxに制限
+                    let scaleSize = MAX_WIDTH / img.width;
+                    canvas.width = MAX_WIDTH;
+                    canvas.height = img.height * scaleSize;
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    
+                    // 画質を少し落として保存 (0.7)
+                    newItem.image = canvas.toDataURL('image/jpeg', 0.7);
+                    
+                    try {
+                        items.push(newItem);
+                        saveAndRender();
+                        alert(`「${name}」を追加しました！`);
+                    } catch (error) {
+                        alert('エラー：画像のデータ容量が大きすぎます。別の画像を選ぶか、画像を無しにして登録してください。');
+                    }
+                };
+                img.src = e.target.result;
             };
             reader.readAsDataURL(fileInput.files[0]);
         } else {
-            // 画像がない場合はダミー画像
             newItem.image = 'https://via.placeholder.com/150?text=No+Image';
             items.push(newItem);
             saveAndRender();
+            alert(`「${name}」を追加しました！`);
         }
     }
 
-    // 商品の削除
     function deleteItem(itemId) {
         if(confirm('この商品を削除しますか？')) {
             items = items.filter(i => i.id !== itemId);
@@ -193,7 +202,6 @@
         renderAll();
     }
 
-    // 画面の描画処理まとめ
     function renderAll() {
         renderPos();
         renderSettings();
