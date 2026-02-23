@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>はづきレジ３</title>
+    <title>はづきれじ</title>
     <style>
-        /* 全体の設定 */
-        body { font-family: sans-serif; margin: 0; padding: 0; background-color: #f4f4f9; color: #333; padding-bottom: 110px; }
+        /* 全体の設定（ズーム防止を追加） */
+        body { font-family: sans-serif; margin: 0; padding: 0; background-color: #f4f4f9; color: #333; padding-bottom: 110px; touch-action: manipulation; }
+        button { touch-action: manipulation; } /* 連打時の拡大を防止 */
         
         /* 上部ヘッダー（イベント管理） */
         .preset-header { background-color: #222; padding: 10px; display: flex; justify-content: space-between; align-items: center; gap: 5px; }
@@ -61,25 +62,27 @@
 
         /* お会計モーダル（お釣り計算機） */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
-        .modal-content { background: white; width: 90%; max-width: 400px; border-radius: 12px; padding: 20px; box-sizing: border-box; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-        .modal-title { text-align: center; font-size: 1.2rem; font-weight: bold; margin-top: 0; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
-        .calc-total { font-size: 1.5rem; text-align: center; margin-bottom: 15px; }
-        .calc-total span { font-size: 2.2rem; font-weight: bold; color: #333; }
+        .modal-content { background: white; width: 92%; max-width: 400px; border-radius: 12px; padding: 15px 20px; box-sizing: border-box; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .modal-title { text-align: center; font-size: 1.2rem; font-weight: bold; margin-top: 0; margin-bottom: 10px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .calc-total { font-size: 1.4rem; text-align: center; margin-bottom: 15px; }
+        .calc-total span { font-size: 2rem; font-weight: bold; color: #333; }
         
-        .quick-money-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .money-btn { background: #e0f7fa; color: #00838f; border: 1px solid #b2ebf2; padding: 12px; border-radius: 6px; font-size: 1.1rem; font-weight: bold; cursor: pointer; }
+        /* 預かり金入力エリア（加算ボタン対応） */
+        .quick-money-btns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 15px; }
+        .money-btn { background: #e0f7fa; color: #00838f; border: 1px solid #b2ebf2; padding: 10px 5px; border-radius: 6px; font-size: 0.95rem; font-weight: bold; cursor: pointer; }
+        .money-btn.clear-btn { background: #f5f5f5; color: #666; border: 1px solid #ddd; }
         .money-btn.exact { background: #fff3e0; color: #e65100; border: 1px solid #ffe0b2; }
         
         .tender-input-wrap { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
         .tender-input-wrap label { font-weight: bold; white-space: nowrap; }
-        .tender-input-wrap input { flex-grow: 1; padding: 12px; font-size: 1.5rem; text-align: right; border: 2px solid #ccc; border-radius: 6px; }
+        .tender-input-wrap input { flex-grow: 1; padding: 10px; font-size: 1.5rem; text-align: right; border: 2px solid #ccc; border-radius: 6px; }
         
-        .change-display { background: #f8bbd0; padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 20px; }
+        .change-display { background: #f8bbd0; padding: 10px; border-radius: 8px; text-align: center; margin-bottom: 15px; }
         .change-display div { font-size: 1rem; color: #880e4f; font-weight: bold; margin-bottom: 5px;}
         .change-display span { font-size: 2.5rem; font-weight: bold; color: #e91e63; }
         
         .modal-actions { display: flex; gap: 10px; }
-        .modal-btn { flex: 1; padding: 15px; border: none; border-radius: 6px; font-size: 1.1rem; font-weight: bold; cursor: pointer; }
+        .modal-btn { flex: 1; padding: 12px; border: none; border-radius: 6px; font-size: 1.1rem; font-weight: bold; cursor: pointer; }
         .btn-cancel { background: #e0e0e0; color: #333; }
         .btn-complete { background: #4CAF50; color: white; }
         .btn-complete:disabled { background: #a5d6a7; cursor: not-allowed; }
@@ -147,14 +150,16 @@
         <div class="calc-total">合計: ¥<span id="modal-total-amount">0</span></div>
         
         <div class="quick-money-btns">
-            <button class="money-btn" onclick="setTenderAmount(1000)">1,000円から</button>
-            <button class="money-btn" onclick="setTenderAmount(5000)">5,000円から</button>
-            <button class="money-btn" onclick="setTenderAmount(10000)">10,000円から</button>
-            <button class="money-btn exact" onclick="setTenderExact()">ピッタリお預かり</button>
+            <button class="money-btn" onclick="addTenderAmount(100)">＋100円</button>
+            <button class="money-btn" onclick="addTenderAmount(1000)">＋1,000円</button>
+            <button class="money-btn" onclick="addTenderAmount(5000)">＋5,000円</button>
+            <button class="money-btn" onclick="addTenderAmount(10000)">＋10,000円</button>
+            <button class="money-btn clear-btn" onclick="clearTenderAmount()">クリア</button>
+            <button class="money-btn exact" onclick="setTenderExact()">ピッタリ</button>
         </div>
         
         <div class="tender-input-wrap">
-            <label>お預かり：</label>
+            <label>お預かり</label>
             <input type="number" id="tender-input" inputmode="numeric" pattern="\d*" placeholder="0" oninput="calculateChange()">
             <span style="font-weight:bold; font-size:1.2rem;">円</span>
         </div>
@@ -175,7 +180,6 @@
     // --- データ構造とマイグレーション ---
     let appData = JSON.parse(localStorage.getItem('pos_app_data'));
     
-    // 古いデータ形式（presets）からの移行処理
     if (!appData || !appData.events) {
         let migratedEvents = [];
         if (appData && appData.presets) {
@@ -196,7 +200,6 @@
     let cart = [];
     let currentCheckoutTotal = 0;
 
-    // 初期化
     updateEventSelector();
     renderAll();
 
@@ -216,7 +219,7 @@
     function changeEvent(eventId) {
         if (cart.length > 0) {
             if(!confirm('カートに商品が入っています。イベントを切り替えるとカートは空になりますがよろしいですか？')) {
-                updateEventSelector(); // 選択を元に戻す
+                updateEventSelector();
                 return;
             }
         }
@@ -305,8 +308,20 @@
         document.getElementById('checkout-modal').style.display = 'none';
     }
 
-    function setTenderAmount(amount) {
-        document.getElementById('tender-input').value = amount;
+    // 加算方式に変更
+    function addTenderAmount(amount) {
+        let inputEl = document.getElementById('tender-input');
+        // 現在の値を安全に数値化（全角対策含む）
+        let currentVal = parseInt(inputEl.value.replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))) || 0;
+        
+        inputEl.value = currentVal + amount;
+        calculateChange();
+        navigator.vibrate && navigator.vibrate(50); // 押した感触
+    }
+
+    // クリアボタン処理
+    function clearTenderAmount() {
+        document.getElementById('tender-input').value = '';
         calculateChange();
     }
 
@@ -317,7 +332,6 @@
 
     function calculateChange() {
         let inputVal = document.getElementById('tender-input').value;
-        // 全角数字対策
         let cleanVal = inputVal.replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0));
         let tender = parseInt(cleanVal) || 0;
         
@@ -348,14 +362,12 @@
         let currentEvent = appData.events.find(e => e.id == appData.currentEventId);
         let timeString = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
         
-        // 履歴作成
         let detailMap = {};
         cart.forEach(item => { detailMap[item.name] = (detailMap[item.name] || 0) + 1; });
         let detailString = Object.entries(detailMap).map(([name, count]) => count > 1 ? `${name}x${count}` : name).join(', ');
 
         currentEvent.history.unshift({ id: Date.now(), time: timeString, detail: detailString, total: currentCheckoutTotal });
 
-        // 在庫減算
         cart.forEach(cartItem => {
             let item = currentEvent.items.find(i => i.id === cartItem.id);
             if(item && item.stock > 0) item.stock--;
@@ -364,10 +376,9 @@
         saveData();
         closeCheckoutModal();
         
-        // ポップアップで完了通知（お釣り額も念のため表示）
         let tender = parseInt(document.getElementById('tender-input').value) || currentCheckoutTotal;
         let change = tender - currentCheckoutTotal;
-        let msg = `会計が完了しました！\n\n合計: ¥${currentCheckoutTotal.toLocaleString()}`;
+        let msg = `会計完了！\n合計: ¥${currentCheckoutTotal.toLocaleString()}`;
         if(change > 0) msg += `\nお釣り: ¥${change.toLocaleString()}`;
         
         alert(msg);
