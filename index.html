@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>かんたんレジ - プリセット対応版</title>
+    <title>かんたんレジ - イベント管理＆お釣り計算版</title>
     <style>
         /* 全体の設定 */
         body { font-family: sans-serif; margin: 0; padding: 0; background-color: #f4f4f9; color: #333; padding-bottom: 110px; }
         
-        /* 上部ヘッダー（プリセット切替） */
-        .preset-header { background-color: #222; padding: 10px; display: flex; justify-content: space-between; align-items: center; }
-        .preset-header span { color: white; font-size: 0.9rem; font-weight: bold; }
+        /* 上部ヘッダー（イベント管理） */
+        .preset-header { background-color: #222; padding: 10px; display: flex; justify-content: space-between; align-items: center; gap: 5px; }
+        .preset-header select { flex-grow: 1; padding: 8px; border-radius: 4px; font-size: 1rem; border: none; font-weight: bold; background: #fff; }
         .preset-btns { display: flex; gap: 5px; }
-        .preset-btn { background-color: #555; color: white; border: none; padding: 8px 15px; border-radius: 4px; font-weight: bold; cursor: pointer; }
-        .preset-btn.active { background-color: #FFC107; color: #333; }
+        .preset-btn { background-color: #555; color: white; border: none; padding: 8px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.9rem; }
+        .preset-btn.primary { background-color: #FFC107; color: #333; }
 
         /* タブメニュー */
         .tabs { display: flex; background-color: #333; position: sticky; top: 0; z-index: 100; }
@@ -33,7 +33,7 @@
         button.add-btn { background-color: #4CAF50; color: white; border: none; padding: 8px; width: 100%; border-radius: 4px; font-size: 0.9rem; cursor: pointer; margin-top: 2px;}
         
         /* カートバー */
-        .bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 10px 15px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 8px; z-index: 100; }
+        .bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 10px 15px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 8px; z-index: 90; }
         .cart-status { display: flex; justify-content: space-between; align-items: center; }
         .checkout-btn { background-color: #2196F3; color: white; border: none; padding: 12px; border-radius: 4px; font-size: 1.1rem; font-weight: bold; width: 100%; cursor: pointer; }
         .checkout-btn:disabled { background-color: #ccc; color: #666; }
@@ -44,12 +44,10 @@
         .form-group input { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem; }
         .save-btn { background-color: #e91e63; color: white; border: none; padding: 12px; width: 100%; border-radius: 4px; font-size: 1rem; font-weight: bold; cursor: pointer; }
         
-        /* チェックリスト・ヘッダー */
+        /* リストスタイル */
         .list-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 10px; margin-top: 25px; border-bottom: 2px solid #ddd; padding-bottom: 5px;}
         .list-header h3 { margin: 0; }
         .delete-checked-btn { background-color: #607D8B; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 0.85rem; cursor: pointer; }
-
-        /* リストアイテム (チェックボックス付き) */
         .list-item { background: white; padding: 10px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 10px; }
         .custom-checkbox { width: 20px; height: 20px; accent-color: #e91e63; transform: scale(1.2); }
         .item-info { flex-grow: 1; display: flex; align-items: center; }
@@ -60,16 +58,40 @@
         .history-time { font-size: 0.85rem; color: #888; margin-right: 10px; white-space: nowrap; }
         .history-detail { flex-grow: 1; font-size: 0.95rem; margin-right: 10px; }
         .history-price { font-weight:bold; color:#e91e63; white-space: nowrap; font-size: 1.1rem;}
+
+        /* お会計モーダル（お釣り計算機） */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
+        .modal-content { background: white; width: 90%; max-width: 400px; border-radius: 12px; padding: 20px; box-sizing: border-box; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .modal-title { text-align: center; font-size: 1.2rem; font-weight: bold; margin-top: 0; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .calc-total { font-size: 1.5rem; text-align: center; margin-bottom: 15px; }
+        .calc-total span { font-size: 2.2rem; font-weight: bold; color: #333; }
+        
+        .quick-money-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .money-btn { background: #e0f7fa; color: #00838f; border: 1px solid #b2ebf2; padding: 12px; border-radius: 6px; font-size: 1.1rem; font-weight: bold; cursor: pointer; }
+        .money-btn.exact { background: #fff3e0; color: #e65100; border: 1px solid #ffe0b2; }
+        
+        .tender-input-wrap { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
+        .tender-input-wrap label { font-weight: bold; white-space: nowrap; }
+        .tender-input-wrap input { flex-grow: 1; padding: 12px; font-size: 1.5rem; text-align: right; border: 2px solid #ccc; border-radius: 6px; }
+        
+        .change-display { background: #f8bbd0; padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 20px; }
+        .change-display div { font-size: 1rem; color: #880e4f; font-weight: bold; margin-bottom: 5px;}
+        .change-display span { font-size: 2.5rem; font-weight: bold; color: #e91e63; }
+        
+        .modal-actions { display: flex; gap: 10px; }
+        .modal-btn { flex: 1; padding: 15px; border: none; border-radius: 6px; font-size: 1.1rem; font-weight: bold; cursor: pointer; }
+        .btn-cancel { background: #e0e0e0; color: #333; }
+        .btn-complete { background: #4CAF50; color: white; }
+        .btn-complete:disabled { background: #a5d6a7; cursor: not-allowed; }
     </style>
 </head>
 <body>
 
 <div class="preset-header">
-    <span>📁 イベント設定</span>
+    <select id="event-selector" onchange="changeEvent(this.value)"></select>
     <div class="preset-btns">
-        <button id="btn-preset-1" class="preset-btn active" onclick="changePreset(1)">①</button>
-        <button id="btn-preset-2" class="preset-btn" onclick="changePreset(2)">②</button>
-        <button id="btn-preset-3" class="preset-btn" onclick="changePreset(3)">③</button>
+        <button class="preset-btn" onclick="renameCurrentEvent()">✏️ 名前</button>
+        <button class="preset-btn primary" onclick="createNewEvent()">➕ 新規</button>
     </div>
 </div>
 
@@ -100,7 +122,7 @@
 
 <div id="history" class="tab-content">
     <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center;">
-        <h3 style="margin: 0 0 5px 0; font-size: 1rem; color: #666;">現在のプリセット売上</h3>
+        <h3 style="margin: 0 0 5px 0; font-size: 1rem; color: #666;">このイベントの売上合計</h3>
         <div style="font-size: 2rem; font-weight: bold; color: #e91e63;">¥<span id="history-total-price">0</span></div>
     </div>
     
@@ -116,54 +138,117 @@
         <button onclick="clearCart()" style="padding: 8px 15px; border-radius: 4px; background:#f0f0f0; border:1px solid #ccc; font-size:0.9rem;">空にする</button>
         <div style="font-size: 1.1rem;">小計: <span style="font-weight: bold; font-size: 1.3rem;">¥<span id="cart-total">0</span></span></div>
     </div>
-    <button class="checkout-btn" id="checkout-btn" onclick="checkout()" disabled>会計を確定する</button>
+    <button class="checkout-btn" id="checkout-btn" onclick="openCheckoutModal()" disabled>会計へ進む</button>
+</div>
+
+<div class="modal-overlay" id="checkout-modal">
+    <div class="modal-content">
+        <h2 class="modal-title">お会計</h2>
+        <div class="calc-total">合計: ¥<span id="modal-total-amount">0</span></div>
+        
+        <div class="quick-money-btns">
+            <button class="money-btn" onclick="setTenderAmount(1000)">1,000円から</button>
+            <button class="money-btn" onclick="setTenderAmount(5000)">5,000円から</button>
+            <button class="money-btn" onclick="setTenderAmount(10000)">10,000円から</button>
+            <button class="money-btn exact" onclick="setTenderExact()">ピッタリお預かり</button>
+        </div>
+        
+        <div class="tender-input-wrap">
+            <label>お預かり：</label>
+            <input type="number" id="tender-input" inputmode="numeric" pattern="\d*" placeholder="0" oninput="calculateChange()">
+            <span style="font-weight:bold; font-size:1.2rem;">円</span>
+        </div>
+        
+        <div class="change-display">
+            <div id="change-label">お釣り</div>
+            ¥<span id="change-amount">0</span>
+        </div>
+        
+        <div class="modal-actions">
+            <button class="modal-btn btn-cancel" onclick="closeCheckoutModal()">キャンセル</button>
+            <button class="modal-btn btn-complete" id="complete-checkout-btn" onclick="executeCheckout()" disabled>会計完了</button>
+        </div>
+    </div>
 </div>
 
 <script>
-    // --- データ構造の初期化とマイグレーション（旧データ引き継ぎ） ---
+    // --- データ構造とマイグレーション ---
     let appData = JSON.parse(localStorage.getItem('pos_app_data'));
     
-    if (!appData) {
-        // 初回起動、または旧バージョンからのアップデート
-        appData = {
-            currentPreset: 1,
-            presets: {
-                1: { items: [], history: [] },
-                2: { items: [], history: [] },
-                3: { items: [], history: [] }
-            }
-        };
-        // 旧バージョンのデータがあればプリセット1に引き継ぐ
-        let oldItems = JSON.parse(localStorage.getItem('pos_items'));
-        let oldHistory = JSON.parse(localStorage.getItem('pos_history'));
-        if (oldItems) appData.presets[1].items = oldItems;
-        if (oldHistory) appData.presets[1].history = oldHistory;
+    // 古いデータ形式（presets）からの移行処理
+    if (!appData || !appData.events) {
+        let migratedEvents = [];
+        if (appData && appData.presets) {
+            migratedEvents.push({ id: 1, name: "イベント①", items: appData.presets[1].items || [], history: appData.presets[1].history || [] });
+            migratedEvents.push({ id: 2, name: "イベント②", items: appData.presets[2].items || [], history: appData.presets[2].history || [] });
+            migratedEvents.push({ id: 3, name: "イベント③", items: appData.presets[3].items || [], history: appData.presets[3].history || [] });
+        } else {
+            migratedEvents.push({ id: Date.now(), name: "最初のイベント", items: [], history: [] });
+        }
         
+        appData = {
+            currentEventId: migratedEvents[0].id,
+            events: migratedEvents
+        };
         saveData();
     }
 
     let cart = [];
+    let currentCheckoutTotal = 0;
 
-    // 初期描画
-    updatePresetUI();
+    // 初期化
+    updateEventSelector();
     renderAll();
 
-    // --- プリセット切替 ---
-    function changePreset(presetNum) {
+    // --- イベント（プリセット）管理機能 ---
+    function updateEventSelector() {
+        let selector = document.getElementById('event-selector');
+        selector.innerHTML = '';
+        appData.events.forEach(ev => {
+            let option = document.createElement('option');
+            option.value = ev.id;
+            option.text = ev.name;
+            if (ev.id == appData.currentEventId) option.selected = true;
+            selector.appendChild(option);
+        });
+    }
+
+    function changeEvent(eventId) {
         if (cart.length > 0) {
-            if(!confirm('カートに商品が入っています。プリセットを切り替えるとカートは空になりますがよろしいですか？')) return;
+            if(!confirm('カートに商品が入っています。イベントを切り替えるとカートは空になりますがよろしいですか？')) {
+                updateEventSelector(); // 選択を元に戻す
+                return;
+            }
         }
-        appData.currentPreset = presetNum;
-        cart = []; // カートをリセット
+        appData.currentEventId = parseInt(eventId);
+        cart = [];
         saveData();
-        updatePresetUI();
         updateCart();
         renderAll();
     }
 
-    function updatePresetUI() {
-        document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
-        document.getElementById(`btn-preset-${appData.currentPreset}`).classList.add('active');
+    function createNewEvent() {
+        let eventName = prompt('新しいイベントの名前を入力してください\n(例: 春の即売会2026)');
+        if (eventName && eventName.trim() !== '') {
+            let newEvent = { id: Date.now(), name: eventName.trim(), items: [], history: [] };
+            appData.events.push(newEvent);
+            appData.currentEventId = newEvent.id;
+            cart = [];
+            saveData();
+            updateEventSelector();
+            updateCart();
+            renderAll();
+        }
+    }
+
+    function renameCurrentEvent() {
+        let currentEvent = appData.events.find(e => e.id == appData.currentEventId);
+        let newName = prompt('イベント名を変更します', currentEvent.name);
+        if (newName && newName.trim() !== '') {
+            currentEvent.name = newName.trim();
+            saveData();
+            updateEventSelector();
+        }
     }
 
     // --- タブ切り替え ---
@@ -176,10 +261,10 @@
         window.scrollTo(0, 0);
     }
 
-    // --- カートと会計 ---
+    // --- カート機能 ---
     function addToCart(itemId) {
-        let items = appData.presets[appData.currentPreset].items;
-        let item = items.find(i => i.id === itemId);
+        let currentEvent = appData.events.find(e => e.id == appData.currentEventId);
+        let item = currentEvent.items.find(i => i.id === itemId);
         if (item.stock > 0) {
             cart.push(item);
             updateCart();
@@ -192,7 +277,7 @@
         document.getElementById('cart-total').innerText = total.toLocaleString();
         let checkoutBtn = document.getElementById('checkout-btn');
         checkoutBtn.disabled = cart.length === 0;
-        checkoutBtn.innerText = cart.length > 0 ? `会計を確定 (${cart.length}点)` : '会計を確定する';
+        checkoutBtn.innerText = cart.length > 0 ? `会計へ進む (${cart.length}点)` : '会計へ進む';
     }
 
     function clearCart() {
@@ -201,31 +286,98 @@
         updateCart();
     }
 
-    function checkout() {
+    // --- お会計モーダル（お釣り計算） ---
+    function openCheckoutModal() {
         if (cart.length === 0) return;
-        let presetData = appData.presets[appData.currentPreset];
-        let total = cart.reduce((sum, item) => sum + item.price, 0);
+        currentCheckoutTotal = cart.reduce((sum, item) => sum + item.price, 0);
+        
+        document.getElementById('modal-total-amount').innerText = currentCheckoutTotal.toLocaleString();
+        document.getElementById('tender-input').value = '';
+        document.getElementById('change-amount').innerText = '0';
+        document.getElementById('change-amount').style.color = '#e91e63';
+        document.getElementById('change-label').innerText = 'お釣り';
+        document.getElementById('complete-checkout-btn').disabled = true;
+        
+        document.getElementById('checkout-modal').style.display = 'flex';
+    }
+
+    function closeCheckoutModal() {
+        document.getElementById('checkout-modal').style.display = 'none';
+    }
+
+    function setTenderAmount(amount) {
+        document.getElementById('tender-input').value = amount;
+        calculateChange();
+    }
+
+    function setTenderExact() {
+        document.getElementById('tender-input').value = currentCheckoutTotal;
+        calculateChange();
+    }
+
+    function calculateChange() {
+        let inputVal = document.getElementById('tender-input').value;
+        // 全角数字対策
+        let cleanVal = inputVal.replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0));
+        let tender = parseInt(cleanVal) || 0;
+        
+        let change = tender - currentCheckoutTotal;
+        let changeAmountEl = document.getElementById('change-amount');
+        let changeLabelEl = document.getElementById('change-label');
+        let completeBtn = document.getElementById('complete-checkout-btn');
+
+        if (tender === 0 || isNaN(tender)) {
+            changeAmountEl.innerText = '0';
+            changeAmountEl.style.color = '#e91e63';
+            changeLabelEl.innerText = 'お釣り';
+            completeBtn.disabled = true;
+        } else if (change < 0) {
+            changeAmountEl.innerText = Math.abs(change).toLocaleString();
+            changeAmountEl.style.color = '#f44336';
+            changeLabelEl.innerText = '不足額';
+            completeBtn.disabled = true;
+        } else {
+            changeAmountEl.innerText = change.toLocaleString();
+            changeAmountEl.style.color = '#e91e63';
+            changeLabelEl.innerText = 'お釣り';
+            completeBtn.disabled = false;
+        }
+    }
+
+    function executeCheckout() {
+        let currentEvent = appData.events.find(e => e.id == appData.currentEventId);
         let timeString = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
         
+        // 履歴作成
         let detailMap = {};
         cart.forEach(item => { detailMap[item.name] = (detailMap[item.name] || 0) + 1; });
         let detailString = Object.entries(detailMap).map(([name, count]) => count > 1 ? `${name}x${count}` : name).join(', ');
 
-        presetData.history.unshift({ id: Date.now(), time: timeString, detail: detailString, total: total });
+        currentEvent.history.unshift({ id: Date.now(), time: timeString, detail: detailString, total: currentCheckoutTotal });
 
+        // 在庫減算
         cart.forEach(cartItem => {
-            let item = presetData.items.find(i => i.id === cartItem.id);
+            let item = currentEvent.items.find(i => i.id === cartItem.id);
             if(item && item.stock > 0) item.stock--;
         });
 
         saveData();
-        alert(`会計完了！\n合計: ¥${total.toLocaleString()}`);
+        closeCheckoutModal();
+        
+        // ポップアップで完了通知（お釣り額も念のため表示）
+        let tender = parseInt(document.getElementById('tender-input').value) || currentCheckoutTotal;
+        let change = tender - currentCheckoutTotal;
+        let msg = `会計が完了しました！\n\n合計: ¥${currentCheckoutTotal.toLocaleString()}`;
+        if(change > 0) msg += `\nお釣り: ¥${change.toLocaleString()}`;
+        
+        alert(msg);
+        
         cart = [];
         updateCart();
         renderAll();
     }
 
-    // --- 商品の追加 ---
+    // --- 商品管理 ---
     function addNewItem() {
         let nameInput = document.getElementById('itemName');
         let priceInput = document.getElementById('itemPrice');
@@ -244,7 +396,8 @@
         let newItem = { id: Date.now(), name, price, stock, image: '' };
 
         const finalizeAddItem = () => {
-            appData.presets[appData.currentPreset].items.push(newItem);
+            let currentEvent = appData.events.find(e => e.id == appData.currentEventId);
+            currentEvent.items.push(newItem);
             saveData();
             renderAll();
             nameInput.value = ''; priceInput.value = ''; stockInput.value = ''; fileInput.value = '';
@@ -273,17 +426,14 @@
         }
     }
 
-    // --- チェックした項目の削除機能 ---
+    // --- 削除機能 ---
     function deleteCheckedItems() {
         let checkboxes = document.querySelectorAll('.item-checkbox:checked');
-        if (checkboxes.length === 0) {
-            alert('削除する商品にチェックを入れてください。');
-            return;
-        }
+        if (checkboxes.length === 0) return alert('削除する商品にチェックを入れてください。');
         if (confirm(`チェックした ${checkboxes.length} 件の商品を削除しますか？`)) {
             let idsToDelete = Array.from(checkboxes).map(cb => parseInt(cb.value));
-            let items = appData.presets[appData.currentPreset].items;
-            appData.presets[appData.currentPreset].items = items.filter(item => !idsToDelete.includes(item.id));
+            let currentEvent = appData.events.find(e => e.id == appData.currentEventId);
+            currentEvent.items = currentEvent.items.filter(item => !idsToDelete.includes(item.id));
             saveData();
             renderAll();
         }
@@ -291,14 +441,11 @@
 
     function deleteCheckedHistory() {
         let checkboxes = document.querySelectorAll('.history-checkbox:checked');
-        if (checkboxes.length === 0) {
-            alert('削除する履歴にチェックを入れてください。');
-            return;
-        }
+        if (checkboxes.length === 0) return alert('削除する履歴にチェックを入れてください。');
         if (confirm(`チェックした ${checkboxes.length} 件の履歴を削除しますか？`)) {
             let idsToDelete = Array.from(checkboxes).map(cb => parseInt(cb.value));
-            let history = appData.presets[appData.currentPreset].history;
-            appData.presets[appData.currentPreset].history = history.filter(h => !idsToDelete.includes(h.id));
+            let currentEvent = appData.events.find(e => e.id == appData.currentEventId);
+            currentEvent.history = currentEvent.history.filter(h => !idsToDelete.includes(h.id));
             saveData();
             renderAll();
         }
@@ -316,7 +463,8 @@
     }
 
     function renderPos() {
-        let items = appData.presets[appData.currentPreset].items;
+        let currentEvent = appData.events.find(e => e.id == appData.currentEventId);
+        let items = currentEvent ? currentEvent.items : [];
         let grid = document.getElementById('pos-grid');
         grid.innerHTML = '';
         if (items.length === 0) {
@@ -339,7 +487,8 @@
     }
 
     function renderSettings() {
-        let items = appData.presets[appData.currentPreset].items;
+        let currentEvent = appData.events.find(e => e.id == appData.currentEventId);
+        let items = currentEvent ? currentEvent.items : [];
         let list = document.getElementById('settings-list');
         list.innerHTML = '';
         if (items.length === 0) list.innerHTML = '<div style="padding:15px; text-align:center; color:#888;">登録されている商品はありません</div>';
@@ -360,7 +509,8 @@
     }
 
     function renderHistory() {
-        let historyData = appData.presets[appData.currentPreset].history;
+        let currentEvent = appData.events.find(e => e.id == appData.currentEventId);
+        let historyData = currentEvent ? currentEvent.history : [];
         let list = document.getElementById('history-list');
         list.innerHTML = '';
         let totalSales = 0;
