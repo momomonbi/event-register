@@ -27,10 +27,8 @@
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         .item { background: white; border-radius: 8px; padding: 8px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); position: relative; }
         .item img { width: 100%; height: 90px; object-fit: contain; border-radius: 4px; background-color: #f0f0f0; margin-bottom: 5px; transition: opacity 0.1s; }
-        
-        /* ★画像タップ時のアクション設定 */
         .item img.clickable { cursor: pointer; }
-        .item img.clickable:active { opacity: 0.5; } /* 押した瞬間に少し暗くする */
+        .item img.clickable:active { opacity: 0.5; } 
         
         .item h3 { margin: 4px 0; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .item p { margin: 0; font-weight: bold; color: #e91e63; font-size: 1rem; }
@@ -41,7 +39,8 @@
         /* カートバー */
         .bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 10px 15px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 8px; z-index: 90; }
         .cart-status { display: flex; justify-content: space-between; align-items: center; }
-        .checkout-btn { background-color: #2196F3; color: white; border: none; padding: 12px; border-radius: 4px; font-size: 1.1rem; font-weight: bold; width: 100%; cursor: pointer; }
+        /* 吸い込まれるアニメーションのアクション用 */
+        .checkout-btn { background-color: #2196F3; color: white; border: none; padding: 12px; border-radius: 4px; font-size: 1.1rem; font-weight: bold; width: 100%; cursor: pointer; transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .checkout-btn:disabled { background-color: #ccc; color: #666; }
 
         /* 入力フォーム・ボタン */
@@ -132,7 +131,7 @@
 
 <div id="settings" class="tab-content">
     <h3>商品を追加</h3>
-    <div class="form-group"><input type="text" id="itemName" placeholder="商品名 (例: 新作本)"></div>
+    <div class="form-group"><input type="text" id="itemName" placeholder="商品名 (例: 新譜CD)"></div>
     <div class="form-group"><input type="number" id="itemPrice" placeholder="価格 (数字のみ)" inputmode="numeric" pattern="\d*"></div>
     <div class="form-group"><input type="number" id="itemStock" placeholder="在庫数 (数字のみ)" inputmode="numeric" pattern="\d*"></div>
     <div class="form-group" style="background: white; padding: 10px; border-radius: 4px;"><input type="file" id="itemImage" accept="image/*"></div>
@@ -186,7 +185,7 @@
     <div id="stat-time" class="stat-list"></div>
 
     <button class="copy-report-btn" onclick="copyReportToClipboard()">📝 テキストで結果をコピー</button>
-    <p style="text-align:center; font-size:0.8rem; color:#666; margin-top:10px;">メモ帳とかににそのまま貼り付けられるよ</p>
+    <p style="text-align:center; font-size:0.8rem; color:#666; margin-top:10px;">メモ帳とかに貼り付けれるよ。</p>
 </div>
 
 <div class="bottom-bar" id="cart-bar">
@@ -239,7 +238,6 @@
             migratedEvents.push({ id: 4, name: "イベント④", items: [], history: [] });
             migratedEvents.push({ id: 5, name: "イベント⑤", items: [], history: [] });
         } else {
-            // 文字列連結に変更し、バグの要因になる記号を排除
             migratedEvents.push({ id: Date.now(), name: "イベント①", items: [], history: [] });
             migratedEvents.push({ id: Date.now()+1, name: "イベント②", items: [], history: [] });
             migratedEvents.push({ id: Date.now()+2, name: "イベント③", items: [], history: [] });
@@ -318,7 +316,6 @@
         }
     }
 
-    // --- CSV出力機能 ---
     function exportCSV() {
         let currentEvent = appData.events.find(e => e.id == appData.currentEventId);
         if (!currentEvent || currentEvent.history.length === 0) return alert('出力する売上履歴がありません。');
@@ -348,7 +345,6 @@
         document.body.removeChild(link);
     }
 
-    // --- タブ切り替え ---
     function switchTab(tabId) {
         document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
@@ -360,15 +356,63 @@
         window.scrollTo(0, 0);
     }
 
-    // --- カートと会計 ---
-    function addToCart(itemId) {
+    // --- ★カート追加処理＆アニメーション ---
+    function addToCart(event, itemId) {
         let currentEvent = appData.events.find(e => e.id == appData.currentEventId);
         let item = currentEvent.items.find(i => i.id === itemId);
+        
         if (item.stock > 0) {
             cart.push(item);
             updateCart();
+            flyToCart(event); // ここでアニメーションを実行
             navigator.vibrate && navigator.vibrate(50);
         }
+    }
+
+    // カートへ吸い込まれるアニメーション処理
+    function flyToCart(event) {
+        if (!event) return;
+        let targetBtn = document.getElementById('checkout-btn');
+        let targetRect = targetBtn.getBoundingClientRect();
+        
+        // タップした要素の中心を計算
+        let rect = event.target.getBoundingClientRect();
+        let startX = rect.left + rect.width / 2;
+        let startY = rect.top + rect.height / 2;
+
+        // 飛んでいく要素（ピンクの丸）を作成
+        let flier = document.createElement('div');
+        flier.style.position = 'fixed';
+        flier.style.left = startX + 'px';
+        flier.style.top = startY + 'px';
+        flier.style.width = '24px';
+        flier.style.height = '24px';
+        flier.style.background = '#e91e63';
+        flier.style.borderRadius = '50%';
+        flier.style.zIndex = '9999';
+        flier.style.pointerEvents = 'none'; // タップの邪魔にならないようにする
+        flier.style.transform = 'translate(-50%, -50%)';
+        // ぬるっと動くようにイージングを設定
+        flier.style.transition = 'left 0.4s ease-in, top 0.4s ease-in, transform 0.4s ease-in, opacity 0.4s ease-in';
+        
+        document.body.appendChild(flier);
+
+        // 次のフレームで移動先（カートボタンの中心）を指定
+        setTimeout(() => {
+            flier.style.left = (targetRect.left + targetRect.width / 2) + 'px';
+            flier.style.top = (targetRect.top + targetRect.height / 2) + 'px';
+            flier.style.transform = 'translate(-50%, -50%) scale(0.2)'; // 吸い込まれるように小さく
+            flier.style.opacity = '0.3'; // 徐々に消える
+        }, 10);
+
+        // アニメーション完了後の処理（丸を消して、ボタンを揺らす）
+        setTimeout(() => {
+            flier.remove();
+            targetBtn.style.transform = 'scale(1.05)';
+            setTimeout(() => {
+                targetBtn.style.transform = 'scale(1)';
+            }, 100);
+        }, 400);
     }
 
     function updateCart() {
@@ -466,7 +510,6 @@
         renderAll();
     }
 
-    // --- 商品管理・削除処理 ---
     function addNewItem() {
         let nameInput = document.getElementById('itemName');
         let priceInput = document.getElementById('itemPrice');
@@ -538,7 +581,6 @@
 
     function saveData() { localStorage.setItem('pos_app_data', JSON.stringify(appData)); }
 
-    // --- 描画処理まとめ ---
     function renderAll() {
         renderPos();
         renderSettings();
@@ -555,11 +597,10 @@
             grid.innerHTML = '<p style="grid-column: 1 / span 2; text-align: center; color: #666; padding: 20px;">[商品設定]から<br>商品を追加してください。</p>'; return;
         }
         
-        // ★修正点：画像のクリック対応と、完売時のクリック無効化処理
         items.forEach(item => {
             let isSoldOut = item.stock <= 0;
-            // 完売でなければ onclick 属性と clickable クラスを付与
-            let imageClickEvent = isSoldOut ? '' : 'onclick="addToCart(' + item.id + ')"';
+            // onclickに event を渡すように変更
+            let imageClickEvent = isSoldOut ? '' : 'onclick="addToCart(event, ' + item.id + ')"';
             let imageClass = isSoldOut ? '' : 'class="clickable"';
             let buttonStatus = isSoldOut ? 'disabled style="background:#ccc; color:#666;"' : '';
             let soldOutOverlay = isSoldOut ? '<div class="sold-out">完売</div>' : '';
@@ -570,7 +611,7 @@
                     '<h3>' + item.name + '</h3>' +
                     '<p>¥' + item.price.toLocaleString() + '</p>' +
                     '<div class="stock">残り: ' + item.stock + '</div>' +
-                    '<button class="add-btn" onclick="addToCart(' + item.id + ')" ' + buttonStatus + '>追加</button>' +
+                    '<button class="add-btn" onclick="addToCart(event, ' + item.id + ')" ' + buttonStatus + '>追加</button>' +
                     soldOutOverlay +
                 '</div>';
         });
@@ -621,7 +662,6 @@
         document.getElementById('history-total-price').innerText = totalSales.toLocaleString();
     }
 
-    // --- 分析・レポート描画機能 ---
     function renderAnalytics() {
         let currentEvent = appData.events.find(e => e.id == appData.currentEventId);
         let history = currentEvent ? currentEvent.history : [];
@@ -703,7 +743,6 @@
         }
     }
 
-    // --- レポートテキストコピー機能 ---
     function copyReportToClipboard() {
         let currentEvent = appData.events.find(e => e.id == appData.currentEventId);
         let history = currentEvent ? currentEvent.history : [];
