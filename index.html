@@ -8,7 +8,6 @@
     <style>
         /* --- テーマ設定 --- */
         :root {
-            /* デフォルトはさわやかブルー系 */
             --bg-color: #f0f4f8; --header-bg: rgba(255, 255, 255, 0.85); --tab-bg: rgba(255,255,255,0.5); --accent-color: #007aff;
             --tab-active-bg: #007aff; --tab-active-color: #fff;
             --card-bg: rgba(255, 255, 255, 0.35); --text-color: #333; --btn-checkout: #007aff;
@@ -16,7 +15,6 @@
             --grid-cols: 2; /* 列数の初期値 */
         }
         [data-theme="cute"] {
-            /* かわいいテーマはピンク系 */
             --bg-color: #fff0f5; --header-bg: rgba(255, 182, 193, 0.85); --tab-bg: rgba(255,255,255,0.4); --accent-color: #ff69b4;
             --tab-active-bg: #ff69b4; --tab-active-color: #fff;
             --card-bg: rgba(255, 255, 255, 0.4); --text-color: #5d4037; --btn-checkout: #ff69b4;
@@ -69,11 +67,10 @@
         #app-background {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1;
             background-size: cover; background-position: center; background-repeat: no-repeat;
-            opacity: 0.4; /* 背景の透かし効果を強化 */
-            pointer-events: none;
+            opacity: 0.4; pointer-events: none;
         }
 
-        /* ★ 極上のすりガラス効果（Glassmorphism 強化版） */
+        /* 極上のすりガラス効果（Glassmorphism 強化版） */
         .glass-card {
             background: var(--card-bg);
             backdrop-filter: blur(28px) saturate(160%);
@@ -83,7 +80,6 @@
             border-radius: 20px;
         }
 
-        /* ★ 分析画面用のさらに強いすりガラス */
         .accent-glass {
             background: color-mix(in srgb, var(--accent-color) 80%, transparent);
             backdrop-filter: blur(24px) saturate(150%);
@@ -101,11 +97,11 @@
         button:active { transform: scale(0.92); }
         input, select { font-family: inherit; }
 
-        /* ヘッダー（スマホで1段に収める） */
+        /* ヘッダー（間隔を詰めて上部に寄せる） */
         .preset-header { 
             background-color: var(--header-bg); padding: 12px 15px; display: flex; justify-content: space-between; 
             align-items: center; gap: 8px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08); z-index: 101; position: relative; margin-bottom: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08); z-index: 101; position: relative; margin-bottom: 8px;
             backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
         }
         .preset-header select { 
@@ -118,11 +114,11 @@
         .preset-btn.primary { background-color: #FFC107; color: #333; }
         .preset-btn.danger { background-color: #f44336; color: white; padding: 12px 16px; font-size: 1.1rem;}
 
-        /* タブ（超滑らかスライドアニメーション） */
+        /* タブ（隙間をなくして上に詰める） */
         .tabs { 
             position: relative; display: flex; background-color: var(--tab-bg); 
-            top: 10px; z-index: 100; box-shadow: 0 8px 32px rgba(0,0,0,0.08); 
-            margin: 0 15px 15px 15px; border-radius: 24px; padding: 6px; 
+            top: 0; z-index: 100; box-shadow: 0 8px 32px rgba(0,0,0,0.08); 
+            margin: 0 15px 10px 15px; border-radius: 24px; padding: 6px; 
             backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
             border: 1px solid rgba(255,255,255,0.6);
         }
@@ -139,7 +135,6 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.15);
         }
         
-        /* ★ コンテンツのふわりと浮かび上がるアニメーション */
         @keyframes tabFadeIn {
             0% { opacity: 0; transform: translateY(40px) scale(0.97); }
             100% { opacity: 1; transform: translateY(0) scale(1); }
@@ -147,16 +142,16 @@
         .tab-content { display: none; padding: 0 15px; }
         .tab-content.active { display: block; animation: tabFadeIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
         
-        /* レジ画面 */
-        .grid { display: grid; grid-template-columns: repeat(var(--grid-cols), 1fr); gap: 12px; }
-        .item { padding: 10px; text-align: center; position: relative; overflow: hidden; transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s; }
+        /* ★ レジ商品カードの超コンパクト化 */
+        .grid { display: grid; grid-template-columns: repeat(var(--grid-cols), 1fr); gap: 10px; }
+        .item { padding: 8px; text-align: center; position: relative; overflow: hidden; transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s; border-radius: 16px;}
         .item.clickable { cursor: pointer; }
         .item.clickable:active { transform: scale(0.92); box-shadow: 0 2px 10px rgba(0,0,0,0.05); } 
-        .item img { width: 100%; aspect-ratio: 1 / 1; height: auto; object-fit: contain; border-radius: 12px; background-color: rgba(255,255,255,0.6); margin-bottom: 6px; pointer-events: none; }
-        .item h3 { margin: 4px 0; font-size: 0.9rem; font-weight: 900; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none;}
-        .item p { margin: 0; font-weight: 900; color: var(--accent-color); font-size: 1.2rem; pointer-events: none;}
-        .stock { font-size: 0.8rem; color: #888; margin-bottom: 2px; font-weight: 700; pointer-events: none;}
-        .sold-out { position: absolute; top:0; left:0; right:0; bottom:0; background: rgba(255,255,255,0.85); display:flex; align-items:center; justify-content:center; font-weight:900; color:#f44336; font-size:1.4rem; pointer-events:none; border: 3px dashed #f44336; z-index: 5; border-radius: 20px;}
+        .item img { width: 100%; aspect-ratio: 1 / 1; height: auto; object-fit: contain; border-radius: 10px; background-color: rgba(255,255,255,0.6); margin-bottom: 2px; pointer-events: none; }
+        .item h3 { margin: 2px 0 0 0; font-size: 0.85rem; font-weight: 900; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none; line-height: 1.2;}
+        .item p { margin: 2px 0 0 0; font-weight: 900; color: var(--accent-color); font-size: 1.1rem; pointer-events: none; line-height: 1.2;}
+        .stock { font-size: 0.75rem; color: #888; margin-top: 2px; font-weight: 700; pointer-events: none; line-height: 1;}
+        .sold-out { position: absolute; top:0; left:0; right:0; bottom:0; background: rgba(255,255,255,0.85); display:flex; align-items:center; justify-content:center; font-weight:900; color:#f44336; font-size:1.4rem; pointer-events:none; border: 3px dashed #f44336; z-index: 5; border-radius: 16px;}
         
         /* カートバー */
         .bottom-bar { 
@@ -183,6 +178,7 @@
         .form-group input, .form-group select { width: 100%; padding: 15px; box-sizing: border-box; border: 1px solid rgba(0,0,0,0.05); border-radius: 16px; font-size: 1.1rem; color: #333; background: rgba(255,255,255,0.9); font-weight: 700;}
         .save-btn { background-color: var(--accent-color); color: white; padding: 18px; width: 100%; font-size: 1.2rem; font-weight: 900; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);}
         
+        /* リストスタイル */
         .list-item { padding: 10px; border-bottom: 1px solid rgba(0,0,0,0.05); display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
         .list-item img { width: 45px; height: 45px; object-fit: contain; background: rgba(255,255,255,0.9); border-radius: 10px; }
         .list-btn { padding: 8px 12px; font-size: 0.85rem; font-weight: 900; border-radius: 10px;}
@@ -207,7 +203,7 @@
         .change-box { background: #fff0f5; padding: 15px; border-radius: 16px; text-align: center; margin-bottom: 20px; border: 3px dashed var(--accent-color); }
         .change-val { font-size: 2.6rem; font-weight: 900; color: var(--accent-color); line-height: 1; margin-top: 5px;}
         
-        /* ★ 金額がポヨンと跳ねるアニメーション */
+        /* 金額がポヨンと跳ねるアニメーション */
         @keyframes popValue {
             0% { transform: scale(1); }
             50% { transform: scale(1.15); color: var(--accent-color); }
@@ -215,10 +211,9 @@
         }
         .pop-anim { animation: popValue 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); display: inline-block;}
 
-        /* カートの中身レイアウト変更 */
-        .cart-item-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed rgba(0,0,0,0.1); padding: 12px 0; gap: 10px;}
-        .cart-item-info { display: flex; align-items: center; gap: 12px; flex-grow: 1; overflow: hidden; }
-        .cart-item-text { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+        /* ★ カートの中身をスマホ最適化（縦並び） */
+        .cart-item-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed rgba(0,0,0,0.1); padding: 15px 0; gap: 10px;}
+        .cart-item-info { display: flex; align-items: flex-start; gap: 12px; flex-grow: 1; overflow: hidden; }
         .qty-btn { width: 38px; height: 38px; border-radius: 12px; border: none; background: #eee; font-size: 1.4rem; font-weight: 900; color: #333; flex-shrink: 0;}
         .modal-large-btn { width: 100%; padding: 18px; font-size: 1.2rem; font-weight: 900; margin-bottom: 12px; border-radius: 16px;}
 
@@ -250,6 +245,10 @@
         #magnifier::after {
             content: '+'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--accent-color); font-size: 24px; font-weight: 900; text-shadow: 0 0 3px white;
         }
+        
+        .icon-radio { display: none; }
+        .icon-label { font-size: 1.8rem; padding: 5px; border-radius: 12px; border: 3px solid transparent; cursor: pointer; transition: 0.2s;}
+        .icon-radio:checked + .icon-label { border-color: var(--accent-color); background: rgba(0,0,0,0.05); transform: scale(1.1);}
 
         .danger-zone { margin-top: 50px; padding-top: 25px; border-top: 2px dashed #f44336; text-align: center; }
     </style>
@@ -323,7 +322,7 @@
 
     <div class="glass-card" style="margin-top: 30px; padding: 20px;">
         <h3 style="margin-top:0; color:#1565c0; font-size:1.2rem;">💾 データの保存と読込</h3>
-        <p style="font-size:0.85rem; color:#666; font-weight:700;">現在の状態（画像やマップ含む）をファイルに保存したり、別のファイルから新しいイベントとして読み込んだりできます。</p>
+        <p style="font-size:0.85rem; color:#666; font-weight:700;">現在の状態をファイルに保存したり、新しいイベントとして読み込んだりできます。</p>
         <button onclick="exportAppData()" style="background:#2196F3; color:white; padding:16px; width:100%; font-weight:900; font-size:1.1rem; border-radius:14px; margin-bottom:12px; box-shadow: 0 4px 12px rgba(33,150,243,0.3);">⬇️ データを保存する</button>
         <label style="display:block; background:#4CAF50; color:white; padding:16px; width:100%; font-weight:900; font-size:1.1rem; border-radius:14px; text-align:center; box-sizing:border-box; box-shadow: 0 4px 12px rgba(76,175,80,0.3); cursor:pointer;">
             ⬆️ データを読み込む
@@ -526,9 +525,6 @@
 </div>
 
 <script>
-    // ==========================================
-    // 🚀 IndexedDB（大容量保存システム）
-    // ==========================================
     const DB_NAME = 'HazukiRegiDB';
     const DB_VERSION = 1;
     let db;
@@ -588,7 +584,6 @@
 
                 applyBackgroundImage(); updateEventSelector(); renderAll(); setupMapGestures(); 
                 
-                // ★ 初期化時にタブハイライトをセット
                 setTimeout(() => {
                     const activeTab = document.querySelector('.tab.active');
                     if (activeTab) switchTab('pos', activeTab);
@@ -609,7 +604,6 @@
     function saveData() { return saveDataToDB(); }
     window.onload = () => { initDB(); };
 
-    // --- 背景画像 ---
     function loadBackgroundImage(input) {
         if (input.files && input.files[0]) {
             const reader = new FileReader();
@@ -684,7 +678,7 @@
         }
     }
 
-    // ★ 超滑らかなタブ切り替え＆カートバーのバグ修正
+    // ★ 超滑らかなタブ切り替え
     function switchTab(id, tabElement) {
         try {
             document.querySelectorAll('.tab, .tab-content').forEach(el => el.classList.remove('active'));
@@ -692,7 +686,6 @@
             
             if (tabElement) {
                 tabElement.classList.add('active');
-                // ハイライトの移動
                 const highlight = document.getElementById('tab-highlight');
                 const leftPos = tabElement.offsetLeft;
                 highlight.style.width = tabElement.offsetWidth + 'px';
@@ -702,7 +695,6 @@
             const content = document.getElementById(id);
             if(content) content.classList.add('active');
             
-            // カートバーの確実な表示・非表示
             const cartBar = document.getElementById('cart-bar');
             if(cartBar) cartBar.style.display = (id === 'pos') ? 'flex' : 'none';
             
@@ -740,7 +732,6 @@
         reader.readAsText(input.files[0]);
     }
 
-    // --- 価格入力ポップアップ ---
     function openPriceModal() {
         const current = document.getElementById('itemPrice').value;
         document.getElementById('modal-price-input').value = current || '';
@@ -753,7 +744,6 @@
         let current = parseInt((el.value||"").replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0))) || 0;
         el.value = current + amount;
         
-        // ぽよんっ！アニメーション
         wrap.classList.remove('pop-anim');
         void wrap.offsetWidth; 
         wrap.classList.add('pop-anim');
@@ -773,7 +763,6 @@
         closePriceModal();
     }
 
-    // --- 商品登録 ---
     function addNewItem() {
         try {
             const n = document.getElementById('itemName').value;
@@ -837,7 +826,7 @@
         document.getElementById('form-title').innerText = "✏️ 商品編集";
         document.getElementById('save-product-btn').innerText = "💾 変更を保存する";
         document.getElementById('cancel-edit-btn').style.display = "block";
-        window.scrollTo(0, 0);
+        window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
     function cancelEdit() {
@@ -866,7 +855,6 @@
         if (index < ev.items.length - 1) { const temp = ev.items[index]; ev.items[index] = ev.items[index + 1]; ev.items[index + 1] = temp; saveData(); renderAll(); }
     }
 
-    // --- カート・レジ操作 ---
     function getAvailableStock(itemId) {
         const ev = appData.events.find(e => e.id == appData.currentEventId);
         if(!ev) return 0; const item = ev.items.find(i => i.id === itemId);
@@ -890,14 +878,14 @@
 
         const rect = img.getBoundingClientRect(); const target = btn.getBoundingClientRect();
         const flier = document.createElement('div');
-        flier.style.cssText = `position:fixed; left:${rect.left}px; top:${rect.top}px; width:${rect.width}px; height:${rect.height}px; background-image:url(${img.src}); background-size:contain; background-repeat:no-repeat; background-position:center; z-index:9999; pointer-events:none; transition:all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); transform-origin:center;`;
+        flier.style.cssText = `position:fixed; left:${rect.left}px; top:${rect.top}px; width:${rect.width}px; height:${rect.height}px; background-image:url(${img.src}); background-size:contain; background-repeat:no-repeat; background-position:center; z-index:9999; pointer-events:none; transition:all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); transform-origin:center;`;
         document.body.appendChild(flier);
 
         setTimeout(() => {
             flier.style.left = (target.left + target.width/2) + 'px'; flier.style.top = (target.top + target.height/2) + 'px';
             flier.style.width = '20px'; flier.style.height = '20px'; flier.style.opacity = '0'; flier.style.transform = 'translate(-50%, -50%) rotate(360deg)';
         }, 10);
-        setTimeout(() => { flier.remove(); btn.style.transform = 'scale(1.05)'; setTimeout(() => btn.style.transform = 'scale(1)', 100); if(callback) callback(); }, 500);
+        setTimeout(() => { flier.remove(); btn.style.transform = 'scale(1.05)'; setTimeout(() => btn.style.transform = 'scale(1)', 100); if(callback) callback(); }, 400);
     }
 
     // ★ 金額がぬるぬる変わるアニメーション
@@ -923,7 +911,7 @@
     function syncCartTotalAnimated() { 
         const end = cart.reduce((s,i)=>s+i.price, 0);
         const obj = document.getElementById('cart-total');
-        animateValue(obj, displayedTotal, end, 600); // ぬるぬる
+        animateValue(obj, displayedTotal, end, 600); 
         displayedTotal = end;
     }
     
@@ -939,31 +927,46 @@
         b.innerText = cart.length ? "会計へ進む (" + cart.length + ")" : "会計へ進む"; 
     }
     
-    // ★ 戻すときのアニメーション
+    // ★ 戻すときの切ないアニメーション
     function undoLastCartItem() { 
         if(cart.length){ 
-            cart.pop(); updateCartButton(); syncCartTotalAnimated(); renderPos(); 
+            const removedItem = cart.pop(); 
+            updateCartButton(); syncCartTotalAnimated(); renderPos(); 
             
-            // 戻す（消える）アニメーション
             const btn = document.querySelector('.action-btn'); 
-            const rect = btn.getBoundingClientRect();
+            const btnRect = btn.getBoundingClientRect();
+            
+            const targetEl = document.getElementById(`pos-item-${removedItem.id}`);
+            let targetRect = null;
+            if(targetEl) {
+                const img = targetEl.querySelector('img');
+                if(img) targetRect = img.getBoundingClientRect();
+            }
+
             const flier = document.createElement('div');
-            flier.innerText = '💨';
-            flier.style.cssText = `position:fixed; left:${rect.left + rect.width/2}px; top:${rect.top}px; font-size:1.5rem; z-index:9999; pointer-events:none; transition:all 0.4s cubic-bezier(0.2, 1, 0.3, 1); transform:translate(-50%, -50%);`;
+            flier.style.cssText = `position:fixed; left:${btnRect.left + btnRect.width/2}px; top:${btnRect.top}px; width:40px; height:40px; background-image:url(${removedItem.image}); background-size:contain; background-repeat:no-repeat; background-position:center; z-index:9999; pointer-events:none; transition:all 1.2s cubic-bezier(0.25, 0.1, 0.25, 1); transform:translate(-50%, -50%); opacity: 0.8; filter: grayscale(30%) sepia(20%); border-radius: 8px;`;
             document.body.appendChild(flier);
+            
             setTimeout(() => {
-                flier.style.top = `${rect.top - 60}px`;
-                flier.style.opacity = '0';
-                flier.style.transform = 'translate(-50%, -50%) scale(1.5)';
-            }, 10);
-            setTimeout(() => { flier.remove(); }, 400);
+                if(targetRect) {
+                    flier.style.left = `${targetRect.left + targetRect.width/2}px`;
+                    flier.style.top = `${targetRect.top + targetRect.height/2}px`;
+                    flier.style.transform = 'translate(-50%, -50%) scale(0.3) rotate(-15deg)';
+                    flier.style.opacity = '0';
+                } else {
+                    flier.style.top = `${btnRect.top - 150}px`;
+                    flier.style.transform = 'translate(-50%, -50%) scale(0.3) rotate(-15deg)';
+                    flier.style.opacity = '0';
+                }
+            }, 20);
+            setTimeout(() => { flier.remove(); }, 1200);
         } 
     }
     
     function openCartModal() { if(cart.length){ renderCartModalItems(); document.getElementById('cart-modal').style.display='flex'; } else alert('カートは空です'); }
     function closeCartModal() { document.getElementById('cart-modal').style.display='none'; }
     
-    // ★ カートの中身レイアウト変更（金額を右寄せ）
+    // ★ カートの中身をスマホ最適化（商品名の下に金額）
     function renderCartModalItems() {
         const list = document.getElementById('cart-items-list'); list.innerHTML = '';
         const map = {}; cart.forEach(i => { if(!map[i.id]) map[i.id] = {...i, count:0}; map[i.id].count++; });
@@ -971,14 +974,14 @@
             const avail = getAvailableStock(i.id);
             list.innerHTML += `
             <div class="cart-item-row">
-                <div class="cart-item-info">
-                    <img src="${i.image}" style="width:45px; height:45px; object-fit:contain; border-radius:8px; background:rgba(255,255,255,0.9); flex-shrink:0;">
-                    <div class="cart-item-text">
-                        <strong style="font-size:1.1rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${i.name}</strong>
-                        <span style="color:#666; font-size:1.1rem; font-weight:900; margin-left:10px;">¥${i.price.toLocaleString()}</span>
+                <div class="cart-item-info" style="align-items: flex-start;">
+                    <img src="${i.image}" style="width:45px; height:45px; object-fit:contain; border-radius:10px; background:rgba(255,255,255,0.9); flex-shrink:0;">
+                    <div style="display:flex; flex-direction:column; overflow:hidden;">
+                        <strong style="font-size:1.05rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${i.name}</strong>
+                        <span style="color:#666; font-size:0.95rem; font-weight:900;">¥${i.price.toLocaleString()}</span>
                     </div>
                 </div>
-                <div style="display:flex; align-items:center; gap:8px; margin-left:10px;">
+                <div style="display:flex; align-items:center; gap:8px; margin-left:10px; flex-shrink:0;">
                     <button class="qty-btn" onclick="modifyQty(${i.id},-1)">-</button>
                     <b style="font-size:1.3rem; width:25px; text-align:center;">${i.count}</b>
                     <button class="qty-btn" onclick="modifyQty(${i.id},1)" ${avail<=0?'disabled style="opacity:0.3"':''}>+</button>
@@ -994,7 +997,6 @@
     }
     function clearCart() { if(confirm('空にしますか？')){ cart=[]; updateCartButton(); syncCartTotalInstant(); renderPos(); closeCartModal(); } }
 
-    // --- お会計 ---
     function openCheckoutModal() {
         currentCheckoutTotal = cart.reduce((s,i)=>s+i.price, 0);
         document.getElementById('modal-total-amount').innerText = currentCheckoutTotal.toLocaleString();
@@ -1025,7 +1027,6 @@
             changeEl.innerText = '0'; changeEl.style.color = 'var(--accent-color)'; 
             lastChangeVal = 0;
         } else { 
-            // ぬるぬるアニメーション
             if (c >= 0 && lastChangeVal !== c) {
                 animateValue(changeEl, lastChangeVal, c, 500);
                 lastChangeVal = c;
@@ -1049,7 +1050,6 @@
         if(navigator.vibrate) navigator.vibrate([100, 50, 100]); 
     }
 
-    // --- 分析描画 ---
     function renderAnalytics() {
         const ev = appData.events.find(e => e.id == appData.currentEventId);
         if(!ev) return;
@@ -1123,7 +1123,7 @@
         link.download = `${ev.name}_売上.csv`; link.click();
     }
 
-    // --- ★ マップ機能 ---
+    // --- マップ機能 ---
     let mapScale = 1, mapTx = 0, mapTy = 0;
     let isPanning = false, startTx = 0, startTy = 0;
     let initialDist = null, lastScale = 1;
@@ -1319,21 +1319,21 @@
         saveData(); renderMap(); closePinModal();
     }
 
-    // --- 全体描画まとめ ---
     function renderAll() { 
         renderPos(); renderSettings(); renderHistory(); 
         if(document.getElementById('analytics').classList.contains('active')) renderAnalytics(); 
         if(document.getElementById('map').classList.contains('active')) renderMap();
     }
 
-    // --- 描画処理関数 ---
+    // --- ★ レジカード描画（コンパクト化＆id付与） ---
     function renderPos() {
         const grid = document.getElementById('pos-grid'); grid.innerHTML = '';
         const ev = appData.events.find(e => e.id == appData.currentEventId);
         if(!ev.items.length) { grid.innerHTML = '<p style="grid-column:1/-1; text-align:center; padding:60px 0; color:#888; font-weight:700;">[設定]から<br>商品を登録してください</p>'; return; }
         ev.items.forEach(i => {
             const avail = getAvailableStock(i.id);
-            grid.innerHTML += `<div class="item glass-card ${avail>0?'clickable':''}" ${avail>0?`onclick="addToCart(event,${i.id})"`:''}><img src="${i.image}"><h3>${i.name}</h3><p>¥${i.price.toLocaleString()}</p><div class="stock">残り: ${avail}</div>${avail<=0?'<div class="sold-out">完売</div>':''}</div>`;
+            // アニメーション用に id="pos-item-xxx" を追加
+            grid.innerHTML += `<div class="item glass-card ${avail>0?'clickable':''}" id="pos-item-${i.id}" ${avail>0?`onclick="addToCart(event,${i.id})"`:''}><img src="${i.image}"><h3>${i.name}</h3><p>¥${i.price.toLocaleString()}</p><div class="stock">残り: ${avail}</div>${avail<=0?'<div class="sold-out">完売</div>':''}</div>`;
         });
     }
 
