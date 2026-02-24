@@ -6,23 +6,56 @@
     <title>はづきれじ</title>
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&family=Noto+Sans+JP:wght@400;700&family=Kiwi+Maru:wght@400;700&family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
     <style>
+        /* --- テーマ設定 --- */
         :root {
             --bg-color: #f4f4f9; --header-bg: #222; --tab-bg: #333; --accent-color: #e91e63;
             --tab-active-bg: #e91e63; --tab-active-color: #fff;
             --card-bg: #ffffff; --text-color: #333; --btn-checkout: #2196F3;
             --app-font: 'Noto Sans JP', sans-serif;
         }
-        [data-theme="cute"] { --bg-color: #fff0f5; --header-bg: #ffb6c1; --tab-bg: #ffe4e1; --accent-color: #ff69b4; --tab-active-bg: #ff69b4; --tab-active-color: #fff; --card-bg: #ffffff; --text-color: #5d4037; --btn-checkout: #ff69b4; --app-font: 'Zen Maru Gothic', sans-serif; }
-        [data-theme="chocolate"] { --bg-color: #f3e5f5; --header-bg: #3e2723; --tab-bg: #5d4037; --accent-color: #795548; --tab-active-bg: #795548; --tab-active-color: #fff; --card-bg: #fff8e1; --text-color: #3e2723; --btn-checkout: #8d6e63; --app-font: 'Kiwi Maru', serif; }
-        [data-theme="matcha"] { --bg-color: #f1f8e9; --header-bg: #33691e; --tab-bg: #558b2f; --accent-color: #689f38; --tab-active-bg: #689f38; --tab-active-color: #fff; --card-bg: #ffffff; --text-color: #1b5e20; --btn-checkout: #aed581; --app-font: 'Noto Sans JP', sans-serif; }
-        [data-theme="visibility"] { --bg-color: #ffffff; --header-bg: #000000; --tab-bg: #1a1a1a; --accent-color: #ffeb3b; --tab-active-bg: #ffeb3b; --tab-active-color: #000; --card-bg: #ffffff; --text-color: #000000; --btn-checkout: #0000ff; --app-font: sans-serif; }
-        [data-theme="cyber"] { --bg-color: #0f0f1b; --header-bg: #1a1a2e; --tab-bg: #16213e; --accent-color: #00f0ff; --tab-active-bg: #e94560; --tab-active-color: #fff; --card-bg: #1a1a2e; --text-color: #e0e0e0; --btn-checkout: #e94560; --app-font: 'Noto Sans JP', sans-serif; }
-        [data-theme="ocean"] { --bg-color: #e0f7fa; --header-bg: #01579b; --tab-bg: #0288d1; --accent-color: #00acc1; --tab-active-bg: #26c6da; --tab-active-color: #004d40; --card-bg: #ffffff; --text-color: #004d40; --btn-checkout: #00838f; --app-font: 'Noto Sans JP', sans-serif; }
+        [data-theme="cute"] {
+            --bg-color: #fff0f5; --header-bg: #ffb6c1; --tab-bg: #ffe4e1; --accent-color: #ff69b4;
+            --tab-active-bg: #ff69b4; --tab-active-color: #fff;
+            --card-bg: #ffffff; --text-color: #5d4037; --btn-checkout: #ff69b4;
+            --app-font: 'Zen Maru Gothic', sans-serif; 
+        }
+        [data-theme="chocolate"] {
+            --bg-color: #f3e5f5; --header-bg: #3e2723; --tab-bg: #5d4037; --accent-color: #795548;
+            --tab-active-bg: #795548; --tab-active-color: #fff;
+            --card-bg: #fff8e1; --text-color: #3e2723; --btn-checkout: #8d6e63;
+            --app-font: 'Kiwi Maru', serif;
+        }
+        [data-theme="matcha"] {
+            --bg-color: #f1f8e9; --header-bg: #33691e; --tab-bg: #558b2f; --accent-color: #689f38;
+            --tab-active-bg: #689f38; --tab-active-color: #fff;
+            --card-bg: #ffffff; --text-color: #1b5e20; --btn-checkout: #aed581;
+            --app-font: 'Noto Sans JP', sans-serif;
+        }
+        [data-theme="visibility"] {
+            --bg-color: #ffffff; --header-bg: #000000; --tab-bg: #1a1a1a; --accent-color: #ffeb3b;
+            --tab-active-bg: #ffeb3b; --tab-active-color: #000;
+            --card-bg: #ffffff; --text-color: #000000; --btn-checkout: #0000ff;
+            --app-font: sans-serif;
+        }
+        [data-theme="cyber"] {
+            --bg-color: #0f0f1b; --header-bg: #1a1a2e; --tab-bg: #16213e; --accent-color: #00f0ff;
+            --tab-active-bg: #e94560; --tab-active-color: #fff;
+            --card-bg: #1a1a2e; --text-color: #e0e0e0; --btn-checkout: #e94560;
+            --app-font: 'Noto Sans JP', sans-serif;
+        }
+        [data-theme="ocean"] {
+            --bg-color: #e0f7fa; --header-bg: #01579b; --tab-bg: #0288d1; --accent-color: #00acc1;
+            --tab-active-bg: #26c6da; --tab-active-color: #004d40;
+            --card-bg: #ffffff; --text-color: #004d40; --btn-checkout: #00838f;
+            --app-font: 'Noto Sans JP', sans-serif;
+        }
 
+        /* --- 全体レイアウト --- */
         body { font-family: var(--app-font); margin: 0; padding: 0; background-color: var(--bg-color); color: var(--text-color); padding-bottom: 130px; touch-action: manipulation; }
         button { touch-action: manipulation; font-family: inherit; cursor: pointer; border: none; border-radius: 6px; }
         input, select { font-family: inherit; }
 
+        /* ヘッダー＆タブ */
         .preset-header { background-color: var(--header-bg); padding: 8px 10px; display: flex; justify-content: space-between; align-items: center; gap: 5px; }
         .preset-header select { flex-grow: 1; padding: 8px; border-radius: 4px; font-size: 1rem; border: none; font-weight: bold; background: #fff; color: #333; }
         .preset-btn { background-color: #555; color: white; padding: 8px 10px; font-weight: bold; font-size: 0.85rem; }
@@ -35,6 +68,7 @@
         .tab-content { display: none; padding: 10px; }
         .tab-content.active { display: block; }
         
+        /* レジ画面 */
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
         .item { background: var(--card-bg); border-radius: 8px; padding: 5px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); position: relative; overflow: hidden; }
         .item img { width: 100%; height: 90px; object-fit: contain; border-radius: 4px; background-color: #f0f0f0; margin-bottom: 2px; transition: 0.1s; }
@@ -45,6 +79,7 @@
         .stock { font-size: 0.75rem; color: #777; margin-bottom: 2px; font-weight: bold; }
         .sold-out { position: absolute; top:0; left:0; right:0; bottom:0; background: rgba(255,255,255,0.85); display:flex; align-items:center; justify-content:center; font-weight:bold; color:#f44336; font-size:1.2rem; pointer-events:none; border: 2px solid #f44336; }
         
+        /* カートバー */
         .bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 10px 15px; box-shadow: 0 -3px 15px rgba(0,0,0,0.15); display: flex; flex-direction: column; gap: 8px; z-index: 90; border-top: 2px solid var(--accent-color); }
         .cart-status { display: flex; justify-content: space-between; align-items: center; width: 100%; }
         .action-btn { padding: 10px 12px; background: #f0f0f0; border: 1px solid #ccc; font-size: 0.95rem; font-weight: bold; color: #333; border-radius: 6px;}
@@ -52,66 +87,94 @@
         .checkout-btn:disabled { background-color: #ccc; color: #666; }
         .total-amount-display { font-weight: bold; font-size: 2.2rem; color: #333; line-height: 1;}
 
+        /* 設定画面 */
         .form-group { margin-bottom: 12px; }
         .form-group label { display: block; font-size: 0.85rem; color: #666; margin-bottom: 4px; }
         .form-group input, .form-group select { width: 100%; padding: 12px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; color: #333; background: #fff;}
         .save-btn { background-color: var(--accent-color); color: white; padding: 14px; width: 100%; font-size: 1.1rem; font-weight: bold; border-radius: 8px;}
         
-        /* 長押しドラッグ＆ドロップ用リストスタイル */
-        .list-item { background: var(--card-bg); padding: 10px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 10px; border-radius: 8px; margin-bottom: 5px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); user-select: none; transition: transform 0.2s;}
-        .list-item img { width: 45px; height: 45px; object-fit: contain; background: #f9f9f9; border-radius: 4px; pointer-events: none;}
-        .list-btn { padding: 6px 10px; font-size: 0.8rem; font-weight: bold; border-radius: 4px; z-index: 2;}
-        .drag-handle { color: #ccc; font-size: 1.5rem; padding: 0 10px; font-weight: bold; pointer-events: none; }
+        /* リストスタイル（並び替えボタン追加） */
+        .list-item { background: var(--card-bg); padding: 8px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 8px; border-radius: 8px; margin-bottom: 5px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);}
+        .list-item img { width: 40px; height: 40px; object-fit: contain; background: #f9f9f9; border-radius: 4px; }
+        .list-btn { padding: 6px 10px; font-size: 0.8rem; font-weight: bold; border-radius: 4px;}
+        .order-btn { background: #eee; border: none; color: #333; font-size: 1rem; padding: 5px 8px; border-radius: 4px; font-weight: bold; }
         
+        /* 履歴・分析 */
         .history-card { background: var(--card-bg); padding: 12px; border-radius: 8px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .history-info { display: flex; align-items: center; gap: 10px; flex-grow: 1; overflow: hidden; }
         .history-time { font-size: 0.8rem; color: #888; background: #f0f0f0; padding: 3px 6px; border-radius: 4px; white-space: nowrap; font-weight: bold;}
         .history-detail { font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-color); }
         .history-price { font-weight:bold; color:var(--accent-color); font-size: 1.1rem; white-space: nowrap; margin-left: 5px;}
 
+        /* モーダル群 */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; padding: 10px; }
         .modal-content { background: white; width: 100%; max-width: 450px; border-radius: 16px; padding: 20px; box-sizing: border-box; max-height: 95vh; overflow-y: auto; position: relative; color: #333; }
+        
         .money-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 15px; }
         .money-btn { background: #e3f2fd; color: #1565c0; padding: 14px 5px; font-size: 1rem; font-weight: bold; border-radius: 6px;}
         .tender-input { width: 100%; padding: 12px; font-size: 1.6rem; text-align: right; border: 2px solid var(--btn-checkout); border-radius: 10px; box-sizing: border-box; }
         .change-box { background: #fff0f5; padding: 10px; border-radius: 10px; text-align: center; margin-bottom: 15px; border: 2px dashed var(--accent-color); }
         .change-val { font-size: 2rem; font-weight: bold; color: var(--accent-color); }
+        
         .cart-item-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #ddd; padding: 10px 0; }
         .qty-btn { width: 32px; height: 32px; border-radius: 50%; border: none; background: #eee; font-size: 1.2rem; font-weight: bold; color: #333;}
         .modal-large-btn { width: 100%; padding: 16px; font-size: 1.1rem; font-weight: bold; margin-bottom: 10px; border-radius: 8px;}
 
         /* マップ関連 */
-        #map-container { width: 100%; height: 60vh; background: #ddd; overflow: hidden; position: relative; border-radius: 8px; margin-top: 10px; border: 2px solid #ccc; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+        #map-container { 
+            width: 100%; height: 60vh; background: #ddd; overflow: hidden; position: relative; 
+            border-radius: 8px; margin-top: 10px; border: 2px solid #ccc;
+            -webkit-touch-callout: none; -webkit-user-select: none; user-select: none;
+        }
         #map-wrapper { position: absolute; transform-origin: 0 0; }
         #map-image { pointer-events: none; }
-        .map-pin-wrap { position: absolute; transform: translate(-50%, calc(-100% + 3px)); display: flex; flex-direction: column; align-items: center; z-index: 10; pointer-events: auto; }
+        
+        .map-pin-wrap { 
+            position: absolute; 
+            transform: translate(-50%, calc(-100% + 3px)); 
+            display: flex; flex-direction: column; align-items: center; z-index: 10; 
+            pointer-events: auto; 
+        }
+        
         #pins-container.pin-mode .map-pin-wrap { pointer-events: none; opacity: 0.4; filter: grayscale(0.5); }
-        .pin-label { padding: 2px 6px; border-radius: 4px; font-size: 0.65rem; font-weight: bold; white-space: nowrap; margin-bottom: 2px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.2); pointer-events: none; backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); }
+
+        .pin-label { 
+            padding: 2px 6px; border-radius: 4px; font-size: 0.65rem; font-weight: bold; 
+            white-space: nowrap; margin-bottom: 2px; text-align: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2); 
+            pointer-events: none; 
+            backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
+        }
         .color-white { background: rgba(255,255,255,0.7); color: #222; }
         .color-pink { background: rgba(255,192,203,0.7); color: #900; }
         .color-blue { background: rgba(173,216,230,0.7); color: #005; }
         .color-green { background: rgba(144,238,144,0.7); color: #050; }
         .color-yellow { background: rgba(255,255,224,0.7); color: #550; }
+
         .pin-icon { font-size: 24px; cursor: pointer; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5)); line-height: 1; transition: transform 0.1s; }
         .map-pin-wrap:active .pin-icon { transform: scale(1.2); }
         .pin-dot { width: 6px; height: 6px; background: #ff1744; border-radius: 50%; margin-top: -3px; border: 1px solid white; box-shadow: 0 1px 2px rgba(0,0,0,0.5); }
+        
         #pins-container.hide-labels .pin-label { display: none; }
         
-        #magnifier { position: fixed; width: 100px; height: 100px; border: 3px solid var(--accent-color); border-radius: 50%; background-color: white; background-repeat: no-repeat; pointer-events: none; display: none; z-index: 2000; box-shadow: 0 4px 10px rgba(0,0,0,0.4); }
-        #magnifier::after { content: '+'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--accent-color); font-size: 20px; font-weight: bold; text-shadow: 0 0 2px white; }
+        #magnifier {
+            position: fixed; width: 100px; height: 100px; border: 3px solid var(--accent-color); border-radius: 50%;
+            background-color: white; background-repeat: no-repeat; pointer-events: none; display: none; z-index: 2000; box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        }
+        #magnifier::after {
+            content: '+'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--accent-color); font-size: 20px; font-weight: bold; text-shadow: 0 0 2px white;
+        }
+        
         .icon-radio { display: none; }
         .icon-label { font-size: 1.5rem; padding: 5px; border-radius: 6px; border: 2px solid transparent; cursor: pointer; }
         .icon-radio:checked + .icon-label { border-color: var(--accent-color); background: #f0f0f0; }
 
-        /* ロード画面 */
-        #loader { position: fixed; top:0; left:0; right:0; bottom:0; background:var(--bg-color); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--text-color); font-weight:bold; font-size:1.2rem;}
-        .spinner { border: 4px solid rgba(0,0,0,0.1); border-left-color: var(--accent-color); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 15px;}
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        /* リセット用ボタン等 */
+        .danger-zone { margin-top: 40px; padding-top: 20px; border-top: 2px dashed #f44336; text-align: center; }
+        .export-zone { margin-top: 20px; padding: 15px; background: #e3f2fd; border-radius: 8px; border: 1px solid #90caf9;}
     </style>
 </head>
 <body data-theme="default">
-
-<div id="loader"><div class="spinner"></div><div>大容量倉庫を準備中...</div></div>
 
 <div class="preset-header">
     <select id="event-selector" onchange="changeEvent(this.value)"></select>
@@ -124,9 +187,9 @@
 
 <div class="tabs">
     <div class="tab active" onclick="switchTab('pos')">レジ</div>
-    <div class="tab" onclick="switchTab('settings')">商品設定</div>
-    <div class="tab" onclick="switchTab('analytics')">📊 分析</div>
-    <div class="tab" onclick="switchTab('map')">🗺 マップ</div>
+    <div class="tab" onclick="switchTab('settings')">設定</div>
+    <div class="tab" onclick="switchTab('analytics')">📊分析・履歴</div>
+    <div class="tab" onclick="switchTab('map')">🗺マップ</div>
 </div>
 
 <div id="pos" class="tab-content active">
@@ -134,13 +197,6 @@
 </div>
 
 <div id="settings" class="tab-content">
-    <div style="display:flex; gap:10px; margin-bottom:15px;">
-        <label style="background:#4CAF50; color:white; padding:10px; border-radius:6px; font-weight:bold; flex:1; text-align:center;">
-            📥 データ読込 <input type="file" style="display:none;" accept=".json" onclick="this.value=null;" onchange="importEventData(this)">
-        </label>
-        <button onclick="exportEventData()" style="background:#2196F3; color:white; padding:10px; border-radius:6px; font-weight:bold; flex:1;">📤 データ保存</button>
-    </div>
-
     <div class="form-group">
         <label>🎨 テーマ変更</label>
         <select id="theme-selector" onchange="changeTheme(this.value)">
@@ -175,8 +231,24 @@
         <button class="save-btn" id="cancel-edit-btn" onclick="cancelEdit()" style="display:none; background:#888; margin-top:5px;">キャンセル</button>
     </div>
 
-    <h3 style="margin-top:25px; border-bottom:2px solid #ddd; padding-bottom:5px;">📋 登録済みリスト <span style="font-size:0.75rem; color:#666; font-weight:normal;">(長押し＆スワイプで並替)</span></h3>
-    <div id="settings-list" style="touch-action: none;"></div>
+    <h3 style="margin-top:25px; border-bottom:2px solid #ddd; padding-bottom:5px;">📋 登録済みリスト（△▽で並び替え）</h3>
+    <div id="settings-list"></div>
+
+    <div class="export-zone">
+        <h3 style="margin-top:0; color:#1565c0;">💾 データの保存と読込</h3>
+        <p style="font-size:0.8rem; color:#666;">現在の状態（画像やマップ含む）をファイルに保存したり、別のファイルから新しいイベントとして読み込んだりできます。</p>
+        <button onclick="exportAppData()" style="background:#2196F3; color:white; padding:12px; width:100%; font-weight:bold; border-radius:6px; margin-bottom:10px;">⬇️ データを保存する</button>
+        <label style="display:block; background:#4CAF50; color:white; padding:12px; width:100%; font-weight:bold; border-radius:6px; text-align:center; box-sizing:border-box;">
+            ⬆️ データを読み込む
+            <input type="file" style="display:none;" accept=".json" onchange="importAppData(this)">
+        </label>
+    </div>
+
+    <div class="danger-zone">
+        <h3 style="color:#f44336; margin-top:0;">⚠️ 危険領域</h3>
+        <p style="font-size:0.8rem; color:#666;">動作がおかしい時は、このボタンでアプリを初期化してください。</p>
+        <button onclick="hardResetApp()" style="background:#f44336; color:white; padding:15px; width:100%; font-weight:bold; border-radius:8px; font-size:1.1rem;">⚠️ アプリを完全にリセットする</button>
+    </div>
 </div>
 
 <div id="analytics" class="tab-content">
@@ -196,7 +268,10 @@
         </div>
     </div>
     
-    <button onclick="copyReportToClipboard()" style="background:var(--btn-checkout); color:white; padding:15px; width:100%; border-radius:6px; font-weight:bold; font-size:1.1rem; margin-bottom:10px;">📝 レポートテキストをコピー</button>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:15px;">
+        <button onclick="copyReportToClipboard()" style="background:var(--btn-checkout); color:white; padding:12px; border-radius:6px; font-weight:bold;">📝 レポートコピー</button>
+        <button onclick="exportCSV()" style="background:#4CAF50; color:white; padding:12px; border-radius:6px; font-weight:bold;">📊 CSV出力</button>
+    </div>
 
     <h3 style="border-bottom:2px solid #ddd; padding-bottom:5px;">🏆 商品別売上</h3>
     <div id="stat-items" style="background:var(--card-bg); padding:15px; border-radius:12px; margin-bottom:20px; box-shadow:0 1px 3px rgba(0,0,0,0.1);"></div>
@@ -214,7 +289,8 @@
 <div id="map" class="tab-content">
     <div style="display:flex; justify-content:space-between; align-items:center; gap:5px; margin-bottom:5px;">
         <label style="background:var(--btn-checkout); color:white; padding:10px; border-radius:6px; font-size:0.9rem; font-weight:bold; flex-grow:1; text-align:center;">
-            🗺 図面読込 <input type="file" style="display:none;" accept="image/*" onclick="this.value=null;" onchange="loadMapImage(this)">
+            🗺 図面読込 
+            <input type="file" style="display:none;" accept="image/*" onclick="this.value=null;" onchange="loadMapImage(this)">
         </label>
         <button onclick="deleteMapImage()" style="background:#f44336; color:white; padding:10px; border-radius:6px; font-weight:bold;">🗑 削除</button>
         <button onclick="toggleLabels()" id="label-toggle-btn" style="background:var(--accent-color); color:white; padding:10px; border-radius:6px; font-weight:bold;">👁 文字</button>
@@ -225,7 +301,7 @@
             📍 ピン追加モード：【OFF】（地図移動）
         </button>
     </div>
-    <p style="font-size:0.75rem; color:#666; margin:5px 0; line-height:1.3;">※2本指で拡大縮小。ピン追加ONにして地図をドラッグするとルーペが出ます。離した場所にピンが立ちます。</p>
+    <p style="font-size:0.75rem; color:#666; margin:5px 0; line-height:1.3;">※2本指で拡大縮小。ピン追加ONにして地図をタッチして動かすとルーペが出現します。指を離した場所にピンが立ちます。</p>
     
     <div id="map-container">
         <div id="map-wrapper">
@@ -359,97 +435,129 @@
 
 <script>
     // ==========================================
-    // 💾 超大容量倉庫（IndexedDB）システム
+    // 🚀 IndexedDB（大容量保存システム）の構築
     // ==========================================
-    const DB_NAME = 'HazukiRegiDB_V1';
-    const STORE_NAME = 'store';
-    let appData = null;
-
-    function initDB() {
-        return new Promise((resolve, reject) => {
-            const req = indexedDB.open(DB_NAME, 1);
-            req.onupgradeneeded = e => { e.target.result.createObjectStore(STORE_NAME); };
-            req.onsuccess = e => resolve(e.target.result);
-            req.onerror = e => reject(e.target.error);
-        });
-    }
-
-    async function loadDataFromDB() {
-        const db = await initDB();
-        return new Promise((resolve, reject) => {
-            const tx = db.transaction(STORE_NAME, 'readonly');
-            const req = tx.objectStore(STORE_NAME).get('appData');
-            req.onsuccess = () => resolve(req.result);
-            req.onerror = () => reject(req.error);
-        });
-    }
-
-    async function saveDataToDB(data) {
-        const db = await initDB();
-        return new Promise((resolve, reject) => {
-            const tx = db.transaction(STORE_NAME, 'readwrite');
-            tx.objectStore(STORE_NAME).put(data, 'appData');
-            tx.oncomplete = () => resolve(true);
-            tx.onerror = () => reject(tx.error);
-        });
-    }
-
-    async function saveData() {
-        try {
-            await saveDataToDB(appData);
-        } catch(e) {
-            alert('⚠️ 【保存エラー】データの保存に失敗しました。');
-        }
-    }
-
-    // ==========================================
-    // 🚀 アプリ起動処理
-    // ==========================================
-    window.onload = async () => {
-        try {
-            appData = await loadDataFromDB();
-        } catch(e) { console.error("DB Load Error", e); }
-
-        if (!appData) {
-            // LocalStorageからのマイグレーション（引き継ぎ）
-            const ls = localStorage.getItem('pos_app_data');
-            if (ls) {
-                appData = JSON.parse(ls);
-                await saveDataToDB(appData);
-                localStorage.removeItem('pos_app_data'); // 旧倉庫を掃除
-            } else {
-                appData = { currentEventId: Date.now(), events: [{ id: Date.now(), name: "イベント①", items: [], history: [], mapImage: null, pins: [] }], theme: 'default' };
-                await saveDataToDB(appData);
-            }
-        }
-        
-        // データの補完
-        appData.events.forEach(ev => {
-            if (!ev.history) ev.history = [];
-            if (!ev.items) ev.items = [];
-            if (ev.mapImage === undefined) ev.mapImage = null;
-            if (!ev.pins) ev.pins = [];
-        });
-
-        document.body.setAttribute('data-theme', appData.theme || 'default');
-        if(document.getElementById('theme-selector')) document.getElementById('theme-selector').value = appData.theme || 'default';
-
-        document.getElementById('loader').style.display = 'none';
-
-        updateEventSelector();
-        renderAll();
-        setupMapGestures();
-        setupDragSort(); // 長押し並び替えのセットアップ
-    };
-
+    const DB_NAME = 'HazukiRegiDB';
+    const DB_VERSION = 1;
+    let db;
+    
+    // アプリのメモリ上データ
+    let appData = { currentEventId: Date.now(), events: [], theme: 'default' };
     let cart = [];
     let displayedTotal = 0;
     let currentCheckoutTotal = 0;
 
+    // データベースの初期化と読み込み
+    function initDB() {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open(DB_NAME, DB_VERSION);
+            
+            request.onerror = (event) => {
+                console.error("IndexedDB error:", event);
+                alert("データベースの起動に失敗しました。プライベートモード等では動作しない可能性があります。");
+                reject(event);
+            };
+
+            request.onupgradeneeded = (event) => {
+                db = event.target.result;
+                if (!db.objectStoreNames.contains('appData')) {
+                    db.createObjectStore('appData', { keyPath: 'id' });
+                }
+            };
+
+            request.onsuccess = (event) => {
+                db = event.target.result;
+                loadDataFromDB().then(() => {
+                    resolve();
+                });
+            };
+        });
+    }
+
+    // データの読み込み
+    function loadDataFromDB() {
+        return new Promise((resolve) => {
+            const transaction = db.transaction(['appData'], 'readonly');
+            const store = transaction.objectStore('appData');
+            const request = store.get('main');
+            
+            request.onsuccess = (event) => {
+                if (request.result) {
+                    appData = request.result.data;
+                    
+                    // データ補正
+                    if (!appData.events || appData.events.length === 0) {
+                        const initialId = Date.now();
+                        appData.events = [{ id: initialId, name: "イベント①", items: [], history: [], mapImage: null, pins: [] }];
+                        appData.currentEventId = initialId;
+                    }
+                    appData.events.forEach(ev => {
+                        if (!ev.history) ev.history = [];
+                        if (!ev.items) ev.items = [];
+                        if (ev.mapImage === undefined) ev.mapImage = null;
+                        if (!ev.pins) ev.pins = [];
+                    });
+                } else {
+                    // DBに何もない場合の初期設定
+                    const initialId = Date.now();
+                    appData = {
+                        currentEventId: initialId,
+                        events: [{ id: initialId, name: "イベント①", items: [], history: [], mapImage: null, pins: [] }],
+                        theme: 'default'
+                    };
+                    saveDataToDB();
+                }
+                
+                // 読み込み完了後に画面を構築
+                document.body.setAttribute('data-theme', appData.theme || 'default');
+                if(document.getElementById('theme-selector')) document.getElementById('theme-selector').value = appData.theme || 'default';
+                updateEventSelector();
+                renderAll();
+                setupMapGestures();
+                resolve();
+            };
+        });
+    }
+
+    // データの保存（超大容量対応）
+    function saveDataToDB() {
+        try {
+            const transaction = db.transaction(['appData'], 'readwrite');
+            const store = transaction.objectStore('appData');
+            store.put({ id: 'main', data: appData });
+            return true;
+        } catch(e) {
+            console.error("Save error", e);
+            alert("データの保存に失敗しました。");
+            return false;
+        }
+    }
+    
+    // 以降、従来の saveData() を saveDataToDB() に置き換える処理
+    function saveData() { return saveDataToDB(); }
+
+    // 起動処理
+    window.onload = () => {
+        initDB();
+    };
+
+    // --- 以降はUIと機能のロジック ---
+
+    function hardResetApp() {
+        if(confirm("【⚠️警告】\n登録した商品、売上履歴など、すべてのデータを完全に消去して初期状態に戻します。\n\n本当に実行しますか？")) {
+            if(confirm("本当に消去してよろしいですか？（この操作は取り消せません）")) {
+                const req = indexedDB.deleteDatabase(DB_NAME);
+                req.onsuccess = () => { location.reload(); };
+                req.onerror = () => { alert("リセットに失敗しました"); };
+            }
+        }
+    }
+    
     function changeTheme(name) { appData.theme = name; document.body.setAttribute('data-theme', name); saveData(); }
     
     function updateEventSelector() {
         const sel = document.getElementById('event-selector');
+        if(!sel) return;
         sel.innerHTML = '';
         appData.events.forEach(ev => {
             const opt = document.createElement('option');
@@ -490,54 +598,70 @@
     }
 
     function switchTab(id) {
-        document.querySelectorAll('.tab, .tab-content').forEach(el => el.classList.remove('active'));
-        document.querySelector(`.tab[onclick*="${id}"]`).classList.add('active');
-        document.getElementById(id).classList.add('active');
-        document.getElementById('cart-bar').style.display = id === 'pos' ? 'flex' : 'none';
-        if (id === 'analytics') renderAnalytics();
-        if (id === 'map') renderMap();
-        window.scrollTo(0, 0);
+        try {
+            document.querySelectorAll('.tab, .tab-content').forEach(el => el.classList.remove('active'));
+            const tabBtn = document.querySelector(`.tab[onclick*="${id}"]`);
+            if(tabBtn) tabBtn.classList.add('active');
+            const content = document.getElementById(id);
+            if(content) content.classList.add('active');
+            const cartBar = document.getElementById('cart-bar');
+            if(cartBar) cartBar.style.display = id === 'pos' ? 'flex' : 'none';
+            
+            if (id === 'analytics') renderAnalytics();
+            if (id === 'map') renderMap();
+            window.scrollTo(0, 0);
+        } catch(e) { console.error("Tab switch error:", e); }
     }
 
-    // ==========================================
-    // 📦 データ インポート・エクスポート
-    // ==========================================
-    function exportEventData() {
-        const ev = appData.events.find(e => e.id == appData.currentEventId);
-        const jsonStr = JSON.stringify(ev);
-        const blob = new Blob([jsonStr], { type: "application/json" });
+    // --- データのインポート・エクスポート（バックアップ） ---
+    function exportAppData() {
+        const dataStr = JSON.stringify(appData);
+        const blob = new Blob([dataStr], { type: "application/json" });
         const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = ev.name + "_データ.json";
-        a.click();
+        const link = document.createElement('a');
+        link.href = url;
+        
+        let d = new Date();
+        let yyyy = d.getFullYear();
+        let mm = ('0' + (d.getMonth() + 1)).slice(-2);
+        let dd = ('0' + d.getDate()).slice(-2);
+        
+        link.download = `はづきれじ_バックアップ_${yyyy}${mm}${dd}.json`;
+        link.click();
+        URL.revokeObjectURL(url);
     }
 
-    function importEventData(input) {
-        const file = input.files[0];
-        if(!file) return;
+    function importAppData(input) {
+        if (!input.files || !input.files[0]) return;
+        if (!confirm("読み込んだファイルは『新しいイベント』として追加されます。\nよろしいですか？")) {
+            input.value = ""; return;
+        }
+
         const reader = new FileReader();
-        reader.onload = async (e) => {
+        reader.onload = (e) => {
             try {
-                const data = JSON.parse(e.target.result);
-                if(data.name && Array.isArray(data.items)) {
-                    data.id = Date.now();
-                    data.name = data.name + " (読込)";
-                    appData.events.push(data);
-                    appData.currentEventId = data.id;
-                    await saveData();
+                const importedData = JSON.parse(e.target.result);
+                if (importedData && importedData.events) {
+                    // 読み込んだイベントのIDが被らないように付け替えて追加
+                    importedData.events.forEach(ev => {
+                        ev.id = Date.now() + Math.floor(Math.random() * 1000);
+                        ev.name = ev.name + " (読込)";
+                        appData.events.push(ev);
+                        appData.currentEventId = ev.id; // 読み込んだものに切り替え
+                    });
+                    saveData();
                     updateEventSelector();
                     renderAll();
-                    alert("✅ データを別イベントとして読み込みました！");
+                    alert("データの読み込みが完了しました！");
                 } else {
-                    alert("⚠️ 対応していないファイルです。");
+                    alert("ファイルの形式が違います。");
                 }
-            } catch(err) {
-                alert("⚠️ 読み込みエラー: " + err.message);
+            } catch (err) {
+                alert("ファイルの読み込みに失敗しました。");
             }
-            input.value = ""; 
+            input.value = "";
         };
-        reader.readAsText(file);
+        reader.readAsText(input.files[0]);
     }
 
     // --- 価格入力ポップアップ ---
@@ -569,50 +693,63 @@
         closePriceModal();
     }
 
-    // --- 商品管理 ---
+    // --- 商品登録（IndexedDBの恩恵で高画質に保存可能） ---
     function addNewItem() {
-        const n = document.getElementById('itemName').value;
-        let pStr = document.getElementById('itemPrice').value || "";
-        let sStr = document.getElementById('itemStock').value || "";
-        pStr = pStr.replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0));
-        sStr = sStr.replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0));
-        const p = parseInt(pStr); const s = parseInt(sStr);
-        const f = document.getElementById('itemImage');
-        const editId = document.getElementById('edit-item-id').value;
+        try {
+            const n = document.getElementById('itemName').value;
+            let pStr = document.getElementById('itemPrice').value || "";
+            let sStr = document.getElementById('itemStock').value || "";
+            
+            pStr = pStr.replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0));
+            sStr = sStr.replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0));
+            
+            const p = parseInt(pStr);
+            const s = parseInt(sStr);
+            const f = document.getElementById('itemImage');
+            const editId = document.getElementById('edit-item-id').value;
 
-        if (!n) return alert('⚠️ 商品名を入力してください。');
-        if (isNaN(p)) return alert('⚠️ 価格を設定してください。');
-        if (isNaN(s)) return alert('⚠️ 在庫数を入力してください。');
+            if (!n) return alert('⚠️ 商品名を入力してください。');
+            if (isNaN(p)) return alert('⚠️ 価格を設定してください。（タップして入力）');
+            if (isNaN(s)) return alert('⚠️ 在庫数を入力してください。');
 
-        const ev = appData.events.find(e => e.id == appData.currentEventId);
+            const ev = appData.events.find(e => e.id == appData.currentEventId);
+            if(!ev) return alert("⚠️ イベントが見つかりません。");
 
-        const finalize = async (img) => {
-            if (editId) {
-                const item = ev.items.find(i => i.id == editId);
-                if(item) { item.name = n; item.price = p; item.stock = s; if(img) item.image = img; }
-            } else {
-                ev.items.push({ id: Date.now(), name: n, price: p, stock: s, image: img || 'https://placehold.co/150x150/e0e0e0/666666?text=No+Image' });
-            }
-            await saveData(); renderAll(); cancelEdit(); alert('✅ 保存しました！');
-        };
-
-        if (f.files && f.files[0]) {
-            const r = new FileReader();
-            r.onload = (e) => {
-                const img = new Image();
-                img.onload = () => {
-                    const c = document.createElement('canvas'); const ctx = c.getContext('2d');
-                    // DBなのである程度高画質でもOK（400px）
-                    const max = 400; let scale = max / Math.max(img.width, img.height);
-                    if (scale > 1) scale = 1;
-                    c.width = img.width * scale; c.height = img.height * scale;
-                    ctx.drawImage(img, 0, 0, c.width, c.height);
-                    finalize(c.toDataURL('image/jpeg', 0.8));
-                };
-                img.src = e.target.result;
+            const finalize = (img) => {
+                if (editId) {
+                    const item = ev.items.find(i => i.id == editId);
+                    if(item) { item.name = n; item.price = p; item.stock = s; if(img) item.image = img; }
+                } else {
+                    ev.items.push({ id: Date.now(), name: n, price: p, stock: s, image: img || 'https://placehold.co/200x200/e0e0e0/666666?text=No+Image' });
+                }
+                
+                saveData(); renderAll(); cancelEdit(); alert('✅ 保存しました！');
             };
-            r.readAsDataURL(f.files[0]);
-        } else { finalize(null); }
+
+            if (f.files && f.files[0]) {
+                const r = new FileReader();
+                r.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const c = document.createElement('canvas'); const ctx = c.getContext('2d');
+                        // IndexedDBなら高画質でも大丈夫（最大400px、画質0.8）
+                        const max = 400; 
+                        let scale = max / Math.max(img.width, img.height);
+                        if (scale > 1) scale = 1;
+                        c.width = img.width * scale; c.height = img.height * scale;
+                        ctx.drawImage(img, 0, 0, c.width, c.height);
+                        finalize(c.toDataURL('image/jpeg', 0.8)); 
+                    };
+                    img.src = e.target.result;
+                };
+                r.readAsDataURL(f.files[0]);
+            } else {
+                finalize(null); 
+            }
+        } catch (error) {
+            console.error(error);
+            alert("⚠️ 予期せぬエラーが発生しました: " + error.message);
+        }
     }
 
     function startEdit(id) {
@@ -636,107 +773,44 @@
     }
 
     function cancelEdit() {
-        document.getElementById('itemName').value = ''; document.getElementById('itemPrice').value = ''; document.getElementById('itemPriceDisplay').value = '';
-        document.getElementById('itemStock').value = ''; document.getElementById('edit-item-id').value = ''; document.getElementById('itemImage').value = '';
+        document.getElementById('itemName').value = ''; 
+        document.getElementById('itemPrice').value = ''; document.getElementById('itemPriceDisplay').value = '';
+        document.getElementById('itemStock').value = '';
+        document.getElementById('edit-item-id').value = ''; document.getElementById('itemImage').value = '';
         document.getElementById('edit-image-preview').style.display = 'none'; document.getElementById('image-hint').style.display = 'none';
-        document.getElementById('form-title').innerText = "📦 商品登録"; document.getElementById('save-product-btn').innerText = "✨ この内容で登録する";
+        document.getElementById('form-title').innerText = "📦 商品登録";
+        document.getElementById('save-product-btn').innerText = "✨ この内容で登録する";
         document.getElementById('cancel-edit-btn').style.display = "none";
     }
 
-    async function deleteItem(id) {
+    function deleteItem(id) {
         if(confirm('この商品を削除しますか？')) {
             const ev = appData.events.find(e => e.id == appData.currentEventId);
-            ev.items = ev.items.filter(i => i.id != id); await saveData(); renderAll();
+            ev.items = ev.items.filter(i => i.id != id); saveData(); renderAll();
         }
     }
 
-    // ==========================================
-    // ↕️ 長押しドラッグ＆ドロップ（並び替え）
-    // ==========================================
-    let dragTarget = null;
-    let dragTimer = null;
-    let cloneObj = null;
-    let dragStartY = 0;
+    // --- ★ 並び替え機能（△▽） ---
+    function moveItemUp(id) {
+        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        const index = ev.items.findIndex(i => i.id == id);
+        if (index > 0) {
+            const temp = ev.items[index];
+            ev.items[index] = ev.items[index - 1];
+            ev.items[index - 1] = temp;
+            saveData(); renderAll();
+        }
+    }
 
-    function setupDragSort() {
-        const list = document.getElementById('settings-list');
-        
-        list.addEventListener('touchstart', (e) => {
-            const item = e.target.closest('.list-item');
-            if(!item || e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT') return;
-
-            dragTimer = setTimeout(() => {
-                if(navigator.vibrate) navigator.vibrate(50);
-                dragTarget = item;
-                dragStartY = e.touches[0].clientY;
-                
-                // 元の要素を半透明に
-                item.style.opacity = '0.3';
-                
-                // ゴースト要素を作成
-                cloneObj = item.cloneNode(true);
-                cloneObj.style.position = 'fixed';
-                cloneObj.style.top = item.getBoundingClientRect().top + 'px';
-                cloneObj.style.left = item.getBoundingClientRect().left + 'px';
-                cloneObj.style.width = item.offsetWidth + 'px';
-                cloneObj.style.zIndex = '9999';
-                cloneObj.style.boxShadow = '0 10px 20px rgba(0,0,0,0.3)';
-                cloneObj.style.transform = 'scale(1.05)';
-                cloneObj.style.pointerEvents = 'none';
-                document.body.appendChild(cloneObj);
-            }, 400); // 400ms長押しで発動
-        }, {passive: false});
-
-        list.addEventListener('touchmove', (e) => {
-            if(!dragTarget) { clearTimeout(dragTimer); return; }
-            e.preventDefault(); // スクロール防止
-            const clientY = e.touches[0].clientY;
-            cloneObj.style.top = (clientY - cloneObj.offsetHeight / 2) + 'px';
-
-            // 入れ替え判定
-            const items = Array.from(list.querySelectorAll('.list-item'));
-            let overItem = null;
-            for(let i=0; i<items.length; i++) {
-                if(items[i] === dragTarget) continue;
-                const rect = items[i].getBoundingClientRect();
-                if(clientY > rect.top && clientY < rect.bottom) {
-                    overItem = items[i]; break;
-                }
-            }
-            
-            if(overItem) {
-                const overIndex = Array.from(list.children).indexOf(overItem);
-                const dragIndex = Array.from(list.children).indexOf(dragTarget);
-                if(overIndex < dragIndex) {
-                    list.insertBefore(dragTarget, overItem);
-                } else {
-                    list.insertBefore(dragTarget, overItem.nextSibling);
-                }
-            }
-        }, {passive: false});
-
-        list.addEventListener('touchend', async (e) => {
-            clearTimeout(dragTimer);
-            if(dragTarget) {
-                dragTarget.style.opacity = '1';
-                if(cloneObj) cloneObj.remove();
-                
-                // 配列に反映
-                const items = Array.from(list.querySelectorAll('.list-item'));
-                const ev = appData.events.find(e => e.id == appData.currentEventId);
-                let newItems = [];
-                items.forEach(el => {
-                    const id = parseInt(el.getAttribute('data-id'));
-                    const dataItem = ev.items.find(i => i.id === id);
-                    if(dataItem) newItems.push(dataItem);
-                });
-                ev.items = newItems;
-                await saveData();
-                renderPos(); // レジにも反映
-                
-                dragTarget = null; cloneObj = null;
-            }
-        });
+    function moveItemDown(id) {
+        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        const index = ev.items.findIndex(i => i.id == id);
+        if (index < ev.items.length - 1) {
+            const temp = ev.items[index];
+            ev.items[index] = ev.items[index + 1];
+            ev.items[index + 1] = temp;
+            saveData(); renderAll();
+        }
     }
 
     // --- カート・レジ操作 ---
@@ -787,7 +861,7 @@
 
     function syncCartTotalAnimated() { animateTotalValue(cart.reduce((s,i)=>s+i.price, 0)); }
     function syncCartTotalInstant() { const t = cart.reduce((s,i)=>s+i.price, 0); document.getElementById('cart-total').innerText = t.toLocaleString(); displayedTotal = t; }
-    function updateCartButton() { const b = document.getElementById('checkout-btn'); b.disabled = cart.length === 0; b.innerText = cart.length ? "会計へ進 (" + cart.length + ")" : "会計へ進む"; }
+    function updateCartButton() { const b = document.getElementById('checkout-btn'); b.disabled = cart.length === 0; b.innerText = cart.length ? "会計へ進む (" + cart.length + "点)" : "会計へ進む"; }
     function undoLastCartItem() { if(cart.length){ cart.pop(); updateCartButton(); syncCartTotalAnimated(); renderPos(); } }
     
     function openCartModal() { if(cart.length){ renderCartModalItems(); document.getElementById('cart-modal').style.display='flex'; } else alert('カートは空です'); }
@@ -811,14 +885,17 @@
     function openCheckoutModal() {
         currentCheckoutTotal = cart.reduce((s,i)=>s+i.price, 0);
         document.getElementById('modal-total-amount').innerText = currentCheckoutTotal.toLocaleString();
-        document.getElementById('tender-input').value = ''; calculateChange(); 
+        document.getElementById('tender-input').value = ''; 
+        calculateChange(); 
         document.getElementById('checkout-modal').style.display = 'flex';
     }
     function closeCheckoutModal() { document.getElementById('checkout-modal').style.display = 'none'; }
+    
     function addTenderAmount(a) { 
         const el = document.getElementById('tender-input'); 
         let val = parseInt((el.value||"").replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))) || 0;
-        el.value = val + a; calculateChange(); 
+        el.value = val + a; 
+        calculateChange(); 
     }
     function clearTenderAmount() { document.getElementById('tender-input').value = ''; calculateChange(); }
     function setTenderExact() { document.getElementById('tender-input').value = currentCheckoutTotal; calculateChange(); }
@@ -826,234 +903,35 @@
     function calculateChange() {
         const inputStr = document.getElementById('tender-input').value;
         let t = 0;
-        if (inputStr === '') { t = currentCheckoutTotal; } else { t = parseInt(inputStr.replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))) || 0; }
+        if (inputStr === '') {
+            t = currentCheckoutTotal; 
+        } else {
+            t = parseInt(inputStr.replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))) || 0;
+        }
+        
         const c = t - currentCheckoutTotal;
         const changeEl = document.getElementById('change-amount');
         const btn = document.getElementById('complete-checkout-btn');
-        if (inputStr === '') { changeEl.innerText = '0'; changeEl.style.color = 'var(--accent-color)'; } else { changeEl.innerText = (c < 0 ? Math.abs(c) : c).toLocaleString(); changeEl.style.color = c < 0 ? '#f44336' : 'var(--accent-color)'; }
+        
+        if (inputStr === '') {
+            changeEl.innerText = '0';
+            changeEl.style.color = 'var(--accent-color)';
+        } else {
+            changeEl.innerText = (c < 0 ? Math.abs(c) : c).toLocaleString();
+            changeEl.style.color = c < 0 ? '#f44336' : 'var(--accent-color)';
+        }
         btn.disabled = (c < 0);
     }
     
-    async function executeCheckout() {
+    function executeCheckout() {
         const ev = appData.events.find(e => e.id == appData.currentEventId);
         if(!ev) return;
         const map = {}; cart.forEach(i => map[i.name] = (map[i.name]||0)+1);
         const detail = Object.entries(map).map(([n,c]) => c>1 ? n+"x"+c : n).join(', ');
         ev.history.unshift({ id:Date.now(), time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}), detail, total:currentCheckoutTotal });
         cart.forEach(ci => { const i = ev.items.find(x=>x.id==ci.id); if(i) i.stock--; });
-        await saveData(); closeCheckoutModal(); cart=[]; updateCartButton(); syncCartTotalInstant(); renderAll();
+        saveData(); closeCheckoutModal(); cart=[]; updateCartButton(); syncCartTotalInstant(); renderAll();
         if(navigator.vibrate) navigator.vibrate([100, 50, 100]); 
-    }
-
-    // --- ★ マップ（図面）機能の完全復活 ---
-    let mapScale = 1, mapTx = 0, mapTy = 0;
-    let isPanning = false, startTx = 0, startTy = 0;
-    let initialDist = null, lastScale = 1;
-    let isPinMode = false, showLabels = true;
-    let isPlacingPin = false; 
-
-    function loadMapImage(input) {
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const img = new Image();
-                img.onload = async () => {
-                    const c = document.createElement('canvas'); const ctx = c.getContext('2d');
-                    // DBなので超高画質(2000px)で保存可能！
-                    const max = 2000; const scale = max / Math.max(img.width, img.height);
-                    c.width = img.width * (scale < 1 ? scale : 1); c.height = img.height * (scale < 1 ? scale : 1);
-                    ctx.drawImage(img, 0, 0, c.width, c.height);
-                    
-                    const ev = appData.events.find(e => e.id == appData.currentEventId);
-                    ev.mapImage = c.toDataURL('image/jpeg', 0.8);
-                    await saveData(); renderMap(); resetMap();
-                };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-    
-    async function deleteMapImage() {
-        if(confirm("マップ画像を削除しますか？\n※配置したピンもすべて消えます")){
-            const ev = appData.events.find(e => e.id == appData.currentEventId);
-            ev.mapImage = null; ev.pins = []; await saveData(); renderMap();
-        }
-    }
-
-    function toggleLabels() {
-        showLabels = !showLabels;
-        const btn = document.getElementById('label-toggle-btn');
-        const container = document.getElementById('pins-container');
-        if(showLabels) {
-            btn.style.background = 'var(--accent-color)'; btn.innerText = '👁 文字';
-            container.classList.remove('hide-labels');
-        } else {
-            btn.style.background = '#888'; btn.innerText = 'ー 隠す';
-            container.classList.add('hide-labels');
-        }
-    }
-
-    function renderMap() {
-        const ev = appData.events.find(e => e.id == appData.currentEventId);
-        const imgEl = document.getElementById('map-image');
-        const pinsContainer = document.getElementById('pins-container');
-        pinsContainer.innerHTML = '';
-        
-        if (ev && ev.mapImage) {
-            imgEl.src = ev.mapImage; imgEl.style.display = 'block';
-            ev.pins.forEach(p => {
-                let labelHTML = '';
-                if(p.booth || p.author) {
-                    labelHTML = `<div class="pin-label color-${p.color || 'white'}">${p.booth ? p.booth + '<br>' : ''}${p.author}</div>`;
-                }
-                pinsContainer.innerHTML += `
-                    <div class="map-pin-wrap" style="left:${p.x}px; top:${p.y}px;" onclick="openPinModal(${p.id}, ${p.x}, ${p.y}, '${p.booth}', '${p.author}', '${p.memo}', '${p.icon}', '${p.color}')">
-                        ${labelHTML}
-                        <div class="pin-icon">${p.icon || '📍'}</div>
-                        <div class="pin-dot"></div>
-                    </div>`;
-            });
-        } else { imgEl.style.display = 'none'; }
-        updateMapTransform();
-    }
-
-    function updateMapTransform() { document.getElementById('map-wrapper').style.transform = `translate(${mapTx}px, ${mapTy}px) scale(${mapScale})`; }
-    function resetMap() { mapScale = 1; mapTx = 0; mapTy = 0; updateMapTransform(); }
-
-    function togglePinMode() {
-        isPinMode = !isPinMode;
-        const btn = document.getElementById('pin-mode-btn');
-        const container = document.getElementById('pins-container');
-        if (isPinMode) {
-            btn.style.background = '#ffeb3b'; btn.style.borderColor = '#fbc02d';
-            btn.innerText = '📍 ピン追加モード：【ON】（ドラッグで配置）';
-            container.classList.add('pin-mode'); 
-        } else {
-            btn.style.background = '#f0f0f0'; btn.style.borderColor = '#ccc';
-            btn.innerText = '📍 ピン追加モード：【OFF】（地図移動）';
-            container.classList.remove('pin-mode');
-            document.getElementById('magnifier').style.display = 'none';
-        }
-    }
-
-    function setupMapGestures() {
-        const container = document.getElementById('map-container');
-        let lastTouch = null;
-
-        container.addEventListener('touchstart', e => {
-            if (e.touches.length === 2) {
-                isPlacingPin = false; document.getElementById('magnifier').style.display = 'none';
-                initialDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
-                lastScale = mapScale;
-            } else if (e.touches.length === 1) {
-                if (isPinMode) {
-                    isPlacingPin = true; updateMagnifier(e.touches[0]);
-                } else {
-                    isPanning = true; startTx = e.touches[0].clientX - mapTx; startTy = e.touches[0].clientY - mapTy;
-                }
-            }
-        }, {passive: false});
-
-        container.addEventListener('touchmove', e => {
-            e.preventDefault(); 
-            if (e.touches.length === 2 && initialDist) {
-                const cx = (e.touches[0].clientX + e.touches[1].clientX) / 2;
-                const cy = (e.touches[0].clientY + e.touches[1].clientY) / 2;
-                const rect = container.getBoundingClientRect();
-                const pinchX = cx - rect.left; const pinchY = cy - rect.top;
-                
-                const currentDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
-                const newScale = Math.max(0.2, Math.min(lastScale * (currentDist / initialDist), 5));
-                const ratio = newScale / mapScale;
-                
-                mapTx -= (pinchX - mapTx) * (ratio - 1); mapTy -= (pinchY - mapTy) * (ratio - 1); mapScale = newScale;
-                updateMapTransform();
-            } else if (e.touches.length === 1 && isPanning) {
-                mapTx = e.touches[0].clientX - startTx; mapTy = e.touches[0].clientY - startTy; updateMapTransform();
-            } else if (e.touches.length === 1 && isPlacingPin) {
-                updateMagnifier(e.touches[0]);
-            }
-        }, {passive: false});
-
-        container.addEventListener('touchend', e => {
-            if (e.touches.length < 2) initialDist = null;
-            isPanning = false;
-            if (isPlacingPin && lastTouch) {
-                isPlacingPin = false; document.getElementById('magnifier').style.display = 'none';
-                const imgRect = document.getElementById('map-image').getBoundingClientRect();
-                const realX = (lastTouch.clientX - imgRect.left) / mapScale;
-                const realY = (lastTouch.clientY - imgRect.top) / mapScale;
-                openPinModal(Date.now(), realX, realY, '', '', '', '📍', 'white');
-                lastTouch = null;
-            }
-        });
-
-        function updateMagnifier(touch) {
-            lastTouch = touch;
-            const mag = document.getElementById('magnifier');
-            const img = document.getElementById('map-image');
-            if(!img.src) return;
-
-            mag.style.display = 'block';
-            mag.style.left = (touch.clientX - 50) + 'px';
-            mag.style.top = (touch.clientY - 130) + 'px'; 
-
-            const rect = img.getBoundingClientRect();
-            mag.style.backgroundImage = `url(${img.src})`;
-            const magZoom = 2; 
-            mag.style.backgroundSize = `${rect.width * magZoom}px ${rect.height * magZoom}px`;
-
-            const relX = touch.clientX - rect.left; const relY = touch.clientY - rect.top;
-            mag.style.backgroundPosition = `-${relX * magZoom - 50}px -${relY * magZoom - 50}px`;
-        }
-    }
-
-    function openPinModal(id, x, y, booth, author, memo, icon, color) {
-        document.getElementById('pin-id').value = id;
-        document.getElementById('pin-x').value = x;
-        document.getElementById('pin-y').value = y;
-        document.getElementById('pin-booth').value = booth !== 'undefined' ? booth : '';
-        document.getElementById('pin-author').value = author !== 'undefined' ? author : '';
-        document.getElementById('pin-memo').value = memo !== 'undefined' ? memo : '';
-        
-        let radios = document.getElementsByName('pin-icon');
-        for(let i=0; i<radios.length; i++) { if(radios[i].value === (icon || '📍')) radios[i].checked = true; }
-        document.getElementById('pin-color').value = color || 'white';
-
-        document.getElementById('pin-modal').style.display = 'flex';
-        if(isPinMode) togglePinMode(); 
-    }
-    function closePinModal() { document.getElementById('pin-modal').style.display = 'none'; }
-    
-    async function savePin() {
-        const ev = appData.events.find(e => e.id == appData.currentEventId);
-        const id = parseInt(document.getElementById('pin-id').value);
-        const x = parseFloat(document.getElementById('pin-x').value);
-        const y = parseFloat(document.getElementById('pin-y').value);
-        const booth = document.getElementById('pin-booth').value;
-        const author = document.getElementById('pin-author').value;
-        const memo = document.getElementById('pin-memo').value;
-        
-        let icon = '📍';
-        let radios = document.getElementsByName('pin-icon');
-        for(let i=0; i<radios.length; i++) { if(radios[i].checked) icon = radios[i].value; }
-        const color = document.getElementById('pin-color').value;
-
-        const existing = ev.pins.find(p => p.id === id);
-        if (existing) {
-            existing.booth = booth; existing.author = author; existing.memo = memo; existing.icon = icon; existing.color = color;
-        } else {
-            ev.pins.push({ id, x, y, booth, author, memo, icon, color });
-        }
-        await saveData(); renderMap(); closePinModal();
-    }
-
-    async function deletePin() {
-        const id = parseInt(document.getElementById('pin-id').value);
-        const ev = appData.events.find(e => e.id == appData.currentEventId);
-        ev.pins = ev.pins.filter(p => p.id !== id);
-        await saveData(); renderMap(); closePinModal();
     }
 
     // --- 分析描画 ---
@@ -1070,19 +948,30 @@
                 hourMap[hour] = (hourMap[hour]||0) + h.total;
                 if(hourMap[hour] > maxHour) maxHour = hourMap[hour];
             }
+            
             let parts = String(h.detail || "").split(',');
             parts.forEach(p => {
-                p = p.trim(); if(!p) return;
-                let name = p; let count = 1; let m = p.match(/(.+)x([0-9]+)$/);
-                if(m) { name = m[1]; count = parseInt(m[2]); }
+                p = p.trim();
+                if(!p) return;
+                let name = p;
+                let count = 1;
+                let m = p.match(/(.+)x([0-9]+)$/);
+                if(m) {
+                    name = m[1];
+                    count = parseInt(m[2]);
+                }
                 itemMap[name] = (itemMap[name] || 0) + count;
                 if(itemMap[name] > maxItem) maxItem = itemMap[name];
             });
         });
+        
         document.getElementById('stat-total-rev').innerText = total.toLocaleString();
         document.getElementById('stat-total-tx').innerText = ev.history.length;
         document.getElementById('stat-avg-spend').innerText = ev.history.length ? Math.floor(total/ev.history.length).toLocaleString() : 0;
-        if(document.getElementById('history-total-price')) document.getElementById('history-total-price').innerText = total.toLocaleString();
+        
+        if(document.getElementById('history-total-price')) {
+            document.getElementById('history-total-price').innerText = total.toLocaleString();
+        }
 
         const idiv = document.getElementById('stat-items'); idiv.innerHTML = '';
         const sortedItems = Object.keys(itemMap).sort((a,b)=>itemMap[b]-itemMap[a]);
@@ -1106,7 +995,8 @@
             total += h.total; 
             String(h.detail || "").split(',').forEach(p => {
                 p = p.trim(); if(!p) return;
-                let n = p, c = 1, m = p.match(/(.+)x([0-9]+)$/);
+                let n = p, c = 1;
+                let m = p.match(/(.+)x([0-9]+)$/);
                 if(m) { n = m[1]; c = parseInt(m[2]); }
                 itemMap[n] = (itemMap[n]||0)+c;
             }); 
@@ -1117,19 +1007,265 @@
         navigator.clipboard.writeText(txt).then(()=>alert('レポートをコピーしました！\nメモ帳とかに貼り付けれるよ。'));
     }
 
-    async function clearEventHistory() {
+    function clearEventHistory() {
         if(confirm('このイベントの売上記録をすべて削除して0にしますか？')){
             const ev = appData.events.find(e => e.id == appData.currentEventId);
-            ev.history = []; await saveData(); renderAll();
+            ev.history = []; saveData(); renderAll();
+        }
+    }
+    
+    function exportCSV() {
+        const ev = appData.events.find(e=>e.id==appData.currentEventId);
+        let csv = "\uFEFF時間,内容,売上\n" + ev.history.map(h=>`"${h.time}","${h.detail}","${h.total}"`).join("\n");
+        const link = document.createElement('a'); link.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+        link.download = `${ev.name}_売上.csv`; link.click();
+    }
+
+    // --- ★ マップ（図面）機能の超圧縮対応 ---
+    let mapScale = 1, mapTx = 0, mapTy = 0;
+    let isPanning = false, startTx = 0, startTy = 0;
+    let initialDist = null, lastScale = 1;
+    let isPinMode = false, showLabels = true;
+    let isPlacingPin = false; 
+
+    function loadMapImage(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    const c = document.createElement('canvas'); const ctx = c.getContext('2d');
+                    // ★マップ画像を最大2000pxで高画質保存（IndexedDBなので余裕です）
+                    const max = 2000; 
+                    let scale = max / Math.max(img.width, img.height);
+                    if (scale > 1) scale = 1;
+                    c.width = img.width * scale; c.height = img.height * scale;
+                    ctx.drawImage(img, 0, 0, c.width, c.height);
+                    
+                    const ev = appData.events.find(e => e.id == appData.currentEventId);
+                    ev.mapImage = c.toDataURL('image/jpeg', 0.8);
+                    saveData(); renderMap(); resetMap();
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    
+    function deleteMapImage() {
+        if(confirm("マップ画像を削除しますか？\n※配置したピンもすべて消えます")){
+            const ev = appData.events.find(e => e.id == appData.currentEventId);
+            ev.mapImage = null; ev.pins = []; saveData(); renderMap();
         }
     }
 
+    function toggleLabels() {
+        showLabels = !showLabels;
+        const btn = document.getElementById('label-toggle-btn');
+        const container = document.getElementById('pins-container');
+        if(showLabels) {
+            btn.style.background = 'var(--accent-color)'; btn.innerText = '👁 文字';
+            container.classList.remove('hide-labels');
+        } else {
+            btn.style.background = '#888'; btn.innerText = 'ー 隠す';
+            container.classList.add('hide-labels');
+        }
+    }
+
+    function renderMap() {
+        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        const imgEl = document.getElementById('map-image');
+        const pinsContainer = document.getElementById('pins-container');
+        pinsContainer.innerHTML = '';
+        
+        if (ev && ev.mapImage) {
+            imgEl.src = ev.mapImage;
+            imgEl.style.display = 'block';
+            ev.pins.forEach(p => {
+                let labelHTML = '';
+                if(p.booth || p.author) {
+                    labelHTML = `<div class="pin-label color-${p.color || 'white'}">${p.booth ? p.booth + '<br>' : ''}${p.author}</div>`;
+                }
+                pinsContainer.innerHTML += `
+                    <div class="map-pin-wrap" style="left:${p.x}px; top:${p.y}px;" onclick="openPinModal(${p.id}, ${p.x}, ${p.y}, '${p.booth}', '${p.author}', '${p.memo}', '${p.icon}', '${p.color}')">
+                        ${labelHTML}
+                        <div class="pin-icon">${p.icon || '📍'}</div>
+                        <div class="pin-dot"></div>
+                    </div>`;
+            });
+        } else {
+            imgEl.style.display = 'none';
+        }
+        updateMapTransform();
+    }
+
+    function updateMapTransform() {
+        document.getElementById('map-wrapper').style.transform = `translate(${mapTx}px, ${mapTy}px) scale(${mapScale})`;
+    }
+
+    function resetMap() { mapScale = 1; mapTx = 0; mapTy = 0; updateMapTransform(); }
+
+    function togglePinMode() {
+        isPinMode = !isPinMode;
+        const btn = document.getElementById('pin-mode-btn');
+        const container = document.getElementById('pins-container');
+        if (isPinMode) {
+            btn.style.background = '#ffeb3b'; btn.style.borderColor = '#fbc02d';
+            btn.innerText = '📍 ピン追加モード：【ON】（タップ＆ドラッグで追加）';
+            container.classList.add('pin-mode'); 
+        } else {
+            btn.style.background = '#f0f0f0'; btn.style.borderColor = '#ccc';
+            btn.innerText = '📍 ピン追加モード：【OFF】（地図移動）';
+            container.classList.remove('pin-mode');
+            document.getElementById('magnifier').style.display = 'none';
+        }
+    }
+
+    function setupMapGestures() {
+        const container = document.getElementById('map-container');
+        let lastTouch = null;
+
+        container.addEventListener('touchstart', e => {
+            if (e.touches.length === 2) {
+                isPlacingPin = false; document.getElementById('magnifier').style.display = 'none';
+                initialDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+                lastScale = mapScale;
+            } else if (e.touches.length === 1) {
+                if (isPinMode) {
+                    isPlacingPin = true;
+                    updateMagnifier(e.touches[0]);
+                } else {
+                    isPanning = true;
+                    startTx = e.touches[0].clientX - mapTx;
+                    startTy = e.touches[0].clientY - mapTy;
+                }
+            }
+        }, {passive: false});
+
+        container.addEventListener('touchmove', e => {
+            e.preventDefault(); 
+            if (e.touches.length === 2 && initialDist) {
+                const cx = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+                const cy = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+                const rect = container.getBoundingClientRect();
+                const pinchX = cx - rect.left;
+                const pinchY = cy - rect.top;
+                
+                const currentDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+                const newScale = Math.max(0.2, Math.min(lastScale * (currentDist / initialDist), 5));
+                const ratio = newScale / mapScale;
+                
+                mapTx -= (pinchX - mapTx) * (ratio - 1);
+                mapTy -= (pinchY - mapTy) * (ratio - 1);
+                mapScale = newScale;
+                updateMapTransform();
+            } else if (e.touches.length === 1 && isPanning) {
+                mapTx = e.touches[0].clientX - startTx;
+                mapTy = e.touches[0].clientY - startTy;
+                updateMapTransform();
+            } else if (e.touches.length === 1 && isPlacingPin) {
+                updateMagnifier(e.touches[0]);
+            }
+        }, {passive: false});
+
+        container.addEventListener('touchend', e => {
+            if (e.touches.length < 2) initialDist = null;
+            isPanning = false;
+
+            if (isPlacingPin && lastTouch) {
+                isPlacingPin = false;
+                document.getElementById('magnifier').style.display = 'none';
+                
+                const imgRect = document.getElementById('map-image').getBoundingClientRect();
+                const realX = (lastTouch.clientX - imgRect.left) / mapScale;
+                const realY = (lastTouch.clientY - imgRect.top) / mapScale;
+                openPinModal(Date.now(), realX, realY, '', '', '', '📍', 'white');
+                lastTouch = null;
+            }
+        });
+
+        function updateMagnifier(touch) {
+            lastTouch = touch;
+            const mag = document.getElementById('magnifier');
+            const img = document.getElementById('map-image');
+            if(!img.src) return;
+
+            mag.style.display = 'block';
+            mag.style.left = (touch.clientX - 50) + 'px';
+            mag.style.top = (touch.clientY - 130) + 'px'; 
+
+            const rect = img.getBoundingClientRect();
+            mag.style.backgroundImage = `url(${img.src})`;
+            const magZoom = 2; 
+            mag.style.backgroundSize = `${rect.width * magZoom}px ${rect.height * magZoom}px`;
+
+            const relX = touch.clientX - rect.left;
+            const relY = touch.clientY - rect.top;
+            mag.style.backgroundPosition = `-${relX * magZoom - 50}px -${relY * magZoom - 50}px`;
+        }
+    }
+
+    function openPinModal(id, x, y, booth, author, memo, icon, color) {
+        document.getElementById('pin-id').value = id;
+        document.getElementById('pin-x').value = x;
+        document.getElementById('pin-y').value = y;
+        document.getElementById('pin-booth').value = booth !== 'undefined' ? booth : '';
+        document.getElementById('pin-author').value = author !== 'undefined' ? author : '';
+        document.getElementById('pin-memo').value = memo !== 'undefined' ? memo : '';
+        
+        let radios = document.getElementsByName('pin-icon');
+        for(let i=0; i<radios.length; i++) {
+            if(radios[i].value === (icon || '📍')) radios[i].checked = true;
+        }
+        document.getElementById('pin-color').value = color || 'white';
+
+        document.getElementById('pin-modal').style.display = 'flex';
+        if(isPinMode) togglePinMode(); 
+    }
+    
+    function closePinModal() { document.getElementById('pin-modal').style.display = 'none'; }
+    
+    function savePin() {
+        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        const id = parseInt(document.getElementById('pin-id').value);
+        const x = parseFloat(document.getElementById('pin-x').value);
+        const y = parseFloat(document.getElementById('pin-y').value);
+        const booth = document.getElementById('pin-booth').value;
+        const author = document.getElementById('pin-author').value;
+        const memo = document.getElementById('pin-memo').value;
+        
+        let icon = '📍';
+        let radios = document.getElementsByName('pin-icon');
+        for(let i=0; i<radios.length; i++) { if(radios[i].checked) icon = radios[i].value; }
+        const color = document.getElementById('pin-color').value;
+
+        const existing = ev.pins.find(p => p.id === id);
+        if (existing) {
+            existing.booth = booth; existing.author = author; existing.memo = memo;
+            existing.icon = icon; existing.color = color;
+        } else {
+            ev.pins.push({ id, x, y, booth, author, memo, icon, color });
+        }
+        saveData(); renderMap(); closePinModal();
+    }
+
+    function deletePin() {
+        const id = parseInt(document.getElementById('pin-id').value);
+        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        ev.pins = ev.pins.filter(p => p.id !== id);
+        saveData(); renderMap(); closePinModal();
+    }
+
+    // --- 全体描画まとめ ---
     function renderAll() { 
-        renderPos(); renderSettings(); renderHistory(); 
+        renderPos(); 
+        renderSettings(); 
+        renderHistory(); 
         if(document.getElementById('analytics').classList.contains('active')) renderAnalytics(); 
         if(document.getElementById('map').classList.contains('active')) renderMap();
     }
 
+    // --- 描画処理関数 ---
     function renderPos() {
         const grid = document.getElementById('pos-grid'); grid.innerHTML = '';
         const ev = appData.events.find(e => e.id == appData.currentEventId);
@@ -1144,7 +1280,21 @@
         const list = document.getElementById('settings-list'); list.innerHTML = '';
         const ev = appData.events.find(e => e.id == appData.currentEventId);
         ev.items.forEach(i => {
-            list.innerHTML += `<div class="list-item" data-id="${i.id}"><img src="${i.image}"> <div style="flex-grow:1"><strong>${i.name}</strong><br><span style="color:#666;font-size:0.85rem;">¥${i.price.toLocaleString()} / 在庫:${i.stock}</span></div><button class="list-btn" style="background:#FFC107; color:#333;" onclick="startEdit(${i.id})">✏️</button><button class="list-btn" style="background:#f44336;color:white;" onclick="deleteItem(${i.id})">🗑</button></div>`;
+            list.innerHTML += `<div class="list-item">
+                <img src="${i.image}"> 
+                <div style="flex-grow:1; overflow:hidden;">
+                    <strong style="white-space:nowrap; text-overflow:ellipsis; display:block;">${i.name}</strong>
+                    <span style="color:#666;font-size:0.85rem;">¥${i.price.toLocaleString()} / 在庫:${i.stock}</span>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:2px;">
+                    <button class="order-btn" onclick="moveItemUp(${i.id})">△</button>
+                    <button class="order-btn" onclick="moveItemDown(${i.id})">▽</button>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:2px;">
+                    <button class="list-btn" style="background:#FFC107; color:#333;" onclick="startEdit(${i.id})">編集</button>
+                    <button class="list-btn" style="background:#f44336;color:white;" onclick="deleteItem(${i.id})">削除</button>
+                </div>
+            </div>`;
         });
     }
 
