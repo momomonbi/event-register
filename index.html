@@ -6,7 +6,6 @@
     <title>はづきれじ</title>
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&family=Noto+Sans+JP:wght@400;700&family=Kiwi+Maru:wght@400;700&family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
     <style>
-        /* --- テーマ設定 --- */
         :root {
             --bg-color: #f4f4f9; --header-bg: #222; --tab-bg: #333; --accent-color: #e91e63;
             --tab-active-bg: #e91e63; --tab-active-color: #fff;
@@ -50,7 +49,6 @@
             --app-font: 'Noto Sans JP', sans-serif;
         }
 
-        /* --- 全体レイアウト --- */
         body { font-family: var(--app-font); margin: 0; padding: 0; background-color: var(--bg-color); color: var(--text-color); padding-bottom: 130px; touch-action: manipulation; }
         button { touch-action: manipulation; font-family: inherit; cursor: pointer; border: none; border-radius: 6px; }
         input, select { font-family: inherit; }
@@ -63,7 +61,7 @@
         .preset-btn.danger { background-color: #f44336; color: white; }
 
         .tabs { display: flex; background-color: var(--tab-bg); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.2);}
-        .tab { flex: 1; text-align: center; padding: 15px 2px; color: #ccc; font-weight: bold; font-size: 1rem; white-space: nowrap;}
+        .tab { flex: 1; text-align: center; padding: 15px 2px; color: #ccc; font-weight: bold; font-size: 0.95rem; white-space: nowrap;}
         .tab.active { background-color: var(--tab-active-bg); color: var(--tab-active-color); }
         .tab-content { display: none; padding: 10px; }
         .tab-content.active { display: block; }
@@ -93,9 +91,12 @@
         .form-group input, .form-group select { width: 100%; padding: 12px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; color: #333; background: #fff;}
         .save-btn { background-color: var(--accent-color); color: white; padding: 14px; width: 100%; font-size: 1.1rem; font-weight: bold; border-radius: 8px;}
         
-        .list-item { background: var(--card-bg); padding: 10px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 10px; border-radius: 8px; margin-bottom: 5px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);}
+        /* リスト・並び替え */
+        .list-item { background: var(--card-bg); padding: 10px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 8px; border-radius: 8px; margin-bottom: 5px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);}
+        .sort-btns { display: flex; flex-direction: column; gap: 4px; }
+        .sort-btn { background: #e0e0e0; color: #555; padding: 4px 8px; font-size: 0.7rem; font-weight: bold; border-radius: 4px; }
         .list-item img { width: 45px; height: 45px; object-fit: contain; background: #f9f9f9; border-radius: 4px; }
-        .list-btn { padding: 6px 10px; font-size: 0.8rem; font-weight: bold; border-radius: 4px;}
+        .list-btn { padding: 8px 12px; font-size: 0.8rem; font-weight: bold; border-radius: 4px;}
         
         /* 履歴・分析 */
         .history-card { background: var(--card-bg); padding: 12px; border-radius: 8px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
@@ -118,8 +119,47 @@
         .qty-btn { width: 32px; height: 32px; border-radius: 50%; border: none; background: #eee; font-size: 1.2rem; font-weight: bold; color: #333;}
         .modal-large-btn { width: 100%; padding: 16px; font-size: 1.1rem; font-weight: bold; margin-bottom: 10px; border-radius: 8px;}
 
-        /* リセット用ボタン */
-        .danger-zone { margin-top: 50px; padding-top: 20px; border-top: 2px dashed #f44336; text-align: center; }
+        /* マップ機能（URL直リンク版） */
+        #map-container { 
+            width: 100%; height: 60vh; background: #ddd; overflow: hidden; position: relative; 
+            border-radius: 8px; margin-top: 10px; border: 2px solid #ccc;
+            -webkit-touch-callout: none; -webkit-user-select: none; user-select: none;
+        }
+        #map-wrapper { position: absolute; transform-origin: 0 0; }
+        #map-image { pointer-events: none; }
+        
+        .map-pin-wrap { 
+            position: absolute; 
+            transform: translate(-50%, calc(-100% + 3px)); 
+            display: flex; flex-direction: column; align-items: center; z-index: 10; 
+            pointer-events: auto; 
+        }
+        #pins-container.pin-mode .map-pin-wrap { pointer-events: none; opacity: 0.4; filter: grayscale(0.5); }
+
+        .pin-label { 
+            padding: 2px 6px; border-radius: 4px; font-size: 0.65rem; font-weight: bold; 
+            white-space: nowrap; margin-bottom: 2px; text-align: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2); pointer-events: none; 
+            backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
+        }
+        .color-white { background: rgba(255,255,255,0.7); color: #222; }
+        .color-pink { background: rgba(255,192,203,0.7); color: #900; }
+        .color-blue { background: rgba(173,216,230,0.7); color: #005; }
+        .color-green { background: rgba(144,238,144,0.7); color: #050; }
+        .color-yellow { background: rgba(255,255,224,0.7); color: #550; }
+
+        .pin-icon { font-size: 24px; cursor: pointer; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5)); line-height: 1; transition: transform 0.1s; }
+        .map-pin-wrap:active .pin-icon { transform: scale(1.2); }
+        .pin-dot { width: 6px; height: 6px; background: #ff1744; border-radius: 50%; margin-top: -3px; border: 1px solid white; box-shadow: 0 1px 2px rgba(0,0,0,0.5); }
+        #pins-container.hide-labels .pin-label { display: none; }
+        
+        .icon-radio { display: none; }
+        .icon-label { font-size: 1.5rem; padding: 5px; border-radius: 6px; border: 2px solid transparent; cursor: pointer; }
+        .icon-radio:checked + .icon-label { border-color: var(--accent-color); background: #f0f0f0; }
+
+        /* データ管理ゾーン */
+        .data-zone { margin-top: 40px; padding: 15px; border: 2px solid #ccc; border-radius: 8px; background: #fafafa; }
+        .danger-zone { margin-top: 20px; padding-top: 20px; border-top: 2px dashed #f44336; text-align: center; }
     </style>
 </head>
 <body data-theme="default">
@@ -135,8 +175,9 @@
 
 <div class="tabs">
     <div class="tab active" onclick="switchTab('pos')">レジ</div>
-    <div class="tab" onclick="switchTab('settings')">商品設定</div>
-    <div class="tab" onclick="switchTab('analytics')">📊 分析・履歴</div>
+    <div class="tab" onclick="switchTab('settings')">設定</div>
+    <div class="tab" onclick="switchTab('analytics')">📊履歴</div>
+    <div class="tab" onclick="switchTab('map')">🗺マップ</div>
 </div>
 
 <div id="pos" class="tab-content active">
@@ -178,12 +219,23 @@
         <button class="save-btn" id="cancel-edit-btn" onclick="cancelEdit()" style="display:none; background:#888; margin-top:5px;">キャンセル</button>
     </div>
 
-    <h3 style="margin-top:25px; border-bottom:2px solid #ddd; padding-bottom:5px;">📋 登録済みリスト</h3>
+    <h3 style="margin-top:25px; border-bottom:2px solid #ddd; padding-bottom:5px;">📋 登録済みリスト（並び替え可能）</h3>
     <div id="settings-list"></div>
 
+    <div class="data-zone">
+        <h3 style="margin-top:0; color:#1565c0;">💾 データの保存・復元</h3>
+        <p style="font-size:0.8rem; color:#666; margin-bottom:10px;">アプリの全データ（画像・履歴含む）をスマホ内にファイルとして保存（バックアップ）できます。別の端末への移行や容量不足の対策に使えます。</p>
+        <button onclick="exportBackup()" style="width:100%; padding:12px; background:#1565c0; color:white; font-weight:bold; border-radius:6px; margin-bottom:15px;">📥 データをファイルに保存（バックアップ）</button>
+        
+        <label style="display:block; width:100%; padding:12px; background:#4CAF50; color:white; font-weight:bold; border-radius:6px; text-align:center; box-sizing:border-box; cursor:pointer;">
+            📤 保存したファイルを読み込む（復元）
+            <input type="file" style="display:none;" accept=".json" onclick="this.value=null;" onchange="importBackup(this)">
+        </label>
+    </div>
+
     <div class="danger-zone">
-        <h3 style="color:#f44336; margin-top:0;">⚠️ 危険領域</h3>
-        <p style="font-size:0.8rem; color:#666;">動作がおかしい時や、容量エラーが出る場合は、このボタンでアプリ内のすべてのデータを完全に消去して初期化してください。</p>
+        <h3 style="color:#f44336; margin-top:0;">⚠️ アプリの初期化</h3>
+        <p style="font-size:0.8rem; color:#666;">動作がおかしい時や、容量エラーが出る場合は、このボタンでアプリ内のすべてのデータを完全に消去して初期化してください。（※事前にバックアップ推奨）</p>
         <button onclick="hardResetApp()" style="background:#f44336; color:white; padding:15px; width:100%; font-weight:bold; border-radius:8px; font-size:1.1rem;">⚠️ アプリを完全にリセットする</button>
     </div>
 </div>
@@ -221,6 +273,32 @@
         <button onclick="clearEventHistory()" style="background:#f44336; color:white; padding:6px 10px; font-size:0.8rem; border-radius:4px; font-weight:bold;">🔄 履歴をリセット</button>
     </div>
     <div id="history-list"></div>
+</div>
+
+<div id="map" class="tab-content">
+    <div style="display:flex; gap:5px; margin-bottom:5px;">
+        <input type="text" id="map-url-input" placeholder="画像のURLを貼り付け (https://...)" style="flex-grow:1; padding:10px; border-radius:6px; border:1px solid #ccc;">
+        <button onclick="loadMapUrl()" style="background:var(--btn-checkout); color:white; padding:10px 15px; border-radius:6px; font-weight:bold; white-space:nowrap;">読込</button>
+    </div>
+    
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:5px;">
+        <button onclick="deleteMapImage()" style="background:#f44336; color:white; padding:10px; border-radius:6px; font-weight:bold;">🗑 消去</button>
+        <button onclick="toggleLabels()" id="label-toggle-btn" style="background:var(--accent-color); color:white; padding:10px; border-radius:6px; font-weight:bold; flex-grow:1;">👁 文字</button>
+        <button onclick="resetMap()" style="background:#555; color:white; padding:10px; border-radius:6px; font-weight:bold;">視点</button>
+    </div>
+    <div style="margin-top:10px;">
+        <button id="pin-mode-btn" onclick="togglePinMode()" style="width:100%; padding:12px; background:#f0f0f0; border:2px solid #ccc; font-weight:bold; font-size:1rem; color:#333; border-radius:8px;">
+            📍 ピン追加モード：【OFF】（地図移動）
+        </button>
+    </div>
+    <p style="font-size:0.75rem; color:#666; margin:5px 0; line-height:1.3;">※2本指で拡大縮小。ピン追加ONの時、マップを<strong style="color:red;">「ポンッ」と1回タップ</strong>するとそこにピンが立ちます。</p>
+    
+    <div id="map-container">
+        <div id="map-wrapper">
+            <img id="map-image" style="display:none; transform-origin: top left;">
+            <div id="pins-container"></div>
+        </div>
+    </div>
 </div>
 
 <div class="bottom-bar" id="cart-bar">
@@ -302,6 +380,47 @@
     </div>
 </div>
 
+<div class="modal-overlay" id="pin-modal">
+    <div class="modal-content">
+        <h3 style="margin-top:0;">📍 ピンの情報</h3>
+        <input type="hidden" id="pin-id">
+        <input type="hidden" id="pin-x">
+        <input type="hidden" id="pin-y">
+        
+        <div class="form-group">
+            <label>アイコン</label>
+            <div style="display:flex; gap:10px; font-size:1.5rem; justify-content:center;">
+                <label><input type="radio" name="pin-icon" class="icon-radio" value="📍" checked><div class="icon-label">📍</div></label>
+                <label><input type="radio" name="pin-icon" class="icon-radio" value="🌟"><div class="icon-label">🌟</div></label>
+                <label><input type="radio" name="pin-icon" class="icon-radio" value="🛒"><div class="icon-label">🛒</div></label>
+                <label><input type="radio" name="pin-icon" class="icon-radio" value="🤝"><div class="icon-label">🤝</div></label>
+                <label><input type="radio" name="pin-icon" class="icon-radio" value="⚠️"><div class="icon-label">⚠️</div></label>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label>ラベルの色（半透明）</label>
+            <select id="pin-color">
+                <option value="white">白（デフォルト）</option>
+                <option value="pink">ピンク（目立つ）</option>
+                <option value="blue">水色（さわやか）</option>
+                <option value="green">緑色（安心）</option>
+                <option value="yellow">黄色（注意）</option>
+            </select>
+        </div>
+
+        <div class="form-group"><label>ブース名</label><input type="text" id="pin-booth" placeholder="例：あ-01"></div>
+        <div class="form-group"><label>作者名</label><input type="text" id="pin-author" placeholder="例：Momo"></div>
+        <div class="form-group"><label>メモ（挨拶など）</label><input type="text" id="pin-memo" placeholder="例：新譜を渡す！"></div>
+        
+        <div style="display:flex; gap:10px; margin-top:15px;">
+            <button onclick="deletePin()" style="flex:1; padding:12px; background:#f44336; color:white; font-weight:bold;">削除</button>
+            <button onclick="savePin()" style="flex:2; padding:12px; background:var(--accent-color); color:white; font-weight:bold;">保存する</button>
+        </div>
+        <button onclick="closePinModal()" style="width:100%; margin-top:10px; padding:12px; background:#ddd; font-weight:bold;">閉じる</button>
+    </div>
+</div>
+
 <script>
     // --- 【堅牢化】データ管理と初期化 ---
     let appData = { currentEventId: Date.now(), events: [], theme: 'default' };
@@ -311,17 +430,19 @@
             const parsed = JSON.parse(saved);
             if (parsed && parsed.events && parsed.events.length > 0) appData = parsed;
         }
-    } catch(e) { console.error("データ読み込みエラー:", e); }
+    } catch(e) { console.error("データ読み込みエラー"); }
 
     if (appData.events.length === 0) {
         const initialId = Date.now();
-        appData.events.push({ id: initialId, name: "イベント①", items: [], history: [] });
+        appData.events.push({ id: initialId, name: "イベント①", items: [], history: [], mapImageUrl: null, pins: [] });
         appData.currentEventId = initialId;
     }
     
     appData.events.forEach(ev => {
         if (!ev.history) ev.history = [];
         if (!ev.items) ev.items = [];
+        if (ev.mapImageUrl === undefined) ev.mapImageUrl = null;
+        if (!ev.pins) ev.pins = [];
     });
 
     let cart = [];
@@ -333,15 +454,57 @@
 
     updateEventSelector();
     renderAll();
+    setupMapGestures();
 
     function saveData() { 
         try {
             localStorage.setItem('pos_app_data', JSON.stringify(appData)); 
             return true;
         } catch(e) {
-            alert('⚠️ 【データ保存エラー】\nブラウザの保存容量がいっぱいです。「アプリを完全にリセットする」を実行して下さい。');
+            alert('⚠️ 【データ保存エラー】\nブラウザの保存容量がいっぱいです。「データをファイルに保存」でバックアップを取り、「アプリを完全にリセットする」を実行して下さい。');
             return false;
         }
+    }
+
+    // ★ データのエクスポート（バックアップ）
+    function exportBackup() {
+        const dataStr = JSON.stringify(appData);
+        const blob = new Blob([dataStr], {type: "application/json"});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        const date = new Date();
+        const dStr = `${date.getFullYear()}${('0'+(date.getMonth()+1)).slice(-2)}${('0'+date.getDate()).slice(-2)}`;
+        a.download = `hazukiregi_backup_${dStr}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    // ★ データのインポート（復元）
+    function importBackup(input) {
+        if (!input.files || !input.files[0]) return;
+        if(!confirm("現在のデータはすべて上書きされます。復元してよろしいですか？")) {
+            input.value = ""; return;
+        }
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const parsed = JSON.parse(e.target.result);
+                if (parsed && parsed.events) {
+                    appData = parsed;
+                    saveData();
+                    updateEventSelector();
+                    renderAll();
+                    alert("✅ データを完全に復元しました！");
+                } else {
+                    alert("⚠️ ファイルの形式が正しくありません。");
+                }
+            } catch(err) {
+                alert("⚠️ ファイルの読み込みに失敗しました。");
+            }
+            input.value = ""; 
+        };
+        reader.readAsText(input.files[0]);
     }
 
     function hardResetApp() {
@@ -375,7 +538,7 @@
     function createNewEvent() {
         const name = prompt('イベント名を入力');
         if (name && name.trim()) {
-            const newEv = { id: Date.now(), name: name.trim(), items: [], history: [] };
+            const newEv = { id: Date.now(), name: name.trim(), items: [], history: [], mapImageUrl: null, pins: [] };
             appData.events.push(newEv); appData.currentEventId = newEv.id;
             cart = []; saveData(); updateEventSelector(); syncCartTotalInstant(); updateCartButton(); renderAll();
         }
@@ -408,8 +571,9 @@
             if(cartBar) cartBar.style.display = id === 'pos' ? 'flex' : 'none';
             
             if (id === 'analytics') renderAnalytics();
+            if (id === 'map') renderMap();
             window.scrollTo(0, 0);
-        } catch(e) { console.error("Tab switch error:", e); }
+        } catch(e) { console.error(e); }
     }
 
     // --- 価格入力ポップアップ ---
@@ -441,7 +605,7 @@
         closePriceModal();
     }
 
-    // --- ★ エラー・フリーズを完全に防ぐ商品登録 ---
+    // --- 商品管理 (登録・編集・削除・並び替え) ---
     function addNewItem() {
         try {
             const n = document.getElementById('itemName').value;
@@ -463,7 +627,6 @@
             const ev = appData.events.find(e => e.id == appData.currentEventId);
             if(!ev) return alert("⚠️ イベントが見つかりません。");
 
-            // 保存処理の本体
             const finalize = (img) => {
                 try {
                     let backupItems = JSON.stringify(ev.items); 
@@ -477,35 +640,30 @@
                     if (saveData()) {
                         renderAll(); cancelEdit(); alert('✅ 保存しました！');
                     } else {
-                        ev.items = JSON.parse(backupItems); // 容量エラー時ロールバック
+                        ev.items = JSON.parse(backupItems);
                     }
                 } catch(err) {
                     alert('処理中にエラーが発生しました: ' + err.message);
                 }
             };
 
-            // 画像の超軽量化処理
             if (f.files && f.files[0]) {
                 const r = new FileReader();
                 r.onerror = () => { alert("⚠️ 画像の読み込みに失敗しました。"); finalize(null); };
                 r.onload = (e) => {
                     const img = new Image();
-                    img.onerror = () => { alert("⚠️ 画像の形式が非対応か壊れています。"); finalize(null); };
+                    img.onerror = () => { alert("⚠️ 画像が壊れています。"); finalize(null); };
                     img.onload = () => {
                         try {
                             const c = document.createElement('canvas'); const ctx = c.getContext('2d');
-                            const max = 200; // 超軽量化
+                            const max = 200; 
                             let scale = max / Math.max(img.width, img.height);
                             if (scale > 1) scale = 1;
                             c.width = img.width * scale; c.height = img.height * scale;
-                            
-                            if(c.width === 0 || c.height === 0) throw new Error("画像サイズが0です");
-                            
                             ctx.drawImage(img, 0, 0, c.width, c.height);
-                            finalize(c.toDataURL('image/jpeg', 0.4)); // 画質40%で極限まで軽く
+                            finalize(c.toDataURL('image/jpeg', 0.5)); 
                         } catch(err) {
-                            console.error(err);
-                            finalize(null); // エラーが起きても画像なしで続行させる
+                            console.error(err); finalize(null); 
                         }
                     };
                     img.src = e.target.result;
@@ -515,8 +673,7 @@
                 finalize(null); 
             }
         } catch (error) {
-            console.error(error);
-            alert("⚠️ 予期せぬエラーが発生しました: " + error.message);
+            console.error(error); alert("⚠️ 予期せぬエラーが発生しました");
         }
     }
 
@@ -555,6 +712,28 @@
         if(confirm('この商品を削除しますか？')) {
             const ev = appData.events.find(e => e.id == appData.currentEventId);
             ev.items = ev.items.filter(i => i.id != id); saveData(); renderAll();
+        }
+    }
+
+    // ★ 並び替え機能
+    function moveItemUp(id) {
+        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        const idx = ev.items.findIndex(i => i.id == id);
+        if (idx > 0) {
+            const temp = ev.items[idx];
+            ev.items[idx] = ev.items[idx - 1];
+            ev.items[idx - 1] = temp;
+            saveData(); renderAll();
+        }
+    }
+    function moveItemDown(id) {
+        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        const idx = ev.items.findIndex(i => i.id == id);
+        if (idx > -1 && idx < ev.items.length - 1) {
+            const temp = ev.items[idx];
+            ev.items[idx] = ev.items[idx + 1];
+            ev.items[idx + 1] = temp;
+            saveData(); renderAll();
         }
     }
 
@@ -606,7 +785,7 @@
 
     function syncCartTotalAnimated() { animateTotalValue(cart.reduce((s,i)=>s+i.price, 0)); }
     function syncCartTotalInstant() { const t = cart.reduce((s,i)=>s+i.price, 0); document.getElementById('cart-total').innerText = t.toLocaleString(); displayedTotal = t; }
-    function updateCartButton() { const b = document.getElementById('checkout-btn'); b.disabled = cart.length === 0; b.innerText = cart.length ? "会計へ進 (" + cart.length + ")" : "会計へ進む"; }
+    function updateCartButton() { const b = document.getElementById('checkout-btn'); b.disabled = cart.length === 0; b.innerText = cart.length ? "会計へ進む (" + cart.length + "点)" : "会計へ進む"; }
     function undoLastCartItem() { if(cart.length){ cart.pop(); updateCartButton(); syncCartTotalAnimated(); renderPos(); } }
     
     function openCartModal() { if(cart.length){ renderCartModalItems(); document.getElementById('cart-modal').style.display='flex'; } else alert('カートは空です'); }
@@ -679,6 +858,197 @@
         if(navigator.vibrate) navigator.vibrate([100, 50, 100]); 
     }
 
+    // --- ★ マップ（URL直リンク版） ---
+    let mapScale = 1, mapTx = 0, mapTy = 0;
+    let isPanning = false, startTx = 0, startTy = 0;
+    let initialDist = null, lastScale = 1;
+    let isPinMode = false, showLabels = true;
+
+    function loadMapUrl() {
+        const url = document.getElementById('map-url-input').value;
+        if(!url) return;
+        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        ev.mapImageUrl = url;
+        saveData(); renderMap(); resetMap();
+    }
+    
+    function deleteMapImage() {
+        if(confirm("マップ画像を削除しますか？\n※配置したピンもすべて消えます")){
+            const ev = appData.events.find(e => e.id == appData.currentEventId);
+            ev.mapImageUrl = null; ev.pins = []; saveData(); renderMap();
+            document.getElementById('map-url-input').value = "";
+        }
+    }
+
+    function toggleLabels() {
+        showLabels = !showLabels;
+        const btn = document.getElementById('label-toggle-btn');
+        const container = document.getElementById('pins-container');
+        if(showLabels) {
+            btn.style.background = 'var(--accent-color)'; btn.innerText = '👁 文字';
+            container.classList.remove('hide-labels');
+        } else {
+            btn.style.background = '#888'; btn.innerText = 'ー 隠す';
+            container.classList.add('hide-labels');
+        }
+    }
+
+    function renderMap() {
+        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        const imgEl = document.getElementById('map-image');
+        const pinsContainer = document.getElementById('pins-container');
+        pinsContainer.innerHTML = '';
+        
+        if (ev && ev.mapImageUrl) {
+            imgEl.src = ev.mapImageUrl;
+            imgEl.style.display = 'block';
+            document.getElementById('map-url-input').value = ev.mapImageUrl;
+
+            ev.pins.forEach(p => {
+                let labelHTML = '';
+                if(p.booth || p.author) {
+                    labelHTML = `<div class="pin-label color-${p.color || 'white'}">${p.booth ? p.booth + '<br>' : ''}${p.author}</div>`;
+                }
+                pinsContainer.innerHTML += `
+                    <div class="map-pin-wrap" style="left:${p.x}px; top:${p.y}px;" onclick="openPinModal(${p.id}, ${p.x}, ${p.y}, '${p.booth}', '${p.author}', '${p.memo}', '${p.icon}', '${p.color}')">
+                        ${labelHTML}
+                        <div class="pin-icon">${p.icon || '📍'}</div>
+                        <div class="pin-dot"></div>
+                    </div>`;
+            });
+        } else {
+            imgEl.style.display = 'none';
+        }
+        updateMapTransform();
+    }
+
+    function updateMapTransform() {
+        document.getElementById('map-wrapper').style.transform = `translate(${mapTx}px, ${mapTy}px) scale(${mapScale})`;
+    }
+
+    function resetMap() { mapScale = 1; mapTx = 0; mapTy = 0; updateMapTransform(); }
+
+    function togglePinMode() {
+        isPinMode = !isPinMode;
+        const btn = document.getElementById('pin-mode-btn');
+        const container = document.getElementById('pins-container');
+        if (isPinMode) {
+            btn.style.background = '#ffeb3b'; btn.style.borderColor = '#fbc02d';
+            btn.innerText = '📍 ピン追加モード：【ON】（タップで追加）';
+            container.classList.add('pin-mode'); 
+        } else {
+            btn.style.background = '#f0f0f0'; btn.style.borderColor = '#ccc';
+            btn.innerText = '📍 ピン追加モード：【OFF】（地図移動）';
+            container.classList.remove('pin-mode');
+        }
+    }
+
+    function setupMapGestures() {
+        const container = document.getElementById('map-container');
+
+        container.addEventListener('touchstart', e => {
+            if (e.touches.length === 2) {
+                initialDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+                lastScale = mapScale;
+            } else if (e.touches.length === 1 && !isPinMode) {
+                isPanning = true;
+                startTx = e.touches[0].clientX - mapTx;
+                startTy = e.touches[0].clientY - mapTy;
+            }
+        }, {passive: false});
+
+        container.addEventListener('touchmove', e => {
+            e.preventDefault(); 
+            if (e.touches.length === 2 && initialDist) {
+                const cx = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+                const cy = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+                const rect = container.getBoundingClientRect();
+                const pinchX = cx - rect.left;
+                const pinchY = cy - rect.top;
+                
+                const currentDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+                const newScale = Math.max(0.2, Math.min(lastScale * (currentDist / initialDist), 5));
+                const ratio = newScale / mapScale;
+                
+                mapTx -= (pinchX - mapTx) * (ratio - 1);
+                mapTy -= (pinchY - mapTy) * (ratio - 1);
+                mapScale = newScale;
+                updateMapTransform();
+            } else if (e.touches.length === 1 && isPanning) {
+                mapTx = e.touches[0].clientX - startTx;
+                mapTy = e.touches[0].clientY - startTy;
+                updateMapTransform();
+            }
+        }, {passive: false});
+
+        container.addEventListener('touchend', e => {
+            if (e.touches.length < 2) initialDist = null;
+            if (e.touches.length === 0) isPanning = false;
+        });
+
+        // ピン追加はタッチのズレを防ぐため click で判定
+        container.addEventListener('click', e => {
+            if (!isPinMode) return;
+            if (e.target.closest('.map-pin-wrap')) return; // 既存ピンなら無視
+
+            const imgRect = document.getElementById('map-image').getBoundingClientRect();
+            const realX = (e.clientX - imgRect.left) / mapScale;
+            const realY = (e.clientY - imgRect.top) / mapScale;
+            openPinModal(Date.now(), realX, realY, '', '', '', '📍', 'white');
+        });
+    }
+
+    function openPinModal(id, x, y, booth, author, memo, icon, color) {
+        document.getElementById('pin-id').value = id;
+        document.getElementById('pin-x').value = x;
+        document.getElementById('pin-y').value = y;
+        document.getElementById('pin-booth').value = booth !== 'undefined' ? booth : '';
+        document.getElementById('pin-author').value = author !== 'undefined' ? author : '';
+        document.getElementById('pin-memo').value = memo !== 'undefined' ? memo : '';
+        
+        let radios = document.getElementsByName('pin-icon');
+        for(let i=0; i<radios.length; i++) {
+            if(radios[i].value === (icon || '📍')) radios[i].checked = true;
+        }
+        document.getElementById('pin-color').value = color || 'white';
+
+        document.getElementById('pin-modal').style.display = 'flex';
+        if(isPinMode) togglePinMode(); 
+    }
+    
+    function closePinModal() { document.getElementById('pin-modal').style.display = 'none'; }
+    
+    function savePin() {
+        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        const id = parseInt(document.getElementById('pin-id').value);
+        const x = parseFloat(document.getElementById('pin-x').value);
+        const y = parseFloat(document.getElementById('pin-y').value);
+        const booth = document.getElementById('pin-booth').value;
+        const author = document.getElementById('pin-author').value;
+        const memo = document.getElementById('pin-memo').value;
+        
+        let icon = '📍';
+        let radios = document.getElementsByName('pin-icon');
+        for(let i=0; i<radios.length; i++) { if(radios[i].checked) icon = radios[i].value; }
+        const color = document.getElementById('pin-color').value;
+
+        const existing = ev.pins.find(p => p.id === id);
+        if (existing) {
+            existing.booth = booth; existing.author = author; existing.memo = memo;
+            existing.icon = icon; existing.color = color;
+        } else {
+            ev.pins.push({ id, x, y, booth, author, memo, icon, color });
+        }
+        saveData(); renderMap(); closePinModal();
+    }
+
+    function deletePin() {
+        const id = parseInt(document.getElementById('pin-id').value);
+        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        ev.pins = ev.pins.filter(p => p.id !== id);
+        saveData(); renderMap(); closePinModal();
+    }
+
     // --- 分析描画 ---
     function renderAnalytics() {
         const ev = appData.events.find(e => e.id == appData.currentEventId);
@@ -733,6 +1103,13 @@
         });
     }
 
+    function exportCSV() {
+        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        let csv = "\uFEFF時間,内容,売上\n" + ev.history.map(h => `"${h.time}","${h.detail}","${h.total}"`).join("\n");
+        const link = document.createElement('a'); link.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+        link.download = `${ev.name}_売上.csv`; link.click();
+    }
+
     function copyReportToClipboard() {
         const ev = appData.events.find(e=>e.id==appData.currentEventId);
         let total = 0, itemMap = {};
@@ -759,19 +1136,20 @@
         }
     }
 
-    // --- 全体描画関数（これがないとエラーになる） ---
+    // --- 全体描画まとめ ---
     function renderAll() { 
         renderPos(); 
         renderSettings(); 
         renderHistory(); 
         if(document.getElementById('analytics').classList.contains('active')) renderAnalytics(); 
+        if(document.getElementById('map').classList.contains('active')) renderMap();
     }
 
-    // --- 描画処理関数（追加分） ---
+    // --- 描画処理関数 ---
     function renderPos() {
         const grid = document.getElementById('pos-grid'); grid.innerHTML = '';
         const ev = appData.events.find(e => e.id == appData.currentEventId);
-        if(!ev.items.length) { grid.innerHTML = '<p style="grid-column:1/span 2; text-align:center; padding:60px 0; color:#888;">[商品設定]から<br>商品を登録してください</p>'; return; }
+        if(!ev.items.length) { grid.innerHTML = '<p style="grid-column:1/span 2; text-align:center; padding:60px 0; color:#888;">[設定]から<br>商品を登録してください</p>'; return; }
         ev.items.forEach(i => {
             const avail = getAvailableStock(i.id);
             grid.innerHTML += `<div class="item"><img src="${i.image}" class="${avail>0?'clickable':''}" ${avail>0?`onclick="addToCart(event,${i.id})"`:''}><h3>${i.name}</h3><p>¥${i.price.toLocaleString()}</p><div class="stock">残り: ${avail}</div>${avail<=0?'<div class="sold-out">完売</div>':''}</div>`;
@@ -782,7 +1160,17 @@
         const list = document.getElementById('settings-list'); list.innerHTML = '';
         const ev = appData.events.find(e => e.id == appData.currentEventId);
         ev.items.forEach(i => {
-            list.innerHTML += `<div class="list-item"><img src="${i.image}"> <div style="flex-grow:1"><strong>${i.name}</strong><br><span style="color:#666;font-size:0.85rem;">¥${i.price.toLocaleString()} / 在庫:${i.stock}</span></div><button class="list-btn" style="background:#FFC107; color:#333;" onclick="startEdit(${i.id})">✏️編集</button><button class="list-btn" style="background:#f44336;color:white;" onclick="deleteItem(${i.id})">🗑</button></div>`;
+            list.innerHTML += `
+            <div class="list-item">
+                <div class="sort-btns">
+                    <button class="sort-btn" onclick="moveItemUp(${i.id})">▲</button>
+                    <button class="sort-btn" onclick="moveItemDown(${i.id})">▼</button>
+                </div>
+                <img src="${i.image}"> 
+                <div style="flex-grow:1; line-height:1.2;"><strong>${i.name}</strong><br><span style="color:#666;font-size:0.8rem;">¥${i.price.toLocaleString()} / 在庫:${i.stock}</span></div>
+                <button class="list-btn" style="background:#FFC107; color:#333;" onclick="startEdit(${i.id})">✏️</button>
+                <button class="list-btn" style="background:#f44336;color:white;" onclick="deleteItem(${i.id})">🗑</button>
+            </div>`;
         });
     }
 
