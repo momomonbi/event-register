@@ -4,48 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>はづきれじ</title>
-    <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;700&family=Noto+Sans+JP:wght@400;700&family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;700&family=Noto+Sans+JP:wght@400;700&family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
     <style>
-        /* --- テーマ設定（デフォルトは落ち着いた可愛さ） --- */
+        /* --- テーマ設定 --- */
         :root {
-            --bg-color: #f4f4f9; --header-bg: rgba(34, 34, 34, 0.85); --tab-bg: rgba(255,255,255,0.3); --accent-color: #e91e63;
-            --tab-active-bg: #e91e63; --tab-active-color: #fff;
-            --card-bg: rgba(255, 255, 255, 0.4); --text-color: #333; --btn-checkout: #2196F3;
+            /* デフォルトはさわやかブルー系 */
+            --bg-color: #f0f4f8; --header-bg: rgba(255, 255, 255, 0.85); --tab-bg: rgba(255,255,255,0.5); --accent-color: #007aff;
+            --tab-active-bg: #007aff; --tab-active-color: #fff;
+            --card-bg: rgba(255, 255, 255, 0.35); --text-color: #333; --btn-checkout: #007aff;
             --app-font: 'Zen Maru Gothic', sans-serif;
-            --grid-cols: 2;
+            --grid-cols: 2; /* 列数の初期値 */
         }
-        /* かわいいテーマ（よりポップでパステルに） */
         [data-theme="cute"] {
-            --bg-color: #fff0f5; --header-bg: rgba(255, 179, 198, 0.9); --tab-bg: rgba(255,255,255,0.4); --accent-color: #ff6b81;
-            --tab-active-bg: #ff6b81; --tab-active-color: #fff;
-            --card-bg: rgba(255, 255, 255, 0.45); --text-color: #5d4037; --btn-checkout: #ff9ff3;
+            /* かわいいテーマはピンク系 */
+            --bg-color: #fff0f5; --header-bg: rgba(255, 182, 193, 0.85); --tab-bg: rgba(255,255,255,0.4); --accent-color: #ff69b4;
+            --tab-active-bg: #ff69b4; --tab-active-color: #fff;
+            --card-bg: rgba(255, 255, 255, 0.4); --text-color: #5d4037; --btn-checkout: #ff69b4;
+            --app-font: 'Zen Maru Gothic', sans-serif; 
         }
         [data-theme="chocolate"] {
-            --bg-color: #f3e5f5; --header-bg: rgba(78, 52, 46, 0.9); --tab-bg: rgba(255,255,255,0.25); --accent-color: #8d6e63;
+            --bg-color: #f3e5f5; --header-bg: rgba(78, 52, 46, 0.85); --tab-bg: rgba(255,255,255,0.3); --accent-color: #8d6e63;
             --tab-active-bg: #8d6e63; --tab-active-color: #fff;
             --card-bg: rgba(255, 248, 225, 0.5); --text-color: #3e2723; --btn-checkout: #795548;
             --app-font: 'Kiwi Maru', serif;
         }
         [data-theme="matcha"] {
-            --bg-color: #f1f8e9; --header-bg: rgba(85, 139, 47, 0.9); --tab-bg: rgba(255,255,255,0.3); --accent-color: #7cb342;
+            --bg-color: #f1f8e9; --header-bg: rgba(85, 139, 47, 0.85); --tab-bg: rgba(255,255,255,0.4); --accent-color: #7cb342;
             --tab-active-bg: #7cb342; --tab-active-color: #fff;
-            --card-bg: rgba(255, 255, 255, 0.45); --text-color: #2e7d32; --btn-checkout: #689f38;
+            --card-bg: rgba(255, 255, 255, 0.4); --text-color: #2e7d32; --btn-checkout: #689f38;
+            --app-font: 'Zen Maru Gothic', sans-serif;
         }
         [data-theme="visibility"] {
-            --bg-color: #f5f5f5; --header-bg: rgba(17, 17, 17, 0.95); --tab-bg: rgba(255,255,255,0.8); --accent-color: #ffeb3b;
+            --bg-color: #f5f5f5; --header-bg: rgba(34, 34, 34, 0.95); --tab-bg: rgba(255,255,255,0.8); --accent-color: #ffeb3b;
             --tab-active-bg: #222; --tab-active-color: #ffeb3b;
-            --card-bg: rgba(255, 255, 255, 0.95); --text-color: #000; --btn-checkout: #2196f3;
+            --card-bg: rgba(255, 255, 255, 0.85); --text-color: #000; --btn-checkout: #2196f3;
             --app-font: 'Noto Sans JP', sans-serif;
         }
         [data-theme="cyber"] {
-            --bg-color: #0f0f1b; --header-bg: rgba(26, 26, 46, 0.95); --tab-bg: rgba(22,33,62,0.5); --accent-color: #00f0ff;
+            --bg-color: #0f0f1b; --header-bg: rgba(26, 26, 46, 0.95); --tab-bg: rgba(22,33,62,0.6); --accent-color: #00f0ff;
             --tab-active-bg: #e94560; --tab-active-color: #fff;
-            --card-bg: rgba(26, 26, 46, 0.6); --text-color: #e0e0e0; --btn-checkout: #e94560;
+            --card-bg: rgba(26, 26, 46, 0.65); --text-color: #e0e0e0; --btn-checkout: #e94560;
+            --app-font: 'Noto Sans JP', sans-serif;
         }
         [data-theme="ocean"] {
-            --bg-color: #e0f7fa; --header-bg: rgba(2, 136, 209, 0.9); --tab-bg: rgba(255,255,255,0.25); --accent-color: #26c6da;
+            --bg-color: #e0f7fa; --header-bg: rgba(2, 136, 209, 0.85); --tab-bg: rgba(255,255,255,0.3); --accent-color: #26c6da;
             --tab-active-bg: #26c6da; --tab-active-color: #fff;
-            --card-bg: rgba(255, 255, 255, 0.45); --text-color: #006064; --btn-checkout: #00acc1;
+            --card-bg: rgba(255, 255, 255, 0.4); --text-color: #006064; --btn-checkout: #00acc1;
+            --app-font: 'Zen Maru Gothic', sans-serif;
         }
 
         /* --- 全体レイアウト --- */
@@ -53,7 +58,7 @@
             font-family: var(--app-font); margin: 0; padding: 0; 
             background-color: transparent; 
             color: var(--text-color); padding-bottom: 160px; 
-            touch-action: manipulation; overflow-x: hidden;
+            touch-action: manipulation; 
         }
         
         #bg-color-layer {
@@ -64,192 +69,189 @@
         #app-background {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1;
             background-size: cover; background-position: center; background-repeat: no-repeat;
-            opacity: 0.35; /* 背景画像をしっかり見せる */
+            opacity: 0.4; /* 背景の透かし効果を強化 */
             pointer-events: none;
         }
 
         /* ★ 極上のすりガラス効果（Glassmorphism 強化版） */
         .glass-card {
             background: var(--card-bg);
-            backdrop-filter: blur(28px) saturate(180%);
-            -webkit-backdrop-filter: blur(28px) saturate(180%);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(28px) saturate(160%);
+            -webkit-backdrop-filter: blur(28px) saturate(160%);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 20px;
+        }
+
+        /* ★ 分析画面用のさらに強いすりガラス */
+        .accent-glass {
+            background: color-mix(in srgb, var(--accent-color) 80%, transparent);
+            backdrop-filter: blur(24px) saturate(150%);
+            -webkit-backdrop-filter: blur(24px) saturate(150%);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.4);
             border-radius: 24px;
+            color: white;
         }
 
         button { 
             touch-action: manipulation; font-family: inherit; cursor: pointer; border: none; 
-            border-radius: 16px; transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s; 
+            border-radius: 14px; transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s; 
         }
         button:active { transform: scale(0.92); }
-        input, select { font-family: inherit; outline: none; }
+        input, select { font-family: inherit; }
 
-        /* ★ ヘッダーの最適化（1段に収める） */
+        /* ヘッダー（スマホで1段に収める） */
         .preset-header { 
             background-color: var(--header-bg); padding: 12px 15px; display: flex; justify-content: space-between; 
-            align-items: center; gap: 8px; border-bottom-left-radius: 28px; border-bottom-right-radius: 28px;
-            box-shadow: 0 6px 25px rgba(0,0,0,0.1); z-index: 101; position: relative; margin-bottom: 15px;
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            align-items: center; gap: 8px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08); z-index: 101; position: relative; margin-bottom: 15px;
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
         }
         .preset-header select { 
-            flex-grow: 1; padding: 12px; border-radius: 16px; font-size: 1.05rem; border: none; 
+            flex-grow: 1; padding: 12px; border-radius: 14px; font-size: 1rem; border: none; 
             font-weight: 900; background: rgba(255,255,255,0.95); color: #333; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            min-width: 0; text-overflow: ellipsis;
+            min-width: 0;
         }
         .preset-btns { display: flex; gap: 6px; flex-shrink: 0; }
-        .preset-btn { background-color: rgba(255,255,255,0.15); color: white; padding: 12px 14px; font-weight: 900; font-size: 0.95rem; border-radius: 16px;}
+        .preset-btn { background-color: rgba(0,0,0,0.15); color: #333; padding: 12px 14px; font-weight: 900; font-size: 0.9rem; }
         .preset-btn.primary { background-color: #FFC107; color: #333; }
-        .preset-btn.danger { background-color: #f44336; color: white; padding: 12px 16px; font-size: 1.1rem;} /* ゴミ箱アイコンのみ */
+        .preset-btn.danger { background-color: #f44336; color: white; padding: 12px 16px; font-size: 1.1rem;}
 
-        /* ★ タブ（スライディング・ハイライト搭載） */
+        /* タブ（超滑らかスライドアニメーション） */
         .tabs { 
-            position: relative; display: flex; background-color: var(--tab-bg); position: sticky; top: 10px; z-index: 100; 
-            box-shadow: 0 8px 30px rgba(0,0,0,0.08); margin: 0 15px 20px 15px; border-radius: 28px;
-            padding: 6px; backdrop-filter: blur(24px) saturate(150%); -webkit-backdrop-filter: blur(24px) saturate(150%);
+            position: relative; display: flex; background-color: var(--tab-bg); 
+            top: 10px; z-index: 100; box-shadow: 0 8px 32px rgba(0,0,0,0.08); 
+            margin: 0 15px 15px 15px; border-radius: 24px; padding: 6px; 
+            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
             border: 1px solid rgba(255,255,255,0.6);
         }
-        .tab-highlight {
-            position: absolute; top: 6px; bottom: 6px; left: 0;
-            background-color: var(--tab-active-bg); border-radius: 22px;
-            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 1;
-        }
         .tab { 
-            position: relative; z-index: 2; flex: 1; text-align: center; padding: 14px 2px; color: var(--text-color); opacity: 0.65;
-            font-weight: 900; font-size: 0.95rem; white-space: nowrap; border-radius: 22px; 
-            transition: color 0.3s, opacity 0.3s; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px;
+            flex: 1; text-align: center; padding: 12px 0; color: var(--text-color); opacity: 0.6;
+            font-weight: 900; font-size: 0.9rem; white-space: nowrap; border-radius: 18px; 
+            cursor: pointer; position: relative; z-index: 2; transition: color 0.3s;
         }
-        .tab .icon { font-size: 1.2rem; line-height: 1; margin-bottom: 2px;}
-        .tab.active { color: var(--tab-active-color); opacity: 1; text-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+        .tab.active { opacity: 1; color: var(--tab-active-color); }
+        .tab-highlight {
+            position: absolute; top: 6px; bottom: 6px; left: 6px; width: 0;
+            background: var(--tab-active-bg); border-radius: 18px; z-index: 1;
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
         
-        /* ★ 超滑らかなコンテンツ切り替えアニメーション */
-        @keyframes contentFadeInUp {
-            0% { opacity: 0; transform: translateY(30px) scale(0.97); }
+        /* ★ コンテンツのふわりと浮かび上がるアニメーション */
+        @keyframes tabFadeIn {
+            0% { opacity: 0; transform: translateY(40px) scale(0.97); }
             100% { opacity: 1; transform: translateY(0) scale(1); }
         }
         .tab-content { display: none; padding: 0 15px; }
-        .tab-content.active { display: block; animation: contentFadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .tab-content.active { display: block; animation: tabFadeIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
         
-        /* レジ商品の自由分割と可愛いカード化 */
+        /* レジ画面 */
         .grid { display: grid; grid-template-columns: repeat(var(--grid-cols), 1fr); gap: 12px; }
-        .item { 
-            padding: 10px; text-align: center; position: relative; overflow: hidden; 
-            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s; 
-        }
+        .item { padding: 10px; text-align: center; position: relative; overflow: hidden; transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s; }
         .item.clickable { cursor: pointer; }
         .item.clickable:active { transform: scale(0.92); box-shadow: 0 2px 10px rgba(0,0,0,0.05); } 
-        
-        .item img { 
-            width: 100%; aspect-ratio: 1 / 1; height: auto; object-fit: contain; 
-            border-radius: 16px; background-color: rgba(255,255,255,0.7); margin-bottom: 8px; pointer-events: none; 
-        }
+        .item img { width: 100%; aspect-ratio: 1 / 1; height: auto; object-fit: contain; border-radius: 12px; background-color: rgba(255,255,255,0.6); margin-bottom: 6px; pointer-events: none; }
         .item h3 { margin: 4px 0; font-size: 0.9rem; font-weight: 900; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none;}
         .item p { margin: 0; font-weight: 900; color: var(--accent-color); font-size: 1.2rem; pointer-events: none;}
         .stock { font-size: 0.8rem; color: #888; margin-bottom: 2px; font-weight: 700; pointer-events: none;}
-        .sold-out { position: absolute; top:0; left:0; right:0; bottom:0; background: rgba(255,255,255,0.85); display:flex; align-items:center; justify-content:center; font-weight:900; color:#f44336; font-size:1.4rem; pointer-events:none; border: 3px dashed #f44336; z-index: 5; border-radius: 24px;}
+        .sold-out { position: absolute; top:0; left:0; right:0; bottom:0; background: rgba(255,255,255,0.85); display:flex; align-items:center; justify-content:center; font-weight:900; color:#f44336; font-size:1.4rem; pointer-events:none; border: 3px dashed #f44336; z-index: 5; border-radius: 20px;}
         
-        /* ★ 浮かせるフローティングカートバー */
+        /* カートバー */
         .bottom-bar { 
-            position: fixed; bottom: 25px; left: 15px; right: 15px; 
-            background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(28px) saturate(180%); -webkit-backdrop-filter: blur(28px) saturate(180%);
-            padding: 15px 20px; border-radius: 35px; 
-            box-shadow: 0 20px 50px rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.8);
+            position: fixed; bottom: 20px; left: 15px; right: 15px; 
+            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(28px) saturate(160%); -webkit-backdrop-filter: blur(28px) saturate(160%);
+            padding: 15px 20px; border-radius: 30px; 
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.8);
             display: flex; flex-direction: column; gap: 12px; z-index: 90; 
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s;
         }
         .cart-status { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-        /* アイコンのみのボタン */
-        .action-btn { padding: 12px 20px; background: rgba(0,0,0,0.05); border: none; font-size: 1.4rem; font-weight: 900; color: #444; border-radius: 20px;}
-        .checkout-btn { background-color: var(--btn-checkout); color: white; padding: 16px; font-size: 1.3rem; font-weight: 900; width: 100%; border-radius: 20px; box-shadow: 0 6px 20px rgba(0,0,0,0.15);}
-        .checkout-btn:disabled { background-color: rgba(0,0,0,0.1); color: #888; box-shadow: none;}
-        .total-amount-display { font-weight: 900; font-size: 2.8rem; color: #333; line-height: 1; letter-spacing: -1px;}
+        .action-btn { padding: 12px; background: rgba(0,0,0,0.08); border: none; font-size: 1.4rem; font-weight: 900; color: #444; border-radius: 16px; aspect-ratio: 1/1;}
+        .checkout-btn { background-color: var(--btn-checkout); color: white; padding: 16px; font-size: 1.3rem; font-weight: 900; width: 100%; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);}
+        .checkout-btn:disabled { background-color: #ddd; color: #888; box-shadow: none;}
+        .total-amount-display { font-weight: 900; font-size: 2.6rem; color: #333; line-height: 1; letter-spacing: -1px;}
 
         .grid-selector { 
             padding: 0 10px; font-size: 1.1rem; font-weight: 900; border: none; 
-            border-radius: 20px; background: rgba(255,255,255,0.8); color: var(--text-color); cursor: pointer; text-align: center; width: 85px;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+            border-radius: 16px; background: rgba(0,0,0,0.08); color: var(--text-color); cursor: pointer; text-align: center; width: 85px;
         }
 
         /* 設定画面 */
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; font-size: 0.9rem; color: #666; margin-bottom: 6px; font-weight: 700;}
-        .form-group input, .form-group select { width: 100%; padding: 16px; box-sizing: border-box; border: 1px solid rgba(0,0,0,0.05); border-radius: 20px; font-size: 1.1rem; color: #333; background: rgba(255,255,255,0.8); font-weight: 700; box-shadow: inset 0 2px 5px rgba(0,0,0,0.03);}
-        .save-btn { background-color: var(--accent-color); color: white; padding: 18px; width: 100%; font-size: 1.2rem; font-weight: 900; border-radius: 20px; box-shadow: 0 6px 20px rgba(0,0,0,0.15);}
+        .form-group input, .form-group select { width: 100%; padding: 15px; box-sizing: border-box; border: 1px solid rgba(0,0,0,0.05); border-radius: 16px; font-size: 1.1rem; color: #333; background: rgba(255,255,255,0.9); font-weight: 700;}
+        .save-btn { background-color: var(--accent-color); color: white; padding: 18px; width: 100%; font-size: 1.2rem; font-weight: 900; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);}
         
-        /* リストスタイル */
-        .list-item { padding: 12px; display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-        .list-item img { width: 50px; height: 50px; object-fit: contain; background: rgba(255,255,255,0.9); border-radius: 14px; }
-        .list-btn { padding: 10px 14px; font-size: 0.85rem; font-weight: 900; border-radius: 14px;}
-        .order-btn { background: rgba(0,0,0,0.05); border: none; color: #333; font-size: 1.2rem; padding: 6px 12px; border-radius: 12px; font-weight: 900; }
+        .list-item { padding: 10px; border-bottom: 1px solid rgba(0,0,0,0.05); display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+        .list-item img { width: 45px; height: 45px; object-fit: contain; background: rgba(255,255,255,0.9); border-radius: 10px; }
+        .list-btn { padding: 8px 12px; font-size: 0.85rem; font-weight: 900; border-radius: 10px;}
+        .order-btn { background: rgba(0,0,0,0.05); border: none; color: #333; font-size: 1.1rem; padding: 6px 10px; border-radius: 8px; font-weight: 900; }
         
-        /* 分析・履歴 */
-        /* ★ 分析画面のすべてを透かし対応に */
-        .history-card { padding: 16px 20px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
-        .history-info { display: flex; align-items: center; gap: 12px; flex-grow: 1; overflow: hidden; padding-left: 10px;}
-        .history-time { font-size: 0.85rem; color: #666; background: rgba(255,255,255,0.5); padding: 5px 10px; border-radius: 10px; white-space: nowrap; font-weight: 900;}
+        /* 分析画面 */
+        .history-card { padding: 15px 20px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
+        .history-info { display: flex; align-items: center; gap: 12px; flex-grow: 1; overflow: hidden; }
+        .history-time { font-size: 0.85rem; color: #666; background: rgba(0,0,0,0.05); padding: 4px 8px; border-radius: 8px; white-space: nowrap; font-weight: 900;}
         .history-detail { font-size: 1rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-color); }
-        .history-price { font-weight:900; color:var(--accent-color); font-size: 1.4rem; white-space: nowrap; margin-left: 5px;}
+        .history-price { font-weight:900; color:var(--accent-color); font-size: 1.3rem; white-space: nowrap; margin-left: 5px;}
 
-        /* モーダル群（ぽよんっ！と出るアニメーション） */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 1000; align-items: center; justify-content: center; padding: 15px; animation: fadeIn 0.2s ease-out; }
-        .modal-content { background: rgba(255,255,255,0.85); width: 100%; max-width: 450px; border-radius: 32px; padding: 25px; box-sizing: border-box; max-height: 95vh; overflow-y: auto; position: relative; color: #333; box-shadow: 0 20px 60px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.8); animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);}
-        
+        /* モーダル群 */
+        @keyframes popIn { from { opacity: 0; transform: scale(0.9) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 1000; align-items: center; justify-content: center; padding: 15px; animation: fadeIn 0.3s ease-out; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes popIn { from { opacity: 0; transform: scale(0.9) translateY(30px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        .modal-content { background: rgba(255,255,255,0.95); width: 100%; max-width: 450px; border-radius: 28px; padding: 25px; box-sizing: border-box; max-height: 95vh; overflow-y: auto; position: relative; color: #333; box-shadow: 0 20px 50px rgba(0,0,0,0.2); animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
         
         .money-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .money-btn { background: rgba(255,255,255,0.9); color: var(--btn-checkout); padding: 18px 5px; font-size: 1.1rem; font-weight: 900; border-radius: 16px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);}
-        .tender-input { width: 100%; padding: 18px; font-size: 2.4rem; font-weight: 900; text-align: right; border: 3px solid var(--btn-checkout); border-radius: 20px; box-sizing: border-box; background: rgba(255,255,255,0.9);}
-        .change-box { background: rgba(255,255,255,0.6); padding: 15px; border-radius: 20px; text-align: center; margin-bottom: 20px; border: 3px dashed var(--accent-color); }
-        .change-val { font-size: 2.8rem; font-weight: 900; color: var(--accent-color); line-height: 1; margin-top: 5px;}
+        .money-btn { background: #e3f2fd; color: #1565c0; padding: 18px 5px; font-size: 1.1rem; font-weight: 900; border-radius: 14px;}
+        .tender-input { width: 100%; padding: 16px; font-size: 2rem; font-weight: 900; text-align: right; border: 3px solid var(--btn-checkout); border-radius: 16px; box-sizing: border-box; background: #fff;}
+        .change-box { background: #fff0f5; padding: 15px; border-radius: 16px; text-align: center; margin-bottom: 20px; border: 3px dashed var(--accent-color); }
+        .change-val { font-size: 2.6rem; font-weight: 900; color: var(--accent-color); line-height: 1; margin-top: 5px;}
         
         /* ★ 金額がポヨンと跳ねるアニメーション */
         @keyframes popValue {
             0% { transform: scale(1); }
-            40% { transform: scale(1.15); color: var(--accent-color); }
+            50% { transform: scale(1.15); color: var(--accent-color); }
             100% { transform: scale(1); }
         }
         .pop-anim { animation: popValue 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); display: inline-block;}
 
-        .cart-item-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed rgba(0,0,0,0.1); padding: 15px 0; }
-        .qty-btn { width: 42px; height: 42px; border-radius: 14px; border: none; background: rgba(0,0,0,0.05); font-size: 1.6rem; font-weight: 900; color: #333;}
-        .modal-large-btn { width: 100%; padding: 20px; font-size: 1.2rem; font-weight: 900; margin-bottom: 12px; border-radius: 20px;}
+        /* カートの中身レイアウト変更 */
+        .cart-item-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed rgba(0,0,0,0.1); padding: 12px 0; gap: 10px;}
+        .cart-item-info { display: flex; align-items: center; gap: 12px; flex-grow: 1; overflow: hidden; }
+        .cart-item-text { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+        .qty-btn { width: 38px; height: 38px; border-radius: 12px; border: none; background: #eee; font-size: 1.4rem; font-weight: 900; color: #333; flex-shrink: 0;}
+        .modal-large-btn { width: 100%; padding: 18px; font-size: 1.2rem; font-weight: 900; margin-bottom: 12px; border-radius: 16px;}
 
         /* マップ関連 */
         #map-container { 
             width: 100%; height: 60vh; background: rgba(0,0,0,0.05); overflow: hidden; position: relative; 
-            border-radius: 24px; margin-top: 15px; border: 2px solid rgba(0,0,0,0.05);
+            border-radius: 20px; margin-top: 15px; border: 2px solid rgba(0,0,0,0.1);
             -webkit-touch-callout: none; -webkit-user-select: none; user-select: none;
         }
         #map-wrapper { position: absolute; transform-origin: 0 0; }
         #map-image { pointer-events: none; }
-        .map-pin-wrap { position: absolute; transform: translate(-50%, calc(-100% + 4px)); display: flex; flex-direction: column; align-items: center; z-index: 10; pointer-events: auto; }
+        .map-pin-wrap { position: absolute; transform: translate(-50%, calc(-100% + 3px)); display: flex; flex-direction: column; align-items: center; z-index: 10; pointer-events: auto; }
         #pins-container.pin-mode .map-pin-wrap { pointer-events: none; opacity: 0.4; filter: grayscale(0.5); }
-        .pin-label { padding: 4px 10px; border-radius: 10px; font-size: 0.8rem; font-weight: 900; white-space: nowrap; margin-bottom: 2px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.2); pointer-events: none; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+        .pin-label { padding: 3px 8px; border-radius: 8px; font-size: 0.75rem; font-weight: 900; white-space: nowrap; margin-bottom: 2px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); pointer-events: none; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
         .color-white { background: rgba(255,255,255,0.85); color: #222; }
         .color-pink { background: rgba(255,192,203,0.85); color: #900; }
         .color-blue { background: rgba(173,216,230,0.85); color: #005; }
         .color-green { background: rgba(144,238,144,0.85); color: #050; }
         .color-yellow { background: rgba(255,255,224,0.85); color: #550; }
-        .pin-icon { font-size: 32px; cursor: pointer; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.3)); line-height: 1; transition: transform 0.1s; }
+        .pin-icon { font-size: 28px; cursor: pointer; filter: drop-shadow(0 3px 3px rgba(0,0,0,0.3)); line-height: 1; transition: transform 0.1s; }
         .map-pin-wrap:active .pin-icon { transform: scale(1.2); }
-        .pin-dot { width: 8px; height: 8px; background: #ff1744; border-radius: 50%; margin-top: -4px; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.4); }
+        .pin-dot { width: 8px; height: 8px; background: #ff1744; border-radius: 50%; margin-top: -4px; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.4); }
         #pins-container.hide-labels .pin-label { display: none; }
         
         #magnifier {
-            position: fixed; width: 130px; height: 130px; border: 5px solid var(--accent-color); border-radius: 50%;
-            background-color: white; background-repeat: no-repeat; pointer-events: none; display: none; z-index: 2000; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            position: fixed; width: 120px; height: 120px; border: 4px solid var(--accent-color); border-radius: 50%;
+            background-color: white; background-repeat: no-repeat; pointer-events: none; display: none; z-index: 2000; box-shadow: 0 8px 20px rgba(0,0,0,0.3);
         }
         #magnifier::after {
-            content: '+'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--accent-color); font-size: 28px; font-weight: 900; text-shadow: 0 0 4px white;
+            content: '+'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--accent-color); font-size: 24px; font-weight: 900; text-shadow: 0 0 3px white;
         }
-        
-        .icon-radio { display: none; }
-        .icon-label { font-size: 2rem; padding: 8px; border-radius: 16px; border: 3px solid transparent; cursor: pointer; transition: 0.2s;}
-        .icon-radio:checked + .icon-label { border-color: var(--accent-color); background: rgba(0,0,0,0.05); transform: scale(1.1);}
 
-        .danger-zone { margin-top: 60px; padding-top: 30px; border-top: 2px dashed #f44336; text-align: center; }
+        .danger-zone { margin-top: 50px; padding-top: 25px; border-top: 2px dashed #f44336; text-align: center; }
     </style>
 </head>
 <body data-theme="default">
@@ -268,18 +270,10 @@
 
 <div class="tabs" id="main-tabs">
     <div class="tab-highlight" id="tab-highlight"></div>
-    <div class="tab active" onclick="switchTab('pos', this)">
-        <div class="icon">🛍️</div><div>レジ</div>
-    </div>
-    <div class="tab" onclick="switchTab('settings', this)">
-        <div class="icon">⚙️</div><div>設定</div>
-    </div>
-    <div class="tab" onclick="switchTab('analytics', this)">
-        <div class="icon">📊</div><div>分析</div>
-    </div>
-    <div class="tab" onclick="switchTab('map', this)">
-        <div class="icon">🗺️</div><div>マップ</div>
-    </div>
+    <div class="tab active" onclick="switchTab('pos', this)">🛍️ レジ</div>
+    <div class="tab" onclick="switchTab('settings', this)">⚙️ 設定</div>
+    <div class="tab" onclick="switchTab('analytics', this)">📊 分析</div>
+    <div class="tab" onclick="switchTab('map', this)">🗺️ マップ</div>
 </div>
 
 <div id="pos" class="tab-content active">
@@ -288,10 +282,10 @@
 
 <div id="settings" class="tab-content">
     <div class="form-group glass-card" style="padding:20px; margin-bottom:20px;">
-        <label style="font-weight:900; color:var(--accent-color); font-size:1.05rem;">🎨 外観のカスタマイズ</label>
+        <label style="font-weight:900; color:var(--accent-color); font-size:1.1rem;">🎨 外観のカスタマイズ</label>
         <select id="theme-selector" onchange="changeTheme(this.value)" style="margin-bottom:15px; margin-top:5px;">
-            <option value="default">デフォルト（ピンク）</option>
-            <option value="cute">かわいい（ポップ＆丸字）</option>
+            <option value="default">デフォルト（クリアブルー）</option>
+            <option value="cute">かわいい（ピンク）</option>
             <option value="chocolate">チョコレート（ブラウン）</option>
             <option value="matcha">抹茶（グリーン）</option>
             <option value="visibility">見やすさ重視（白黒黄）</option>
@@ -301,11 +295,11 @@
         
         <label style="font-size:0.9rem; margin-top:10px;">🖼 アプリの背景画像（薄く透けます）</label>
         <input type="file" accept="image/*" onclick="this.value=null;" onchange="loadBackgroundImage(this)" style="border:2px dashed rgba(0,0,0,0.15); padding:10px; background:transparent;">
-        <button onclick="clearBackgroundImage()" style="background:transparent; color:#f44336; border:2px solid #f44336; padding:14px; border-radius:16px; font-weight:900; font-size:1rem; margin-top:10px; width:100%;">🗑 背景画像をリセット</button>
+        <button onclick="clearBackgroundImage()" style="background:transparent; color:#f44336; border:2px solid #f44336; padding:12px; border-radius:12px; font-weight:900; font-size:0.9rem; margin-top:10px; width:100%;">🗑 背景画像をリセット</button>
     </div>
 
-    <div id="product-form-area" class="glass-card" style="padding:25px;">
-        <h3 id="form-title" style="margin-top:0; font-size:1.4rem;">📦 商品を登録</h3>
+    <div id="product-form-area" class="glass-card" style="padding:20px;">
+        <h3 id="form-title" style="margin-top:0; font-size:1.3rem;">📦 商品を登録</h3>
         <input type="hidden" id="edit-item-id">
         <div class="form-group"><input type="text" id="itemName" placeholder="商品名"></div>
         <div class="form-group">
@@ -314,90 +308,87 @@
         </div>
         <div class="form-group"><input type="number" id="itemStock" placeholder="在庫数" inputmode="numeric"></div>
         
-        <div class="form-group" style="background: rgba(0,0,0,0.03); padding: 15px; border-radius: 20px; border:1px solid rgba(0,0,0,0.05);">
+        <div class="form-group" style="background: rgba(0,0,0,0.03); padding: 15px; border-radius: 16px; border:1px solid rgba(0,0,0,0.05);">
             <label>商品画像を選択：</label>
-            <img id="edit-image-preview" style="display:none; width: 80px; height: 80px; object-fit: contain; margin-bottom: 10px; border-radius:16px; background:#fff; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
+            <img id="edit-image-preview" style="display:none; width: 80px; height: 80px; object-fit: contain; margin-bottom: 10px; border-radius:12px; background:#fff; box-shadow:0 2px 8px rgba(0,0,0,0.1);">
             <input type="file" id="itemImage" accept="image/*" style="border:none; padding:5px 0; background:transparent;" onclick="this.value=null;">
-            <div id="image-hint" style="display:none; font-size:0.85rem; color:#888; margin-top:5px;">※変更しない場合は選択不要です</div>
         </div>
         
         <button class="save-btn" id="save-product-btn" onclick="addNewItem()">✨ この内容で登録する</button>
-        <button class="save-btn" id="cancel-edit-btn" onclick="cancelEdit()" style="display:none; background:rgba(0,0,0,0.2); margin-top:10px;">キャンセル</button>
+        <button class="save-btn" id="cancel-edit-btn" onclick="cancelEdit()" style="display:none; background:#888; margin-top:10px;">キャンセル</button>
     </div>
 
-    <h3 style="margin-top:40px; border-bottom:2px solid rgba(0,0,0,0.1); padding-bottom:8px; font-size:1.3rem;">📋 登録済みリスト（△▽で並び替え）</h3>
+    <h3 style="margin-top:35px; border-bottom:2px solid rgba(0,0,0,0.1); padding-bottom:8px; font-size:1.2rem;">📋 登録済みリスト（△▽で並び替え）</h3>
     <div id="settings-list"></div>
 
-    <div class="glass-card" style="margin-top: 35px; padding: 25px;">
-        <h3 style="margin-top:0; color:#1565c0; font-size:1.3rem;">💾 データの保存と読込</h3>
-        <p style="font-size:0.9rem; color:#666; font-weight:700;">現在の状態（画像やマップ含む）をファイルに保存したり、別のファイルから新しいイベントとして読み込んだりできます。</p>
-        <button onclick="exportAppData()" style="background:#2196F3; color:white; padding:18px; width:100%; font-weight:900; font-size:1.2rem; border-radius:16px; margin-bottom:12px; box-shadow: 0 6px 15px rgba(33,150,243,0.3);">⬇️ データを保存する</button>
-        <label style="display:block; background:#4CAF50; color:white; padding:18px; width:100%; font-weight:900; font-size:1.2rem; border-radius:16px; text-align:center; box-sizing:border-box; box-shadow: 0 6px 15px rgba(76,175,80,0.3); cursor:pointer;">
+    <div class="glass-card" style="margin-top: 30px; padding: 20px;">
+        <h3 style="margin-top:0; color:#1565c0; font-size:1.2rem;">💾 データの保存と読込</h3>
+        <p style="font-size:0.85rem; color:#666; font-weight:700;">現在の状態（画像やマップ含む）をファイルに保存したり、別のファイルから新しいイベントとして読み込んだりできます。</p>
+        <button onclick="exportAppData()" style="background:#2196F3; color:white; padding:16px; width:100%; font-weight:900; font-size:1.1rem; border-radius:14px; margin-bottom:12px; box-shadow: 0 4px 12px rgba(33,150,243,0.3);">⬇️ データを保存する</button>
+        <label style="display:block; background:#4CAF50; color:white; padding:16px; width:100%; font-weight:900; font-size:1.1rem; border-radius:14px; text-align:center; box-sizing:border-box; box-shadow: 0 4px 12px rgba(76,175,80,0.3); cursor:pointer;">
             ⬆️ データを読み込む
             <input type="file" style="display:none;" accept=".json" onchange="importAppData(this)">
         </label>
     </div>
 
     <div class="danger-zone">
-        <h3 style="color:#f44336; margin-top:0; font-size:1.2rem;">⚠️ 危険領域</h3>
-        <p style="font-size:0.9rem; color:#666; font-weight:700;">動作がおかしい時は、このボタンでアプリを初期化してください。</p>
-        <button onclick="hardResetApp()" style="background:#f44336; color:white; padding:20px; width:100%; font-weight:900; border-radius:20px; font-size:1.2rem; box-shadow: 0 6px 20px rgba(244,67,54,0.3);">⚠️ アプリを完全にリセットする</button>
+        <h3 style="color:#f44336; margin-top:0;">⚠️ 危険領域</h3>
+        <button onclick="hardResetApp()" style="background:#f44336; color:white; padding:18px; width:100%; font-weight:900; border-radius:16px; font-size:1.1rem; box-shadow: 0 4px 15px rgba(244,67,54,0.3);">⚠️ アプリを完全にリセットする</button>
     </div>
 </div>
 
 <div id="analytics" class="tab-content">
-    <div class="glass-card" style="background: rgba(var(--accent-color-rgb, 233,30,99), 0.8); color:var(--accent-color); padding:30px; border-radius:28px; text-align:center; margin-bottom:20px;">
-        <div style="opacity:0.9; font-size:1.1rem; font-weight:900;">イベント総売上</div>
+    <div class="accent-glass" style="padding:30px; text-align:center; margin-bottom:20px;">
+        <div style="opacity:0.9; font-size:1rem; font-weight:700;">イベント総売上</div>
         <div style="font-size:3.5rem; font-weight:900; letter-spacing:-1px;">¥<span id="stat-total-rev">0</span></div>
     </div>
     
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:25px;">
         <div class="glass-card" style="padding:20px; text-align:center;">
-            <div style="color:#666; font-size:0.95rem; font-weight:700;">会計数</div>
+            <div style="color:#666; font-size:0.9rem; font-weight:700;">会計数</div>
             <div style="font-size:1.8rem; font-weight:900; color:#333;"><span id="stat-total-tx">0</span>回</div>
         </div>
         <div class="glass-card" style="padding:20px; text-align:center;">
-            <div style="color:#666; font-size:0.95rem; font-weight:700;">客単価</div>
+            <div style="color:#666; font-size:0.9rem; font-weight:700;">客単価</div>
             <div style="font-size:1.8rem; font-weight:900; color:#333;">¥<span id="stat-avg-spend">0</span></div>
         </div>
     </div>
     
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:30px;">
-        <button class="glass-card" onclick="copyReportToClipboard()" style="background:var(--btn-checkout); color:white; padding:18px; font-weight:900; font-size:1.1rem;">📝 レポートコピー</button>
-        <button class="glass-card" onclick="exportCSV()" style="background:#4CAF50; color:white; padding:18px; font-weight:900; font-size:1.1rem;">📊 CSV出力</button>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:25px;">
+        <button onclick="copyReportToClipboard()" style="background:var(--btn-checkout); color:white; padding:15px; border-radius:14px; font-weight:900; font-size:1.1rem;">📝 レポートコピー</button>
+        <button onclick="exportCSV()" style="background:#4CAF50; color:white; padding:15px; border-radius:14px; font-weight:900; font-size:1.1rem;">📊 CSV出力</button>
     </div>
 
-    <h3 style="border-bottom:2px solid rgba(0,0,0,0.1); padding-bottom:8px; margin-left:10px; font-size:1.2rem;">🏆 商品別売上</h3>
+    <h3 style="border-bottom:2px solid rgba(0,0,0,0.1); padding-bottom:8px;">🏆 商品別売上</h3>
     <div id="stat-items" class="glass-card" style="padding:20px; margin-bottom:25px;"></div>
 
-    <h3 style="border-bottom:2px solid rgba(0,0,0,0.1); padding-bottom:8px; margin-left:10px; font-size:1.2rem;">⏰ 時間帯別売上</h3>
+    <h3 style="border-bottom:2px solid rgba(0,0,0,0.1); padding-bottom:8px;">⏰ 時間帯別売上</h3>
     <div id="stat-time" class="glass-card" style="padding:20px; margin-bottom:25px;"></div>
 
     <div style="display:flex; justify-content:space-between; align-items:flex-end; border-bottom:2px solid rgba(0,0,0,0.1); padding-bottom:8px; margin-bottom:15px;">
-        <h3 style="margin:0; margin-left:10px; font-size:1.2rem;">📝 取引履歴</h3>
-        <button onclick="clearEventHistory()" style="background:#f44336; color:white; padding:10px 15px; font-size:0.95rem; border-radius:14px; font-weight:900;">🔄 リセット</button>
+        <h3 style="margin:0;">📝 取引履歴</h3>
+        <button onclick="clearEventHistory()" style="background:#f44336; color:white; padding:8px 12px; font-size:0.9rem; border-radius:10px; font-weight:900;">🔄 リセット</button>
     </div>
     <div id="history-list"></div>
 </div>
 
 <div id="map" class="tab-content">
-    <div class="glass-card" style="padding: 20px; margin-bottom: 20px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:12px;">
-            <label style="background:var(--btn-checkout); color:white; padding:14px; border-radius:16px; font-size:1rem; font-weight:900; flex-grow:1; text-align:center; cursor:pointer;">
+    <div class="glass-card" style="padding: 15px; margin-bottom: 15px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:10px;">
+            <label style="background:var(--btn-checkout); color:white; padding:12px; border-radius:12px; font-size:0.95rem; font-weight:900; flex-grow:1; text-align:center; cursor:pointer;">
                 🗺 図面読込 
                 <input type="file" style="display:none;" accept="image/*" onclick="this.value=null;" onchange="loadMapImage(this)">
             </label>
-            <button onclick="deleteMapImage()" style="background:#f44336; color:white; padding:14px; border-radius:16px; font-weight:900;">🗑</button>
-            <button onclick="toggleLabels()" id="label-toggle-btn" style="background:var(--accent-color); color:white; padding:14px; border-radius:16px; font-weight:900;">👁</button>
-            <button onclick="resetMap()" style="background:rgba(0,0,0,0.3); color:white; padding:14px; border-radius:16px; font-weight:900;">視点</button>
+            <button onclick="deleteMapImage()" style="background:#f44336; color:white; padding:12px; border-radius:12px; font-weight:900;">🗑</button>
+            <button onclick="toggleLabels()" id="label-toggle-btn" style="background:var(--accent-color); color:white; padding:12px; border-radius:12px; font-weight:900;">👁</button>
+            <button onclick="resetMap()" style="background:#555; color:white; padding:12px; border-radius:12px; font-weight:900;">視点</button>
         </div>
-        <button id="pin-mode-btn" onclick="togglePinMode()" style="width:100%; padding:18px; background:rgba(255,255,255,0.9); border:2px solid rgba(0,0,0,0.1); font-weight:900; font-size:1.1rem; color:#333; border-radius:16px; backdrop-filter:blur(12px);">
+        <button id="pin-mode-btn" onclick="togglePinMode()" style="width:100%; padding:15px; background:rgba(255,255,255,0.9); border:2px solid rgba(0,0,0,0.15); font-weight:900; font-size:1.1rem; color:#333; border-radius:14px; backdrop-filter:blur(8px);">
             📍 ピン追加モード：【OFF】（地図移動）
         </button>
     </div>
-    <p style="font-size:0.8rem; color:#666; margin:8px 0; font-weight:700; line-height:1.4; text-align:center;">※2本指で拡大縮小。ピン追加ONにして地図をタッチして動かすとルーペが出現します。</p>
     
-    <div id="map-container" class="glass-card" style="border-radius:28px; box-shadow: inset 0 4px 10px rgba(0,0,0,0.05);">
+    <div id="map-container" class="glass-card">
         <div id="map-wrapper">
             <img id="map-image" style="display:none; transform-origin: top left;">
             <div id="pins-container"></div>
@@ -410,8 +401,8 @@
 <div class="bottom-bar" id="cart-bar">
     <div class="cart-status">
         <div class="cart-controls">
-            <button onclick="undoLastCartItem()" class="action-btn" style="font-size:1.6rem; padding: 12px 18px;">↩️</button>
-            <button onclick="openCartModal()" class="action-btn" id="cart-btn-label" style="font-size:1.6rem; padding: 12px 18px;">🛒</button>
+            <button onclick="undoLastCartItem()" class="action-btn">↩️</button>
+            <button onclick="openCartModal()" class="action-btn" id="cart-btn-label">🛒</button>
         </div>
         <div style="text-align: right; color:#333;">小計: <span class="total-amount-display">¥<span id="cart-total">0</span></span></div>
     </div>
@@ -426,35 +417,34 @@
 
 <div class="modal-overlay" id="price-modal">
     <div class="modal-content">
-        <h2 style="text-align:center; margin-top:0; font-size:1.6rem;">価格を設定</h2>
+        <h2 style="text-align:center; margin-top:0; font-size:1.5rem;">価格を設定</h2>
         <div class="money-grid">
             <button class="money-btn" onclick="addPriceAmount(100)">＋100</button>
             <button class="money-btn" onclick="addPriceAmount(500)">＋500</button>
             <button class="money-btn" onclick="addPriceAmount(1000)">＋1000</button>
             <button class="money-btn" onclick="addPriceAmount(5000)">＋5000</button>
             <button class="money-btn" onclick="addPriceAmount(10000)">＋1万</button>
-            <button class="money-btn" onclick="clearPriceAmount()" style="background:rgba(0,0,0,0.05); color:#333;">クリア</button>
+            <button class="money-btn" onclick="clearPriceAmount()" style="background:#eee; color:#333;">クリア</button>
         </div>
         <div style="margin-bottom:20px;">
-            <label style="font-size:0.95rem; color:#666; font-weight:700;">手入力も可能です</label>
+            <label style="font-size:0.9rem; color:#666; font-weight:700;">手入力も可能です</label>
             <div style="display:flex; align-items:center; gap:8px;">
                 <div id="anim-price-wrap" style="flex-grow:1; display:flex;">
                     <input type="number" id="modal-price-input" class="tender-input" inputmode="numeric" placeholder="0" style="flex-grow:1;">
                 </div>
-                <span style="font-weight:900; font-size:1.5rem;">円</span>
+                <span style="font-weight:900; font-size:1.4rem;">円</span>
             </div>
         </div>
-        <button onclick="commitPriceModal()" style="width:100%; padding:20px; background:var(--accent-color); color:white; font-size:1.4rem; font-weight:900; border-radius:20px; margin-bottom:12px; box-shadow: 0 6px 20px rgba(0,0,0,0.15);">決定</button>
-        <button onclick="closePriceModal()" style="width:100%; padding:20px; background:rgba(0,0,0,0.05); color:#333; font-size:1.2rem; font-weight:900; border-radius:20px;">キャンセル</button>
+        <button onclick="commitPriceModal()" style="width:100%; padding:18px; background:var(--accent-color); color:white; font-size:1.3rem; font-weight:900; border-radius:14px; margin-bottom:12px;">決定</button>
+        <button onclick="closePriceModal()" style="width:100%; padding:18px; background:rgba(0,0,0,0.05); color:#333; font-size:1.1rem; font-weight:900; border-radius:14px;">キャンセル</button>
     </div>
 </div>
 
 <div class="modal-overlay" id="cart-modal">
     <div class="modal-content">
-        <h2 style="text-align:center; margin-top:0; font-size:1.6rem;">🛒 カートの中身</h2>
+        <h2 style="text-align:center; margin-top:0; font-size:1.5rem;">🛒 カートの中身</h2>
         <div id="cart-items-list" style="max-height:45vh; overflow-y:auto; margin-bottom:20px; border-top:2px solid rgba(0,0,0,0.05);"></div>
-        
-        <button onclick="openCheckoutModal(); closeCartModal();" class="modal-large-btn" style="background:var(--btn-checkout); color:white; box-shadow: 0 6px 20px rgba(0,0,0,0.15);">💰 このままお会計へ進む</button>
+        <button onclick="openCheckoutModal(); closeCartModal();" class="modal-large-btn" style="background:var(--btn-checkout); color:white;">💰 このままお会計へ進む</button>
         <button onclick="clearCart()" class="modal-large-btn" style="background:#f44336; color:white;">🗑 カートを空にする</button>
         <button onclick="closeCartModal()" class="modal-large-btn" style="background:rgba(0,0,0,0.05); color:#333;">× 閉じる</button>
     </div>
@@ -462,7 +452,7 @@
 
 <div class="modal-overlay" id="checkout-modal">
     <div class="modal-content">
-        <div style="text-align:center; font-size:1.4rem; margin-bottom:15px; font-weight:900;">合計: <strong style="font-size:2.8rem; color:var(--accent-color); letter-spacing:-1px;">¥<span id="modal-total-amount">0</span></strong></div>
+        <div style="text-align:center; font-size:1.4rem; margin-bottom:15px; font-weight:900;">合計: <strong style="font-size:2.6rem; color:var(--accent-color); letter-spacing:-1px;">¥<span id="modal-total-amount">0</span></strong></div>
         
         <div class="money-grid">
             <button class="money-btn" onclick="addTenderAmount(100)">＋100</button>
@@ -470,35 +460,33 @@
             <button class="money-btn" onclick="addTenderAmount(1000)">＋1000</button>
             <button class="money-btn" onclick="addTenderAmount(5000)">＋5000</button>
             <button class="money-btn" onclick="addTenderAmount(10000)">＋1万</button>
-            <button class="money-btn" onclick="clearTenderAmount()" style="background:rgba(0,0,0,0.05); color:#333;">クリア</button>
-            <button class="money-btn" onclick="setTenderExact()" style="grid-column:span 3; background:#fff3e0; color:#e65100; padding:20px;">ピッタリお預かり</button>
+            <button class="money-btn" onclick="clearTenderAmount()" style="background:#eee; color:#333;">クリア</button>
+            <button class="money-btn" onclick="setTenderExact()" style="grid-column:span 3; background:#fff3e0; color:#e65100; padding:18px;">ピッタリお預かり</button>
         </div>
 
         <div class="tender-wrap" style="margin-bottom:15px;">
-            <div style="font-size:0.95rem; margin-bottom:6px; font-weight:900; color:#666;">お預かり金額（未入力でピッタリ）</div>
+            <div style="font-size:0.9rem; margin-bottom:6px; font-weight:900; color:#666;">お預かり金額（未入力でピッタリ会計）</div>
             <div style="display:flex; align-items:center; gap:8px;">
-                <div id="anim-tender-wrap" style="flex-grow:1; display:flex;">
-                    <input type="number" id="tender-input" class="tender-input" oninput="calculateChange()" inputmode="numeric" placeholder="未入力でピッタリ" style="flex-grow:1;">
-                </div>
-                <span style="font-weight:900; font-size:1.5rem;">円</span>
+                <input type="number" id="tender-input" class="tender-input" oninput="calculateChange()" inputmode="numeric" placeholder="未入力でピッタリ">
+                <span style="font-weight:900; font-size:1.4rem;">円</span>
             </div>
         </div>
 
         <div class="change-box">
-            <div style="font-size:1.1rem; font-weight:900; color:var(--accent-color);">お釣り</div>
+            <div style="font-size:1rem; font-weight:900; color:var(--accent-color);">お釣り</div>
             <div class="change-val">¥<span id="change-amount">0</span></div>
         </div>
 
         <div style="display:flex; gap:12px;">
-            <button onclick="closeCheckoutModal()" style="flex:1; padding:20px; background:rgba(0,0,0,0.05); color:#333; font-weight:900; font-size:1.2rem;">やめる</button>
-            <button id="complete-checkout-btn" onclick="executeCheckout()" style="flex:2; padding:20px; background:#4CAF50; color:white; font-weight:900; font-size:1.5rem; box-shadow: 0 6px 20px rgba(76,175,80,0.3);">会計完了</button>
+            <button onclick="closeCheckoutModal()" style="flex:1; padding:18px; background:rgba(0,0,0,0.05); color:#333; font-weight:900; font-size:1.2rem;">やめる</button>
+            <button id="complete-checkout-btn" onclick="executeCheckout()" style="flex:2; padding:18px; background:#4CAF50; color:white; font-weight:900; font-size:1.4rem; box-shadow: 0 4px 15px rgba(76,175,80,0.3);">会計完了</button>
         </div>
     </div>
 </div>
 
 <div class="modal-overlay" id="pin-modal">
     <div class="modal-content">
-        <h3 style="margin-top:0; font-size:1.5rem;">📍 ピンの情報</h3>
+        <h3 style="margin-top:0; font-size:1.4rem;">📍 ピンの情報</h3>
         <input type="hidden" id="pin-id">
         <input type="hidden" id="pin-x">
         <input type="hidden" id="pin-y">
@@ -529,17 +517,17 @@
         <div class="form-group"><label>作者名</label><input type="text" id="pin-author" placeholder="例：Momo"></div>
         <div class="form-group"><label>メモ（挨拶など）</label><input type="text" id="pin-memo" placeholder="例：新譜を渡す！"></div>
         
-        <div style="display:flex; gap:12px; margin-top:25px;">
-            <button onclick="deletePin()" style="flex:1; padding:18px; background:#f44336; color:white; font-weight:900; font-size:1.2rem;">削除</button>
-            <button onclick="savePin()" style="flex:2; padding:18px; background:var(--accent-color); color:white; font-weight:900; font-size:1.2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.15);">保存する</button>
+        <div style="display:flex; gap:12px; margin-top:20px;">
+            <button onclick="deletePin()" style="flex:1; padding:16px; background:#f44336; color:white; font-weight:900; font-size:1.1rem;">削除</button>
+            <button onclick="savePin()" style="flex:2; padding:16px; background:var(--accent-color); color:white; font-weight:900; font-size:1.1rem;">保存する</button>
         </div>
-        <button onclick="closePinModal()" style="width:100%; margin-top:12px; padding:18px; background:rgba(0,0,0,0.05); color:#333; font-weight:900; font-size:1.2rem;">閉じる</button>
+        <button onclick="closePinModal()" style="width:100%; margin-top:12px; padding:16px; background:rgba(0,0,0,0.05); color:#333; font-weight:900; font-size:1.1rem;">閉じる</button>
     </div>
 </div>
 
 <script>
     // ==========================================
-    // 🚀 IndexedDB（大容量保存システム）の構築
+    // 🚀 IndexedDB（大容量保存システム）
     // ==========================================
     const DB_NAME = 'HazukiRegiDB';
     const DB_VERSION = 1;
@@ -600,12 +588,11 @@
 
                 applyBackgroundImage(); updateEventSelector(); renderAll(); setupMapGestures(); 
                 
-                // ★ 初期ロード時のタブハイライト設定
+                // ★ 初期化時にタブハイライトをセット
                 setTimeout(() => {
                     const activeTab = document.querySelector('.tab.active');
-                    if(activeTab) updateTabHighlight(activeTab);
+                    if (activeTab) switchTab('pos', activeTab);
                 }, 100);
-
                 resolve();
             };
         });
@@ -617,7 +604,7 @@
             const store = transaction.objectStore('appData');
             store.put({ id: 'main', data: appData });
             return true;
-        } catch(e) { alert("データの保存に失敗しました。"); return false; }
+        } catch(e) { return false; }
     }
     function saveData() { return saveDataToDB(); }
     window.onload = () => { initDB(); };
@@ -697,60 +684,34 @@
         }
     }
 
-    // ★ タブ切り替えとハイライトアニメーション
-    function updateTabHighlight(targetTab) {
-        const highlight = document.getElementById('tab-highlight');
-        const container = document.getElementById('main-tabs');
-        if(!highlight || !targetTab || !container) return;
-        const tabRect = targetTab.getBoundingClientRect();
-        const containerRect = container.getBoundingClientRect();
-        const offsetLeft = tabRect.left - containerRect.left;
-        
-        highlight.style.width = `${tabRect.width}px`;
-        highlight.style.transform = `translateX(${offsetLeft}px)`;
-    }
-
-    window.addEventListener('resize', () => {
-        const activeTab = document.querySelector('.tab.active');
-        if(activeTab) updateTabHighlight(activeTab);
-    });
-
-    function switchTab(id, el) {
+    // ★ 超滑らかなタブ切り替え＆カートバーのバグ修正
+    function switchTab(id, tabElement) {
         try {
-            const tabs = document.querySelectorAll('.tab');
-            const contents = document.querySelectorAll('.tab-content');
+            document.querySelectorAll('.tab, .tab-content').forEach(el => el.classList.remove('active'));
+            if (!tabElement) tabElement = document.querySelector(`.tab[onclick*="${id}"]`);
             
-            let targetTab = el;
-            if(!targetTab) targetTab = document.querySelector(`.tab[onclick*="${id}"]`);
-
-            tabs.forEach(t => t.classList.remove('active'));
-            contents.forEach(c => c.classList.remove('active'));
-
-            if(targetTab) {
-                targetTab.classList.add('active');
-                updateTabHighlight(targetTab); // ★ハイライトをぬるぬる移動
+            if (tabElement) {
+                tabElement.classList.add('active');
+                // ハイライトの移動
+                const highlight = document.getElementById('tab-highlight');
+                const leftPos = tabElement.offsetLeft;
+                highlight.style.width = tabElement.offsetWidth + 'px';
+                highlight.style.transform = `translateX(${leftPos - 6}px)`;
             }
+            
             const content = document.getElementById(id);
             if(content) content.classList.add('active');
             
+            // カートバーの確実な表示・非表示
             const cartBar = document.getElementById('cart-bar');
-            if(cartBar) {
-                if(id === 'pos') {
-                    cartBar.style.display = 'flex';
-                    setTimeout(() => { cartBar.style.opacity = '1'; cartBar.style.transform = 'translateY(0)'; }, 10);
-                } else {
-                    cartBar.style.opacity = '0'; cartBar.style.transform = 'translateY(20px)';
-                    setTimeout(() => { cartBar.style.display = 'none'; }, 400); // アニメーション後に消す
-                }
-            }
+            if(cartBar) cartBar.style.display = (id === 'pos') ? 'flex' : 'none';
             
             if (id === 'analytics') renderAnalytics();
             if (id === 'map') renderMap();
-            window.scrollTo(0, 0);
+            window.scrollTo({top: 0, behavior: 'smooth'});
         } catch(e) { console.error(e); }
     }
 
-    // --- データ保存・読込 ---
     function exportAppData() {
         const dataStr = JSON.stringify(appData); const blob = new Blob([dataStr], { type: "application/json" });
         const url = URL.createObjectURL(blob); const link = document.createElement('a'); link.href = url;
@@ -779,44 +740,25 @@
         reader.readAsText(input.files[0]);
     }
 
-    // --- ★ 価格入力ポップアップのアニメーション化 ---
+    // --- 価格入力ポップアップ ---
     function openPriceModal() {
         const current = document.getElementById('itemPrice').value;
         document.getElementById('modal-price-input').value = current || '';
         document.getElementById('price-modal').style.display = 'flex';
     }
     function closePriceModal() { document.getElementById('price-modal').style.display = 'none'; }
-    
-    // 金額をぬるぬるカウントアップする
-    function animateModalPrice(start, end) {
-        const el = document.getElementById('modal-price-input');
-        const wrap = document.getElementById('anim-price-wrap');
-        const duration = 400; let startTime = null;
-        const easeOut = t => 1 - Math.pow(1 - t, 4); // easeOutQuart
-
-        const step = (t) => {
-            if(!startTime) startTime = t;
-            const progress = Math.min((t - startTime) / duration, 1);
-            el.value = Math.floor(easeOut(progress) * (end - start) + start);
-            if(progress < 1) window.requestAnimationFrame(step);
-            else el.value = end;
-        };
-        window.requestAnimationFrame(step);
-        
-        // ぽよんアニメーション再発火
-        wrap.classList.remove('pop-anim');
-        void wrap.offsetWidth;
-        wrap.classList.add('pop-anim');
-    }
-
     function addPriceAmount(amount) {
         const el = document.getElementById('modal-price-input');
-        let start = parseInt((el.value||"").replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0))) || 0;
-        animateModalPrice(start, start + amount);
+        const wrap = document.getElementById('anim-price-wrap');
+        let current = parseInt((el.value||"").replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0))) || 0;
+        el.value = current + amount;
+        
+        // ぽよんっ！アニメーション
+        wrap.classList.remove('pop-anim');
+        void wrap.offsetWidth; 
+        wrap.classList.add('pop-anim');
     }
-    
     function clearPriceAmount() { document.getElementById('modal-price-input').value = ''; }
-    
     function commitPriceModal() {
         const inputEl = document.getElementById('modal-price-input');
         inputEl.blur(); 
@@ -847,7 +789,7 @@
             if (isNaN(s)) return alert('⚠️ 在庫数を入力してください。');
 
             const ev = appData.events.find(e => e.id == appData.currentEventId);
-            if(!ev) return alert("⚠️ イベントが見つかりません。");
+            if(!ev) return;
 
             const finalize = (img) => {
                 if (editId) {
@@ -931,7 +873,6 @@
         return item ? item.stock - cart.filter(c => c.id === itemId).length : 0;
     }
 
-    // ★ カード全体をクリックで追加
     function addToCart(event, itemId) {
         if (getAvailableStock(itemId) <= 0) return;
         const ev = appData.events.find(e => e.id == appData.currentEventId);
@@ -944,99 +885,108 @@
     function flyToCart(event, callback) {
         const itemContainer = event.currentTarget || event.target.closest('.item');
         const img = itemContainer ? itemContainer.querySelector('img') : null;
-        const btn = document.getElementById('cart-btn-label'); // カートアイコンへ飛ぶ
+        const btn = document.getElementById('checkout-btn');
         if (!img || !btn) { if(callback) callback(); return; }
 
         const rect = img.getBoundingClientRect(); const target = btn.getBoundingClientRect();
         const flier = document.createElement('div');
-        flier.style.cssText = `position:fixed; left:${rect.left + rect.width/2}px; top:${rect.top + rect.height/2}px; width:${rect.width}px; height:${rect.height}px; background-image:url(${img.src}); background-size:contain; background-repeat:no-repeat; background-position:center; z-index:9999; pointer-events:none; transition:all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); transform:translate(-50%, -50%);`;
+        flier.style.cssText = `position:fixed; left:${rect.left}px; top:${rect.top}px; width:${rect.width}px; height:${rect.height}px; background-image:url(${img.src}); background-size:contain; background-repeat:no-repeat; background-position:center; z-index:9999; pointer-events:none; transition:all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); transform-origin:center;`;
         document.body.appendChild(flier);
-
-        // 次のフレームで移動
-        requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-                flier.style.left = `${target.left + target.width/2}px`;
-                flier.style.top = `${target.top + target.height/2}px`;
-                flier.style.width = `20px`; flier.style.height = `20px`;
-                flier.style.opacity = '0'; flier.style.transform = `translate(-50%, -50%) rotate(360deg)`;
-            });
-        });
-
-        setTimeout(() => { 
-            flier.remove(); btn.style.transform = 'scale(1.25)'; 
-            setTimeout(() => btn.style.transform = 'scale(1)', 150); 
-            if(callback) callback(); 
-        }, 500);
-    }
-
-    // ★ 商品を戻すアニメーション（逆再生）
-    function flyFromCart(itemId) {
-        const btn = document.getElementById('cart-btn-label');
-        const targetItem = document.querySelector(`.item[data-id="${itemId}"] img`);
-        if (!btn || !targetItem) return;
-
-        const startRect = btn.getBoundingClientRect();
-        const endRect = targetItem.getBoundingClientRect();
-
-        const flier = document.createElement('div');
-        flier.style.cssText = `position: fixed; left: ${startRect.left + startRect.width/2}px; top: ${startRect.top + startRect.height/2}px; width: 20px; height: 20px; background-image: url(${targetItem.src}); background-size: contain; background-repeat: no-repeat; background-position: center; z-index: 9999; pointer-events: none; transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); transform: translate(-50%, -50%) rotate(-360deg); opacity: 0;`;
-        document.body.appendChild(flier);
-
-        requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-                flier.style.opacity = '1';
-                flier.style.left = `${endRect.left + endRect.width/2}px`;
-                flier.style.top = `${endRect.top + endRect.height/2}px`;
-                flier.style.width = `${endRect.width}px`;
-                flier.style.height = `${endRect.height}px`;
-                flier.style.transform = `translate(-50%, -50%) rotate(0deg)`;
-            });
-        });
 
         setTimeout(() => {
-            flier.remove();
-            const itemCard = targetItem.closest('.item');
-            if (itemCard) {
-                itemCard.style.transform = 'scale(1.1)';
-                setTimeout(() => itemCard.style.transform = 'scale(1)', 150);
+            flier.style.left = (target.left + target.width/2) + 'px'; flier.style.top = (target.top + target.height/2) + 'px';
+            flier.style.width = '20px'; flier.style.height = '20px'; flier.style.opacity = '0'; flier.style.transform = 'translate(-50%, -50%) rotate(360deg)';
+        }, 10);
+        setTimeout(() => { flier.remove(); btn.style.transform = 'scale(1.05)'; setTimeout(() => btn.style.transform = 'scale(1)', 100); if(callback) callback(); }, 500);
+    }
+
+    // ★ 金額がぬるぬる変わるアニメーション
+    function animateValue(obj, start, end, duration) {
+        if (!obj) return;
+        if (obj.animationRef) cancelAnimationFrame(obj.animationRef);
+        let startTimestamp = null;
+        const step = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            const easeOut = 1 - Math.pow(1 - progress, 4);
+            const val = Math.floor(easeOut * (end - start) + start);
+            obj.innerText = val.toLocaleString();
+            if (progress < 1) {
+                obj.animationRef = window.requestAnimationFrame(step);
+            } else {
+                obj.innerText = end.toLocaleString();
             }
-        }, 500);
-    }
-
-    // ★ ぬるぬるカウントアップ
-    function animateTotalValue(end) {
-        const start = displayedTotal; const duration = 500; let startTime = null; const obj = document.getElementById('cart-total');
-        const easeOut = t => t === 1 ? 1 : 1 - Math.pow(2, -10 * t); // easeOutExpo
-        const step = (t) => {
-            if(!startTime) startTime = t; const progress = Math.min((t - startTime) / duration, 1);
-            const val = Math.floor(easeOut(progress) * (end - start) + start); obj.innerText = val.toLocaleString();
-            if(progress < 1) window.requestAnimationFrame(step); else { obj.innerText = end.toLocaleString(); displayedTotal = end; }
         };
-        window.requestAnimationFrame(step);
+        obj.animationRef = window.requestAnimationFrame(step);
     }
 
-    function syncCartTotalAnimated() { animateTotalValue(cart.reduce((s,i)=>s+i.price, 0)); }
-    function syncCartTotalInstant() { const t = cart.reduce((s,i)=>s+i.price, 0); document.getElementById('cart-total').innerText = t.toLocaleString(); displayedTotal = t; }
-    function updateCartButton() { const b = document.getElementById('checkout-btn'); b.disabled = cart.length === 0; b.innerText = cart.length ? "会計へ進む (" + cart.length + ")" : "会計へ進む"; }
+    function syncCartTotalAnimated() { 
+        const end = cart.reduce((s,i)=>s+i.price, 0);
+        const obj = document.getElementById('cart-total');
+        animateValue(obj, displayedTotal, end, 600); // ぬるぬる
+        displayedTotal = end;
+    }
     
+    function syncCartTotalInstant() { 
+        const t = cart.reduce((s,i)=>s+i.price, 0); 
+        document.getElementById('cart-total').innerText = t.toLocaleString(); 
+        displayedTotal = t; 
+    }
+    
+    function updateCartButton() { 
+        const b = document.getElementById('checkout-btn'); 
+        b.disabled = cart.length === 0; 
+        b.innerText = cart.length ? "会計へ進む (" + cart.length + ")" : "会計へ進む"; 
+    }
+    
+    // ★ 戻すときのアニメーション
     function undoLastCartItem() { 
         if(cart.length){ 
-            const removedItem = cart.pop(); 
-            updateCartButton(); syncCartTotalAnimated(); renderPos(); 
-            requestAnimationFrame(() => flyFromCart(removedItem.id)); // 戻るアニメーション
+            cart.pop(); updateCartButton(); syncCartTotalAnimated(); renderPos(); 
+            
+            // 戻す（消える）アニメーション
+            const btn = document.querySelector('.action-btn'); 
+            const rect = btn.getBoundingClientRect();
+            const flier = document.createElement('div');
+            flier.innerText = '💨';
+            flier.style.cssText = `position:fixed; left:${rect.left + rect.width/2}px; top:${rect.top}px; font-size:1.5rem; z-index:9999; pointer-events:none; transition:all 0.4s cubic-bezier(0.2, 1, 0.3, 1); transform:translate(-50%, -50%);`;
+            document.body.appendChild(flier);
+            setTimeout(() => {
+                flier.style.top = `${rect.top - 60}px`;
+                flier.style.opacity = '0';
+                flier.style.transform = 'translate(-50%, -50%) scale(1.5)';
+            }, 10);
+            setTimeout(() => { flier.remove(); }, 400);
         } 
     }
     
     function openCartModal() { if(cart.length){ renderCartModalItems(); document.getElementById('cart-modal').style.display='flex'; } else alert('カートは空です'); }
     function closeCartModal() { document.getElementById('cart-modal').style.display='none'; }
+    
+    // ★ カートの中身レイアウト変更（金額を右寄せ）
     function renderCartModalItems() {
         const list = document.getElementById('cart-items-list'); list.innerHTML = '';
         const map = {}; cart.forEach(i => { if(!map[i.id]) map[i.id] = {...i, count:0}; map[i.id].count++; });
         Object.values(map).forEach(i => {
             const avail = getAvailableStock(i.id);
-            list.innerHTML += `<div class="cart-item-row"><div class="cart-item-info"><img src="${i.image}" style="width:50px; height:50px; object-fit:contain; border-radius:12px; background:rgba(255,255,255,0.9); box-shadow:0 2px 5px rgba(0,0,0,0.1);"><div><strong style="font-size:1.15rem; font-weight:900;">${i.name}</strong><br><span style="color:#666; font-size:1rem; font-weight:700;">¥${i.price.toLocaleString()}</span></div></div><div style="display:flex; align-items:center; gap:10px;"><button class="qty-btn" onclick="modifyQty(${i.id},-1)">-</button><b style="font-size:1.4rem; width:25px; text-align:center;">${i.count}</b><button class="qty-btn" onclick="modifyQty(${i.id},1)" ${avail<=0?'disabled style="opacity:0.3"':''}>+</button></div></div>`;
+            list.innerHTML += `
+            <div class="cart-item-row">
+                <div class="cart-item-info">
+                    <img src="${i.image}" style="width:45px; height:45px; object-fit:contain; border-radius:8px; background:rgba(255,255,255,0.9); flex-shrink:0;">
+                    <div class="cart-item-text">
+                        <strong style="font-size:1.1rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${i.name}</strong>
+                        <span style="color:#666; font-size:1.1rem; font-weight:900; margin-left:10px;">¥${i.price.toLocaleString()}</span>
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px; margin-left:10px;">
+                    <button class="qty-btn" onclick="modifyQty(${i.id},-1)">-</button>
+                    <b style="font-size:1.3rem; width:25px; text-align:center;">${i.count}</b>
+                    <button class="qty-btn" onclick="modifyQty(${i.id},1)" ${avail<=0?'disabled style="opacity:0.3"':''}>+</button>
+                </div>
+            </div>`;
         });
     }
+    
     function modifyQty(id, delta) {
         if(delta > 0) { const it = appData.events.find(e=>e.id==appData.currentEventId).items.find(x=>x.id==id); cart.push(it); }
         else { for(let i=cart.length-1; i>=0; i--) if(cart[i].id==id){ cart.splice(i,1); break; } }
@@ -1052,40 +1002,39 @@
         document.getElementById('checkout-modal').style.display = 'flex';
     }
     function closeCheckoutModal() { document.getElementById('checkout-modal').style.display = 'none'; }
-    
-    // ★ 預かり金のぽよんアニメーション追加
-    function addTenderAmount(amount) { 
+    function addTenderAmount(a) { 
         const el = document.getElementById('tender-input'); 
-        const wrap = document.getElementById('anim-tender-wrap');
-        let start = parseInt((el.value||"").replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))) || 0;
-        let end = start + amount;
-        
-        const duration = 400; let startTime = null;
-        const easeOut = t => 1 - Math.pow(1 - t, 4);
-        const step = (t) => {
-            if(!startTime) startTime = t; const progress = Math.min((t - startTime) / duration, 1);
-            el.value = Math.floor(easeOut(progress) * (end - start) + start);
-            calculateChange();
-            if(progress < 1) window.requestAnimationFrame(step); else el.value = end;
-        };
-        window.requestAnimationFrame(step);
-        
-        wrap.classList.remove('pop-anim'); void wrap.offsetWidth; wrap.classList.add('pop-anim');
+        let val = parseInt((el.value||"").replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))) || 0;
+        el.value = val + a; calculateChange(); 
     }
-
     function clearTenderAmount() { document.getElementById('tender-input').value = ''; calculateChange(); }
     function setTenderExact() { document.getElementById('tender-input').value = currentCheckoutTotal; calculateChange(); }
     
+    let lastChangeVal = 0;
     function calculateChange() {
         const inputStr = document.getElementById('tender-input').value;
         let t = 0;
         if (inputStr === '') { t = currentCheckoutTotal; } 
         else { t = parseInt(inputStr.replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))) || 0; }
+        
         const c = t - currentCheckoutTotal;
         const changeEl = document.getElementById('change-amount');
         const btn = document.getElementById('complete-checkout-btn');
-        if (inputStr === '') { changeEl.innerText = '0'; changeEl.style.color = 'var(--accent-color)'; } 
-        else { changeEl.innerText = (c < 0 ? Math.abs(c) : c).toLocaleString(); changeEl.style.color = c < 0 ? '#f44336' : 'var(--accent-color)'; }
+        
+        if (inputStr === '') { 
+            changeEl.innerText = '0'; changeEl.style.color = 'var(--accent-color)'; 
+            lastChangeVal = 0;
+        } else { 
+            // ぬるぬるアニメーション
+            if (c >= 0 && lastChangeVal !== c) {
+                animateValue(changeEl, lastChangeVal, c, 500);
+                lastChangeVal = c;
+            } else if (c < 0) {
+                changeEl.innerText = Math.abs(c).toLocaleString();
+                lastChangeVal = Math.abs(c);
+            }
+            changeEl.style.color = c < 0 ? '#f44336' : 'var(--accent-color)'; 
+        }
         btn.disabled = (c < 0);
     }
     
@@ -1123,37 +1072,23 @@
             });
         });
         
-        // ★ カウントアップアニメーション
-        animateValue('stat-total-rev', parseInt(document.getElementById('stat-total-rev').innerText.replace(/,/g,''))||0, total);
-        animateValue('stat-total-tx', parseInt(document.getElementById('stat-total-tx').innerText)||0, ev.history.length);
-        const avg = ev.history.length ? Math.floor(total/ev.history.length) : 0;
-        animateValue('stat-avg-spend', parseInt(document.getElementById('stat-avg-spend').innerText.replace(/,/g,''))||0, avg);
+        document.getElementById('stat-total-rev').innerText = total.toLocaleString();
+        document.getElementById('stat-total-tx').innerText = ev.history.length;
+        document.getElementById('stat-avg-spend').innerText = ev.history.length ? Math.floor(total/ev.history.length).toLocaleString() : 0;
 
         const idiv = document.getElementById('stat-items'); idiv.innerHTML = '';
         const sortedItems = Object.keys(itemMap).sort((a,b)=>itemMap[b]-itemMap[a]);
         if(sortedItems.length === 0) idiv.innerHTML = '<p style="text-align:center; color:#888;">データがありません</p>';
         sortedItems.forEach(n => {
-            idiv.innerHTML += `<div style="margin-bottom:12px;"><div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span style="font-weight:900;">${n}</span><span style="color:var(--accent-color); font-weight:900;">${itemMap[n]}個</span></div><div style="background:rgba(0,0,0,0.05); height:12px; border-radius:6px; overflow:hidden;"><div style="background:var(--accent-color); height:100%; width:${(itemMap[n]/maxItem)*100}%; transition:width 1s cubic-bezier(0.16, 1, 0.3, 1);"></div></div></div>`;
+            idiv.innerHTML += `<div style="margin-bottom:12px;"><div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span style="font-weight:900;">${n}</span><span style="color:var(--accent-color); font-weight:900;">${itemMap[n]}個</span></div><div style="background:rgba(0,0,0,0.05); height:12px; border-radius:6px; overflow:hidden;"><div style="background:var(--accent-color); height:100%; width:${(itemMap[n]/maxItem)*100}%"></div></div></div>`;
         });
         
         const hdiv = document.getElementById('stat-time'); hdiv.innerHTML = '';
         const sortedHours = Object.keys(hourMap).sort((a,b)=>parseInt(a)-parseInt(b));
         if(sortedHours.length === 0) hdiv.innerHTML = '<p style="text-align:center; color:#888;">データがありません</p>';
         sortedHours.forEach(h => {
-            hdiv.innerHTML += `<div style="margin-bottom:12px;"><div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span style="font-weight:900;">${h}</span><span style="color:var(--btn-checkout); font-weight:900;">¥${hourMap[h].toLocaleString()}</span></div><div style="background:rgba(0,0,0,0.05); height:12px; border-radius:6px; overflow:hidden;"><div style="background:var(--btn-checkout); height:100%; width:${(hourMap[h]/maxHour)*100}%; transition:width 1s cubic-bezier(0.16, 1, 0.3, 1);"></div></div></div>`;
+            hdiv.innerHTML += `<div style="margin-bottom:12px;"><div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span style="font-weight:900;">${h}</span><span style="color:var(--btn-checkout); font-weight:900;">¥${hourMap[h].toLocaleString()}</span></div><div style="background:rgba(0,0,0,0.05); height:12px; border-radius:6px; overflow:hidden;"><div style="background:var(--btn-checkout); height:100%; width:${(hourMap[h]/maxHour)*100}%"></div></div></div>`;
         });
-    }
-
-    function animateValue(id, start, end) {
-        const obj = document.getElementById(id); if(!obj) return;
-        const duration = 600; let startTime = null;
-        const easeOut = t => 1 - Math.pow(1 - t, 4);
-        const step = (t) => {
-            if(!startTime) startTime = t; const progress = Math.min((t - startTime) / duration, 1);
-            obj.innerText = Math.floor(easeOut(progress) * (end - start) + start).toLocaleString();
-            if(progress < 1) window.requestAnimationFrame(step); else obj.innerText = end.toLocaleString();
-        };
-        window.requestAnimationFrame(step);
     }
 
     function copyReportToClipboard() {
@@ -1227,4 +1162,211 @@
         showLabels = !showLabels;
         const btn = document.getElementById('label-toggle-btn');
         const container = document.getElementById('pins-container');
-        if(show
+        if(showLabels) {
+            btn.style.background = 'var(--accent-color)'; btn.innerText = '👁';
+            container.classList.remove('hide-labels');
+        } else {
+            btn.style.background = '#888'; btn.innerText = 'ー';
+            container.classList.add('hide-labels');
+        }
+    }
+
+    function renderMap() {
+        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        const imgEl = document.getElementById('map-image');
+        const pinsContainer = document.getElementById('pins-container');
+        pinsContainer.innerHTML = '';
+        
+        if (ev && ev.mapImage) {
+            imgEl.src = ev.mapImage; imgEl.style.display = 'block';
+            ev.pins.forEach(p => {
+                let labelHTML = '';
+                if(p.booth || p.author) {
+                    labelHTML = `<div class="pin-label color-${p.color || 'white'}">${p.booth ? p.booth + '<br>' : ''}${p.author}</div>`;
+                }
+                pinsContainer.innerHTML += `
+                    <div class="map-pin-wrap" style="left:${p.x}px; top:${p.y}px;" onclick="openPinModal(${p.id}, ${p.x}, ${p.y}, '${p.booth}', '${p.author}', '${p.memo}', '${p.icon}', '${p.color}')">
+                        ${labelHTML}
+                        <div class="pin-icon">${p.icon || '📍'}</div>
+                        <div class="pin-dot"></div>
+                    </div>`;
+            });
+        } else { imgEl.style.display = 'none'; }
+        updateMapTransform();
+    }
+
+    function updateMapTransform() { document.getElementById('map-wrapper').style.transform = `translate(${mapTx}px, ${mapTy}px) scale(${mapScale})`; }
+    function resetMap() { mapScale = 1; mapTx = 0; mapTy = 0; updateMapTransform(); }
+
+    function togglePinMode() {
+        isPinMode = !isPinMode;
+        const btn = document.getElementById('pin-mode-btn');
+        const container = document.getElementById('pins-container');
+        if (isPinMode) {
+            btn.style.background = '#ffeb3b'; btn.style.borderColor = '#fbc02d';
+            btn.innerText = '📍 ピン追加モード：【ON】（タップ＆ドラッグで追加）';
+            container.classList.add('pin-mode'); 
+        } else {
+            btn.style.background = 'rgba(255,255,255,0.9)'; btn.style.borderColor = 'rgba(0,0,0,0.15)';
+            btn.innerText = '📍 ピン追加モード：【OFF】（地図移動）';
+            container.classList.remove('pin-mode');
+            document.getElementById('magnifier').style.display = 'none';
+        }
+    }
+
+    function setupMapGestures() {
+        const container = document.getElementById('map-container');
+        let lastTouch = null;
+
+        container.addEventListener('touchstart', e => {
+            if (e.touches.length === 2) {
+                isPlacingPin = false; document.getElementById('magnifier').style.display = 'none';
+                initialDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+                lastScale = mapScale;
+            } else if (e.touches.length === 1) {
+                if (isPinMode) {
+                    isPlacingPin = true; updateMagnifier(e.touches[0]);
+                } else {
+                    isPanning = true; startTx = e.touches[0].clientX - mapTx; startTy = e.touches[0].clientY - mapTy;
+                }
+            }
+        }, {passive: false});
+
+        container.addEventListener('touchmove', e => {
+            e.preventDefault(); 
+            if (e.touches.length === 2 && initialDist) {
+                const cx = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+                const cy = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+                const rect = container.getBoundingClientRect();
+                const pinchX = cx - rect.left; const pinchY = cy - rect.top;
+                
+                const currentDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+                const newScale = Math.max(0.2, Math.min(lastScale * (currentDist / initialDist), 5));
+                const ratio = newScale / mapScale;
+                
+                mapTx -= (pinchX - mapTx) * (ratio - 1); mapTy -= (pinchY - mapTy) * (ratio - 1);
+                mapScale = newScale; updateMapTransform();
+            } else if (e.touches.length === 1 && isPanning) {
+                mapTx = e.touches[0].clientX - startTx; mapTy = e.touches[0].clientY - startTy; updateMapTransform();
+            } else if (e.touches.length === 1 && isPlacingPin) {
+                updateMagnifier(e.touches[0]);
+            }
+        }, {passive: false});
+
+        container.addEventListener('touchend', e => {
+            if (e.touches.length < 2) initialDist = null;
+            isPanning = false;
+            if (isPlacingPin && lastTouch) {
+                isPlacingPin = false; document.getElementById('magnifier').style.display = 'none';
+                const imgRect = document.getElementById('map-image').getBoundingClientRect();
+                const realX = (lastTouch.clientX - imgRect.left) / mapScale;
+                const realY = (lastTouch.clientY - imgRect.top) / mapScale;
+                openPinModal(Date.now(), realX, realY, '', '', '', '📍', 'white');
+                lastTouch = null;
+            }
+        });
+
+        function updateMagnifier(touch) {
+            lastTouch = touch;
+            const mag = document.getElementById('magnifier'); const img = document.getElementById('map-image');
+            if(!img.src) return;
+            mag.style.display = 'block';
+            mag.style.left = (touch.clientX - 60) + 'px'; mag.style.top = (touch.clientY - 140) + 'px'; 
+            const rect = img.getBoundingClientRect();
+            mag.style.backgroundImage = `url(${img.src})`;
+            const magZoom = 2; mag.style.backgroundSize = `${rect.width * magZoom}px ${rect.height * magZoom}px`;
+            const relX = touch.clientX - rect.left; const relY = touch.clientY - rect.top;
+            mag.style.backgroundPosition = `-${relX * magZoom - 60}px -${relY * magZoom - 60}px`;
+        }
+    }
+
+    function openPinModal(id, x, y, booth, author, memo, icon, color) {
+        document.getElementById('pin-id').value = id; document.getElementById('pin-x').value = x; document.getElementById('pin-y').value = y;
+        document.getElementById('pin-booth').value = booth !== 'undefined' ? booth : '';
+        document.getElementById('pin-author').value = author !== 'undefined' ? author : '';
+        document.getElementById('pin-memo').value = memo !== 'undefined' ? memo : '';
+        
+        let radios = document.getElementsByName('pin-icon');
+        for(let i=0; i<radios.length; i++) { if(radios[i].value === (icon || '📍')) radios[i].checked = true; }
+        document.getElementById('pin-color').value = color || 'white';
+
+        document.getElementById('pin-modal').style.display = 'flex';
+        if(isPinMode) togglePinMode(); 
+    }
+    
+    function closePinModal() { document.getElementById('pin-modal').style.display = 'none'; }
+    
+    function savePin() {
+        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        const id = parseInt(document.getElementById('pin-id').value);
+        const x = parseFloat(document.getElementById('pin-x').value); const y = parseFloat(document.getElementById('pin-y').value);
+        const booth = document.getElementById('pin-booth').value; const author = document.getElementById('pin-author').value; const memo = document.getElementById('pin-memo').value;
+        
+        let icon = '📍'; let radios = document.getElementsByName('pin-icon');
+        for(let i=0; i<radios.length; i++) { if(radios[i].checked) icon = radios[i].value; }
+        const color = document.getElementById('pin-color').value;
+
+        const existing = ev.pins.find(p => p.id === id);
+        if (existing) { existing.booth = booth; existing.author = author; existing.memo = memo; existing.icon = icon; existing.color = color; } 
+        else { ev.pins.push({ id, x, y, booth, author, memo, icon, color }); }
+        saveData(); renderMap(); closePinModal();
+    }
+
+    function deletePin() {
+        const id = parseInt(document.getElementById('pin-id').value);
+        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        ev.pins = ev.pins.filter(p => p.id !== id);
+        saveData(); renderMap(); closePinModal();
+    }
+
+    // --- 全体描画まとめ ---
+    function renderAll() { 
+        renderPos(); renderSettings(); renderHistory(); 
+        if(document.getElementById('analytics').classList.contains('active')) renderAnalytics(); 
+        if(document.getElementById('map').classList.contains('active')) renderMap();
+    }
+
+    // --- 描画処理関数 ---
+    function renderPos() {
+        const grid = document.getElementById('pos-grid'); grid.innerHTML = '';
+        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        if(!ev.items.length) { grid.innerHTML = '<p style="grid-column:1/-1; text-align:center; padding:60px 0; color:#888; font-weight:700;">[設定]から<br>商品を登録してください</p>'; return; }
+        ev.items.forEach(i => {
+            const avail = getAvailableStock(i.id);
+            grid.innerHTML += `<div class="item glass-card ${avail>0?'clickable':''}" ${avail>0?`onclick="addToCart(event,${i.id})"`:''}><img src="${i.image}"><h3>${i.name}</h3><p>¥${i.price.toLocaleString()}</p><div class="stock">残り: ${avail}</div>${avail<=0?'<div class="sold-out">完売</div>':''}</div>`;
+        });
+    }
+
+    function renderSettings() {
+        const list = document.getElementById('settings-list'); list.innerHTML = '';
+        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        ev.items.forEach(i => {
+            list.innerHTML += `<div class="list-item glass-card">
+                <img src="${i.image}"> 
+                <div style="flex-grow:1; overflow:hidden;">
+                    <strong style="white-space:nowrap; text-overflow:ellipsis; display:block;">${i.name}</strong>
+                    <span style="color:#666;font-size:0.85rem;font-weight:700;">¥${i.price.toLocaleString()} / 在庫:${i.stock}</span>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:4px;">
+                    <button class="order-btn" onclick="moveItemUp(${i.id})">△</button>
+                    <button class="order-btn" onclick="moveItemDown(${i.id})">▽</button>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:4px; margin-left:8px;">
+                    <button class="list-btn" style="background:#FFC107; color:#333;" onclick="startEdit(${i.id})">編集</button>
+                    <button class="list-btn" style="background:#f44336;color:white;" onclick="deleteItem(${i.id})">削除</button>
+                </div>
+            </div>`;
+        });
+    }
+
+    function renderHistory() {
+        const list = document.getElementById('history-list'); list.innerHTML = '';
+        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        ev.history.forEach(h => {
+            list.innerHTML += `<div class="history-card glass-card"><div class="history-info"><span class="history-time">${h.time}</span><span class="history-detail">${h.detail}</span></div><div class="history-price">¥${h.total.toLocaleString()}</div></div>`;
+        });
+    }
+</script>
+
+</body>
+</html>
