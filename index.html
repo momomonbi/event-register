@@ -8,13 +8,15 @@
     <style>
         /* --- テーマ設定 --- */
         :root {
+            /* ★ デフォルトはさわやかブルー系 ＆ 見やすい標準フォント */
             --bg-color: #f0f4f8; --header-bg: rgba(255, 255, 255, 0.85); --tab-bg: rgba(255,255,255,0.5); --accent-color: #007aff;
             --tab-active-bg: #007aff; --tab-active-color: #fff;
             --card-bg: rgba(255, 255, 255, 0.35); --text-color: #333; --btn-checkout: #007aff;
-            --app-font: 'Zen Maru Gothic', sans-serif;
+            --app-font: 'Noto Sans JP', sans-serif;
             --grid-cols: 2; /* 列数の初期値 */
         }
         [data-theme="cute"] {
+            /* かわいいテーマはピンク系 ＆ 丸文字フォント */
             --bg-color: #fff0f5; --header-bg: rgba(255, 182, 193, 0.85); --tab-bg: rgba(255,255,255,0.4); --accent-color: #ff69b4;
             --tab-active-bg: #ff69b4; --tab-active-color: #fff;
             --card-bg: rgba(255, 255, 255, 0.4); --text-color: #5d4037; --btn-checkout: #ff69b4;
@@ -67,7 +69,8 @@
         #app-background {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1;
             background-size: cover; background-position: center; background-repeat: no-repeat;
-            opacity: 0.4; pointer-events: none;
+            opacity: 0.4; /* 背景の透かし効果を強化 */
+            pointer-events: none;
         }
 
         /* 極上のすりガラス効果（Glassmorphism 強化版） */
@@ -142,8 +145,8 @@
         .tab-content { display: none; padding: 0 15px; }
         .tab-content.active { display: block; animation: tabFadeIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
         
-        /* ★ レジ商品カードの超コンパクト化 */
-        .grid { display: grid; grid-template-columns: repeat(var(--grid-cols), 1fr); gap: 10px; }
+        /* レジ商品の自由分割と可愛いカード化 */
+        .grid { display: grid; grid-template-columns: repeat(var(--grid-cols), 1fr); gap: 12px; }
         .item { padding: 8px; text-align: center; position: relative; overflow: hidden; transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s; border-radius: 16px;}
         .item.clickable { cursor: pointer; }
         .item.clickable:active { transform: scale(0.92); box-shadow: 0 2px 10px rgba(0,0,0,0.05); } 
@@ -153,9 +156,9 @@
         .stock { font-size: 0.75rem; color: #888; margin-top: 2px; font-weight: 700; pointer-events: none; line-height: 1;}
         .sold-out { position: absolute; top:0; left:0; right:0; bottom:0; background: rgba(255,255,255,0.85); display:flex; align-items:center; justify-content:center; font-weight:900; color:#f44336; font-size:1.4rem; pointer-events:none; border: 3px dashed #f44336; z-index: 5; border-radius: 16px;}
         
-        /* カートバー */
+        /* ★ カートバー（位置を下に下げる） */
         .bottom-bar { 
-            position: fixed; bottom: 20px; left: 15px; right: 15px; 
+            position: fixed; bottom: 10px; left: 15px; right: 15px; 
             background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(28px) saturate(160%); -webkit-backdrop-filter: blur(28px) saturate(160%);
             padding: 15px 20px; border-radius: 30px; 
             box-shadow: 0 15px 40px rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.8);
@@ -211,7 +214,7 @@
         }
         .pop-anim { animation: popValue 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); display: inline-block;}
 
-        /* ★ カートの中身をスマホ最適化（縦並び） */
+        /* カートの中身をスマホ最適化（縦並び） */
         .cart-item-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed rgba(0,0,0,0.1); padding: 15px 0; gap: 10px;}
         .cart-item-info { display: flex; align-items: flex-start; gap: 12px; flex-grow: 1; overflow: hidden; }
         .qty-btn { width: 38px; height: 38px; border-radius: 12px; border: none; background: #eee; font-size: 1.4rem; font-weight: 900; color: #333; flex-shrink: 0;}
@@ -678,7 +681,6 @@
         }
     }
 
-    // ★ 超滑らかなタブ切り替え
     function switchTab(id, tabElement) {
         try {
             document.querySelectorAll('.tab, .tab-content').forEach(el => el.classList.remove('active'));
@@ -966,7 +968,6 @@
     function openCartModal() { if(cart.length){ renderCartModalItems(); document.getElementById('cart-modal').style.display='flex'; } else alert('カートは空です'); }
     function closeCartModal() { document.getElementById('cart-modal').style.display='none'; }
     
-    // ★ カートの中身をスマホ最適化（商品名の下に金額）
     function renderCartModalItems() {
         const list = document.getElementById('cart-items-list'); list.innerHTML = '';
         const map = {}; cart.forEach(i => { if(!map[i.id]) map[i.id] = {...i, count:0}; map[i.id].count++; });
@@ -1325,14 +1326,12 @@
         if(document.getElementById('map').classList.contains('active')) renderMap();
     }
 
-    // --- ★ レジカード描画（コンパクト化＆id付与） ---
     function renderPos() {
         const grid = document.getElementById('pos-grid'); grid.innerHTML = '';
         const ev = appData.events.find(e => e.id == appData.currentEventId);
         if(!ev.items.length) { grid.innerHTML = '<p style="grid-column:1/-1; text-align:center; padding:60px 0; color:#888; font-weight:700;">[設定]から<br>商品を登録してください</p>'; return; }
         ev.items.forEach(i => {
             const avail = getAvailableStock(i.id);
-            // アニメーション用に id="pos-item-xxx" を追加
             grid.innerHTML += `<div class="item glass-card ${avail>0?'clickable':''}" id="pos-item-${i.id}" ${avail>0?`onclick="addToCart(event,${i.id})"`:''}><img src="${i.image}"><h3>${i.name}</h3><p>¥${i.price.toLocaleString()}</p><div class="stock">残り: ${avail}</div>${avail<=0?'<div class="sold-out">完売</div>':''}</div>`;
         });
     }
