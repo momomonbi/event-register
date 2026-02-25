@@ -62,7 +62,7 @@
 
         /* 極上のすりガラス効果 */
         .glass-card { background: var(--card-bg); backdrop-filter: blur(28px) saturate(160%); -webkit-backdrop-filter: blur(28px) saturate(160%); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); border: 1px solid rgba(255, 255, 255, 0.6); border-radius: 20px; }
-        .accent-glass { background: color-mix(in srgb, var(--accent-color) 80%, transparent); backdrop-filter: blur(24px) saturate(150%); -webkit-backdrop-filter: blur(24px) saturate(150%); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 24px; color: white; }
+        .accent-glass { background: var(--accent-color); opacity: 0.9; backdrop-filter: blur(24px) saturate(150%); -webkit-backdrop-filter: blur(24px) saturate(150%); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 24px; color: white; }
 
         button { touch-action: manipulation; font-family: inherit; cursor: pointer; border: none; border-radius: 14px; transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s; }
         button:active { transform: scale(0.92); }
@@ -76,7 +76,7 @@
         .preset-btn.primary { background-color: #FFC107; color: #333; }
         .preset-btn.danger { background-color: #f44336; color: white; padding: 12px 16px; font-size: 1.1rem;}
 
-        /* タブ */
+        /* タブ（スクロール固定復活） */
         .tabs { position: sticky; display: flex; background-color: var(--tab-bg); top: 10px; z-index: 110; box-shadow: 0 8px 32px rgba(0,0,0,0.08); margin: 0 15px 10px 15px; border-radius: 24px; padding: 6px; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.6); }
         .tab { flex: 1; text-align: center; padding: 12px 0; color: var(--text-color); opacity: 0.6; font-weight: 900; font-size: 0.9rem; white-space: nowrap; border-radius: 18px; cursor: pointer; position: relative; z-index: 2; transition: color 0.3s; }
         .tab.active { opacity: 1; color: var(--tab-active-color); }
@@ -443,20 +443,25 @@
 
 <script>
     // ==========================================
-    // 🚀 【鉄壁化】IndexedDB ＆ デュアル保存システム
+    // 🚀 【完全復旧＆安定化】データ保存システム
     // ==========================================
     const DB_NAME = 'HazukiRegiDB';
     const DB_VERSION = 1;
-    let db;
+    let db = null;
     let appData = { currentEventId: Date.now(), events: [], theme: 'default', gridColumns: 2, backgroundImage: null, hostPin: null, signageSettings: {}, slideshowImages: [] };
     let cart = [];
     let displayedTotal = 0;
     let currentCheckoutTotal = 0;
 
     function initDB() {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
+            if (!window.indexedDB) {
+                recoverFromLocalStorage();
+                resolve();
+                return;
+            }
             const request = indexedDB.open(DB_NAME, DB_VERSION);
-            request.onerror = (event) => { 
+            request.onerror = () => { 
                 recoverFromLocalStorage(); 
                 resolve(); 
             };
@@ -477,7 +482,7 @@
                 const transaction = db.transaction(['appData'], 'readonly');
                 const store = transaction.objectStore('appData');
                 const request = store.get('main');
-                request.onsuccess = (event) => {
+                request.onsuccess = () => {
                     if (request.result && request.result.data) {
                         appData = request.result.data;
                     } else {
@@ -494,7 +499,6 @@
     }
 
     function recoverFromLocalStorage() {
-        // 新しい軽量バックアップを優先して読み込む
         const backup = localStorage.getItem('pos_app_data_light_backup') || localStorage.getItem('pos_app_data_backup') || localStorage.getItem('pos_app_data');
         if (backup) {
             try { appData = JSON.parse(backup); } catch(e) {}
@@ -509,7 +513,11 @@
         }
         
         // ★ イベントIDの不整合バグを自動修復
-        if (!appData.events.find(e => e.id == appData.currentEventId)) {
+        let currentEv = null;
+        for (let i = 0; i < appData.events.length; i++) {
+            if (appData.events[i].id == appData.currentEventId) currentEv = appData.events[i];
+        }
+        if (!currentEv) {
             if(appData.events.length > 0) {
                 appData.currentEventId = appData.events[0].id;
             } else {
@@ -519,57 +527,71 @@
             }
         }
         
-        appData.events.forEach(ev => {
-            if (!ev.history) ev.history = []; if (!ev.items) ev.items = [];
-        });
+        for (let i = 0; i < appData.events.length; i++) {
+            if (!appData.events[i].history) appData.events[i].history = []; 
+            if (!appData.events[i].items) appData.events[i].items = [];
+        }
         
         loadSignageSettingsUI();
         renderSlideshowPreview();
         
         document.body.setAttribute('data-theme', appData.theme || 'default');
-        if(document.getElementById('theme-selector')) document.getElementById('theme-selector').value = appData.theme || 'default';
+        const themeSel = document.getElementById('theme-selector');
+        if(themeSel) themeSel.value = appData.theme || 'default';
         
         const cols = appData.gridColumns || 2;
         document.documentElement.style.setProperty('--grid-cols', cols);
-        if(document.getElementById('grid-columns-select')) document.getElementById('grid-columns-select').value = cols;
+        const gridSel = document.getElementById('grid-columns-select');
+        if(gridSel) gridSel.value = cols;
 
-        applyBackgroundImage(); updateEventSelector(); renderAll(); 
+        applyBackgroundImage(); 
+        updateEventSelector(); 
+        renderAll(); 
         
         setTimeout(() => {
             const activeTab = document.querySelector('.tab.active');
             if (activeTab) switchTab('pos', activeTab);
         }, 100);
         
-        saveData(); // ロード成功後に確実に保存
+        saveData(); 
     }
 
     function saveData() {
         let isSuccess = false;
-        
-        // 1. IndexedDBに完全なデータを保存（クラッシュ防止のため直接代入）
         if (db) {
             try {
                 const transaction = db.transaction(['appData'], 'readwrite');
                 const store = transaction.objectStore('appData');
-                store.put({ id: 'main', data: appData }); 
+                store.put({ id: 'main', data: JSON.parse(JSON.stringify(appData)) });
                 isSuccess = true;
-            } catch(e) { console.error("IDB Save Error:", e); }
+            } catch(e) {}
         }
         
-        // 2. localStorageに画像抜きの「軽量バックアップ」を保存（5MB制限回避）
+        // ★ 画像を含めない「超・軽量バックアップ」でクラッシュを完全に防ぐ
         try {
+            let safeSignage = {};
+            if (appData.signageSettings) {
+                safeSignage.awayText1 = appData.signageSettings.awayText1;
+                safeSignage.awayText2 = appData.signageSettings.awayText2;
+                safeSignage.awayIconType = appData.signageSettings.awayIconType;
+                safeSignage.awayCustomImage = null; // 画像は保存しない
+            }
+            
             const lightData = {
                 currentEventId: appData.currentEventId,
                 theme: appData.theme,
                 gridColumns: appData.gridColumns,
                 hostPin: appData.hostPin,
-                signageSettings: { ...appData.signageSettings, awayCustomImage: null },
-                events: appData.events.map(ev => ({
-                    id: ev.id, name: ev.name, history: ev.history,
-                    items: ev.items.map(item => ({
-                        id: item.id, name: item.name, price: item.price, stock: item.stock, image: null
-                    }))
-                }))
+                signageSettings: safeSignage,
+                slideshowImages: [], // 画像は保存しない
+                events: appData.events.map(ev => {
+                    return {
+                        id: ev.id, name: ev.name, history: ev.history,
+                        items: ev.items.map(item => {
+                            return { id: item.id, name: item.name, price: item.price, stock: item.stock, image: null };
+                        })
+                    };
+                })
             };
             localStorage.setItem('pos_app_data_light_backup', JSON.stringify(lightData));
             isSuccess = true;
@@ -580,6 +602,7 @@
 
     window.onload = () => { initDB(); };
 
+    // --- 背景画像 ---
     function loadBackgroundImage(input) {
         if (input.files && input.files[0]) {
             const reader = new FileReader();
@@ -611,7 +634,9 @@
     function hardResetApp() {
         if(confirm("【⚠️警告】\nすべてのデータを完全に消去して初期状態に戻します。\n本当に実行しますか？")) {
             if(confirm("本当に消去してよろしいですか？（取り消せません）")) {
-                if(db) indexedDB.deleteDatabase(DB_NAME);
+                if(db) {
+                    try { indexedDB.deleteDatabase(DB_NAME); } catch(e){}
+                }
                 localStorage.removeItem('pos_app_data_backup');
                 localStorage.removeItem('pos_app_data_light_backup');
                 localStorage.removeItem('pos_app_data');
@@ -625,12 +650,13 @@
     function updateEventSelector() {
         const sel = document.getElementById('event-selector'); if(!sel) return;
         sel.innerHTML = '';
-        appData.events.forEach(ev => {
+        for (let i = 0; i < appData.events.length; i++) {
+            const ev = appData.events[i];
             const opt = document.createElement('option');
             opt.value = ev.id; opt.text = ev.name;
             if (ev.id == appData.currentEventId) opt.selected = true;
             sel.appendChild(opt);
-        });
+        }
     }
 
     function changeEvent(id) {
@@ -648,14 +674,20 @@
         }
     }
     function renameCurrentEvent() {
-        const ev = appData.events.find(e => e.id == appData.currentEventId); if(!ev) return;
+        let ev = null;
+        for (let i = 0; i < appData.events.length; i++) { if (appData.events[i].id == appData.currentEventId) ev = appData.events[i]; }
+        if(!ev) return;
         const name = prompt('名前を変更', ev.name);
         if (name && name.trim()) { ev.name = name.trim(); saveData(); updateEventSelector(); }
     }
     function deleteCurrentEvent() {
         if (appData.events.length <= 1) { alert("最後のイベントは削除できません。"); return; }
         if (confirm("本当にこのイベントを削除しますか？\n（復元できません）")) {
-            appData.events = appData.events.filter(e => e.id !== appData.currentEventId);
+            const newEvents = [];
+            for (let i = 0; i < appData.events.length; i++) {
+                if (appData.events[i].id != appData.currentEventId) newEvents.push(appData.events[i]);
+            }
+            appData.events = newEvents;
             appData.currentEventId = appData.events[0].id;
             cart = []; saveData(); updateEventSelector(); renderAll();
             syncStateToClient();
@@ -664,9 +696,10 @@
 
     function switchTab(id, tabElement) {
         try {
-            document.querySelectorAll('.tab, .tab-content').forEach(el => el.classList.remove('active'));
-            if (!tabElement) tabElement = document.querySelector(`.tab[onclick*="${id}"]`);
+            const tabs = document.querySelectorAll('.tab, .tab-content');
+            for(let i=0; i<tabs.length; i++) { tabs[i].classList.remove('active'); }
             
+            if (!tabElement) tabElement = document.querySelector(`.tab[onclick*="${id}"]`);
             if (tabElement) {
                 tabElement.classList.add('active');
                 const highlight = document.getElementById('tab-highlight');
@@ -683,7 +716,7 @@
             
             if (id === 'analytics') renderAnalytics();
             window.scrollTo({top: 0, behavior: 'smooth'});
-        } catch(e) { console.error(e); }
+        } catch(e) {}
     }
 
     function exportAppData() {
@@ -701,11 +734,12 @@
             try {
                 const importedData = JSON.parse(e.target.result);
                 if (importedData && importedData.events) {
-                    importedData.events.forEach(ev => {
+                    for(let i=0; i<importedData.events.length; i++) {
+                        let ev = importedData.events[i];
                         ev.id = Date.now() + Math.floor(Math.random() * 1000);
                         ev.name = ev.name + " (読込)";
                         appData.events.push(ev); appData.currentEventId = ev.id; 
-                    });
+                    }
                     saveData(); updateEventSelector(); renderAll(); alert("データの読み込みが完了しました！");
                     syncStateToClient();
                 } else { alert("ファイルの形式が違います。"); }
@@ -748,24 +782,36 @@
 
     function addNewItem() {
         try {
-            const n = document.getElementById('itemName').value;
-            let pStr = document.getElementById('itemPrice').value || ""; let sStr = document.getElementById('itemStock').value || "";
+            const nEl = document.getElementById('itemName');
+            const pEl = document.getElementById('itemPrice');
+            const sEl = document.getElementById('itemStock');
+
+            if (!nEl || !pEl || !sEl) {
+                alert("画面の読み込みに失敗しています。リロードしてください。"); return;
+            }
+
+            const n = nEl.value;
+            let pStr = pEl.value || ""; 
+            let sStr = sEl.value || "";
             pStr = pStr.replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0));
             sStr = sStr.replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0));
             
             const p = parseInt(pStr); const s = parseInt(sStr);
-            const f = document.getElementById('itemImage'); const editId = document.getElementById('edit-item-id').value;
+            const f = document.getElementById('itemImage'); 
+            const editId = document.getElementById('edit-item-id').value;
 
             if (!n) return alert('⚠️ 商品名を入力してください。');
             if (isNaN(p)) return alert('⚠️ 価格を設定してください。');
             if (isNaN(s)) return alert('⚠️ 在庫数を入力してください。');
 
-            const ev = appData.events.find(e => e.id == appData.currentEventId);
+            let ev = null;
+            for (let i = 0; i < appData.events.length; i++) { if (appData.events[i].id == appData.currentEventId) ev = appData.events[i]; }
             if(!ev) return alert("⚠️ エラー：イベントが見つかりません。画面をリロードしてください。");
 
             const finalize = (img) => {
                 if (editId) {
-                    const item = ev.items.find(i => i.id == editId);
+                    let item = null;
+                    for(let i=0; i<ev.items.length; i++){ if(ev.items[i].id == editId) item = ev.items[i]; }
                     if(item) { item.name = n; item.price = p; item.stock = s; if(img) item.image = img; }
                 } else {
                     ev.items.push({ id: Date.now(), name: n, price: p, stock: s, image: img || 'https://placehold.co/200x200/e0e0e0/666666?text=No+Image' });
@@ -774,7 +820,7 @@
                 syncStateToClient(); 
             };
 
-            if (f.files && f.files[0]) {
+            if (f && f.files && f.files[0]) {
                 const r = new FileReader();
                 r.onload = (e) => {
                     const img = new Image();
@@ -786,17 +832,22 @@
                         ctx.drawImage(img, 0, 0, c.width, c.height);
                         finalize(c.toDataURL('image/jpeg', 0.8)); 
                     };
+                    img.onerror = () => { alert("⚠️ 画像の読み込みに失敗しました。"); finalize(null); };
                     img.src = e.target.result;
                 };
+                r.onerror = () => { alert("⚠️ ファイルの読み込みに失敗しました。"); finalize(null); };
                 r.readAsDataURL(f.files[0]);
             } else { finalize(null); }
         } catch (error) { console.error(error); alert("⚠️ エラーが発生しました"); }
     }
 
     function startEdit(id) {
-        const ev = appData.events.find(e => e.id == appData.currentEventId);
-        const item = ev.items.find(i => i.id == id);
+        let ev = null;
+        for (let i = 0; i < appData.events.length; i++) { if (appData.events[i].id == appData.currentEventId) ev = appData.events[i]; }
+        let item = null;
+        for(let i=0; i<ev.items.length; i++){ if(ev.items[i].id == id) item = ev.items[i]; }
         if(!item) return;
+        
         document.getElementById('itemName').value = item.name;
         document.getElementById('itemPrice').value = item.price;
         document.getElementById('itemPriceDisplay').value = "¥" + item.price.toLocaleString();
@@ -823,36 +874,53 @@
 
     function deleteItem(id) {
         if(confirm('この商品を削除しますか？')) {
-            const ev = appData.events.find(e => e.id == appData.currentEventId);
-            ev.items = ev.items.filter(i => i.id != id); saveData(); renderAll();
-            syncStateToClient();
+            let ev = null;
+            for (let i = 0; i < appData.events.length; i++) { if (appData.events[i].id == appData.currentEventId) ev = appData.events[i]; }
+            const newItems = [];
+            for (let i = 0; i < ev.items.length; i++) { if (ev.items[i].id != id) newItems.push(ev.items[i]); }
+            ev.items = newItems;
+            saveData(); renderAll(); syncStateToClient();
         }
     }
 
     function moveItemUp(id) {
-        const ev = appData.events.find(e => e.id == appData.currentEventId);
-        const index = ev.items.findIndex(i => i.id == id);
+        let ev = null;
+        for (let i = 0; i < appData.events.length; i++) { if (appData.events[i].id == appData.currentEventId) ev = appData.events[i]; }
+        let index = -1;
+        for(let i=0; i<ev.items.length; i++){ if(ev.items[i].id == id) index = i; }
         if (index > 0) { const temp = ev.items[index]; ev.items[index] = ev.items[index - 1]; ev.items[index - 1] = temp; saveData(); renderAll(); syncStateToClient();}
     }
     function moveItemDown(id) {
-        const ev = appData.events.find(e => e.id == appData.currentEventId);
-        const index = ev.items.findIndex(i => i.id == id);
-        if (index < ev.items.length - 1) { const temp = ev.items[index]; ev.items[index] = ev.items[index + 1]; ev.items[index + 1] = temp; saveData(); renderAll(); syncStateToClient();}
+        let ev = null;
+        for (let i = 0; i < appData.events.length; i++) { if (appData.events[i].id == appData.currentEventId) ev = appData.events[i]; }
+        let index = -1;
+        for(let i=0; i<ev.items.length; i++){ if(ev.items[i].id == id) index = i; }
+        if (index > -1 && index < ev.items.length - 1) { const temp = ev.items[index]; ev.items[index] = ev.items[index + 1]; ev.items[index + 1] = temp; saveData(); renderAll(); syncStateToClient();}
     }
 
     function getAvailableStock(itemId) {
-        const ev = appData.events.find(e => e.id == appData.currentEventId);
-        if(!ev) return 0; const item = ev.items.find(i => i.id === itemId);
-        return item ? item.stock - cart.filter(c => c.id === itemId).length : 0;
+        let ev = null;
+        for (let i = 0; i < appData.events.length; i++) { if (appData.events[i].id == appData.currentEventId) ev = appData.events[i]; }
+        if(!ev) return 0; 
+        let item = null;
+        for(let i=0; i<ev.items.length; i++){ if(ev.items[i].id == itemId) item = ev.items[i]; }
+        if(!item) return 0;
+        let inCart = 0;
+        for(let i=0; i<cart.length; i++){ if(cart[i].id == itemId) inCart++; }
+        return item.stock - inCart;
     }
 
     function addToCart(event, itemId) {
         if (getAvailableStock(itemId) <= 0) return;
-        const ev = appData.events.find(e => e.id == appData.currentEventId);
-        const item = ev.items.find(i => i.id === itemId);
+        let ev = null;
+        for (let i = 0; i < appData.events.length; i++) { if (appData.events[i].id == appData.currentEventId) ev = appData.events[i]; }
+        let item = null;
+        for(let i=0; i<ev.items.length; i++){ if(ev.items[i].id == itemId) item = ev.items[i]; }
         cart.push(item); updateCartButton();
         
-        displayedTotal = cart.reduce((s,i)=>s+i.price, 0); 
+        let sum = 0;
+        for(let i=0; i<cart.length; i++){ sum += cart[i].price; }
+        displayedTotal = sum; 
         syncCartTotalInstant(); 
         syncStateToClient(); 
         
@@ -898,16 +966,18 @@
     }
 
     function syncCartTotalAnimated() { 
-        const end = cart.reduce((s,i)=>s+i.price, 0);
+        let sum = 0;
+        for(let i=0; i<cart.length; i++){ sum += cart[i].price; }
         const obj = document.getElementById('cart-total');
-        animateValue(obj, displayedTotal, end, 600); 
-        displayedTotal = end;
+        animateValue(obj, displayedTotal, sum, 600); 
+        displayedTotal = sum;
     }
     
     function syncCartTotalInstant() { 
-        const t = cart.reduce((s,i)=>s+i.price, 0); 
-        document.getElementById('cart-total').innerText = t.toLocaleString(); 
-        displayedTotal = t; 
+        let sum = 0;
+        for(let i=0; i<cart.length; i++){ sum += cart[i].price; }
+        document.getElementById('cart-total').innerText = sum.toLocaleString(); 
+        displayedTotal = sum; 
     }
     
     function updateCartButton() { 
@@ -921,7 +991,9 @@
             const removedItem = cart.pop(); 
             updateCartButton(); 
             
-            displayedTotal = cart.reduce((s,i)=>s+i.price, 0); 
+            let sum = 0;
+            for(let i=0; i<cart.length; i++){ sum += cart[i].price; }
+            displayedTotal = sum; 
             syncCartTotalInstant(); 
             syncStateToClient(); 
             
@@ -962,8 +1034,17 @@
     
     function renderCartModalItems() {
         const list = document.getElementById('cart-items-list'); list.innerHTML = '';
-        const map = {}; cart.forEach(i => { if(!map[i.id]) map[i.id] = {...i, count:0}; map[i.id].count++; });
-        Object.values(map).forEach(i => {
+        const map = {}; 
+        for(let i=0; i<cart.length; i++) { 
+            let it = cart[i];
+            if(!map[it.id]) {
+                map[it.id] = { id: it.id, image: it.image, name: it.name, price: it.price, count: 0 };
+            }
+            map[it.id].count++;
+        }
+        
+        for (let key in map) {
+            let i = map[key];
             const avail = getAvailableStock(i.id);
             list.innerHTML += `
             <div class="cart-item-row">
@@ -980,22 +1061,37 @@
                     <button class="qty-btn" onclick="modifyQty(${i.id},1)" ${avail<=0?'disabled style="opacity:0.3"':''}>+</button>
                 </div>
             </div>`;
-        });
+        }
     }
     
     function modifyQty(id, delta) {
-        if(delta > 0) { const it = appData.events.find(e=>e.id==appData.currentEventId).items.find(x=>x.id==id); cart.push(it); }
-        else { for(let i=cart.length-1; i>=0; i--) if(cart[i].id==id){ cart.splice(i,1); break; } }
+        if(delta > 0) { 
+            let ev = null;
+            for (let i = 0; i < appData.events.length; i++) { if (appData.events[i].id == appData.currentEventId) ev = appData.events[i]; }
+            let it = null;
+            for(let i=0; i<ev.items.length; i++){ if(ev.items[i].id == id) it = ev.items[i]; }
+            if(it) cart.push(it); 
+        } else { 
+            for(let i=cart.length-1; i>=0; i--) {
+                if(cart[i].id==id){ cart.splice(i,1); break; }
+            } 
+        }
         renderPos(); updateCartButton(); 
-        displayedTotal = cart.reduce((s,i)=>s+i.price, 0); 
+        
+        let sum = 0;
+        for(let i=0; i<cart.length; i++){ sum += cart[i].price; }
+        displayedTotal = sum; 
         syncCartTotalInstant(); 
         syncStateToClient();
         if(!cart.length) closeCartModal(); else renderCartModalItems();
     }
+    
     function clearCart() { if(confirm('空にしますか？')){ cart=[]; updateCartButton(); displayedTotal=0; syncCartTotalInstant(); renderPos(); closeCartModal(); syncStateToClient(); } }
 
     function openCheckoutModal() {
-        currentCheckoutTotal = cart.reduce((s,i)=>s+i.price, 0);
+        let sum = 0;
+        for(let i=0; i<cart.length; i++){ sum += cart[i].price; }
+        currentCheckoutTotal = sum;
         document.getElementById('modal-total-amount').innerText = currentCheckoutTotal.toLocaleString();
         document.getElementById('tender-input').value = ''; calculateChange(); 
         document.getElementById('checkout-modal').style.display = 'flex';
@@ -1044,12 +1140,34 @@
     }
     
     function executeCheckout() {
-        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        let ev = null;
+        for (let i = 0; i < appData.events.length; i++) { if (appData.events[i].id == appData.currentEventId) ev = appData.events[i]; }
         if(!ev) return;
-        const map = {}; cart.forEach(i => map[i.name] = (map[i.name]||0)+1);
-        const detail = Object.entries(map).map(([n,c]) => c>1 ? n+"x"+c : n).join(', ');
-        ev.history.unshift({ id:Date.now(), time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}), detail, total:currentCheckoutTotal });
-        cart.forEach(ci => { const i = ev.items.find(x=>x.id==ci.id); if(i) i.stock--; });
+        const map = {}; 
+        for(let i=0; i<cart.length; i++){
+            let n = cart[i].name;
+            if(!map[n]) map[n] = 0;
+            map[n]++;
+        }
+        
+        const detailArray = [];
+        for (let n in map) {
+            let c = map[n];
+            if(c > 1) detailArray.push(n + "x" + c);
+            else detailArray.push(n);
+        }
+        const detail = detailArray.join(', ');
+        
+        ev.history.unshift({ id:Date.now(), time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}), detail: detail, total:currentCheckoutTotal });
+        
+        for(let i=0; i<cart.length; i++){
+            for(let j=0; j<ev.items.length; j++){
+                if(ev.items[j].id == cart[i].id) {
+                    ev.items[j].stock--;
+                }
+            }
+        }
+        
         saveData(); closeCheckoutModal(); cart=[]; updateCartButton(); displayedTotal=0; syncCartTotalInstant(); renderAll();
         if(navigator.vibrate) navigator.vibrate([100, 50, 100]); 
         
@@ -1058,7 +1176,8 @@
     }
 
     function renderAnalytics() {
-        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        let ev = null;
+        for (let i = 0; i < appData.events.length; i++) { if (appData.events[i].id == appData.currentEventId) ev = appData.events[i]; }
         if(!ev) return;
         let total = 0, itemMap = {}, hourMap = {}, maxItem = 0, maxHour = 0;
         ev.history.forEach(h => {
@@ -1066,7 +1185,8 @@
             let timeParts = String(h.time || "").split(':');
             if(timeParts.length > 0 && timeParts[0]) {
                 const hour = timeParts[0] + '時台';
-                hourMap[hour] = (hourMap[hour]||0) + h.total;
+                if(!hourMap[hour]) hourMap[hour] = 0;
+                hourMap[hour] += h.total;
                 if(hourMap[hour] > maxHour) maxHour = hourMap[hour];
             }
             let parts = String(h.detail || "").split(',');
@@ -1074,7 +1194,8 @@
                 p = p.trim(); if(!p) return;
                 let name = p; let count = 1; let m = p.match(/(.+)x([0-9]+)$/);
                 if(m) { name = m[1]; count = parseInt(m[2]); }
-                itemMap[name] = (itemMap[name] || 0) + count;
+                if(!itemMap[name]) itemMap[name] = 0;
+                itemMap[name] += count;
                 if(itemMap[name] > maxItem) maxItem = itemMap[name];
             });
         });
@@ -1084,14 +1205,20 @@
         document.getElementById('stat-avg-spend').innerText = ev.history.length ? Math.floor(total/ev.history.length).toLocaleString() : 0;
 
         const idiv = document.getElementById('stat-items'); idiv.innerHTML = '';
-        const sortedItems = Object.keys(itemMap).sort((a,b)=>itemMap[b]-itemMap[a]);
+        const sortedItems = [];
+        for(let key in itemMap) sortedItems.push(key);
+        sortedItems.sort((a,b)=>itemMap[b]-itemMap[a]);
+        
         if(sortedItems.length === 0) idiv.innerHTML = '<p style="text-align:center; color:#888;">データがありません</p>';
         sortedItems.forEach(n => {
             idiv.innerHTML += `<div style="margin-bottom:12px;"><div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span style="font-weight:900;">${n}</span><span style="color:var(--accent-color); font-weight:900;">${itemMap[n]}個</span></div><div style="background:rgba(0,0,0,0.05); height:12px; border-radius:6px; overflow:hidden;"><div style="background:var(--accent-color); height:100%; width:${(itemMap[n]/maxItem)*100}%"></div></div></div>`;
         });
         
         const hdiv = document.getElementById('stat-time'); hdiv.innerHTML = '';
-        const sortedHours = Object.keys(hourMap).sort((a,b)=>parseInt(a)-parseInt(b));
+        const sortedHours = [];
+        for(let key in hourMap) sortedHours.push(key);
+        sortedHours.sort((a,b)=>parseInt(a)-parseInt(b));
+        
         if(sortedHours.length === 0) hdiv.innerHTML = '<p style="text-align:center; color:#888;">データがありません</p>';
         sortedHours.forEach(h => {
             hdiv.innerHTML += `<div style="margin-bottom:12px;"><div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span style="font-weight:900;">${h}</span><span style="color:var(--btn-checkout); font-weight:900;">¥${hourMap[h].toLocaleString()}</span></div><div style="background:rgba(0,0,0,0.05); height:12px; border-radius:6px; overflow:hidden;"><div style="background:var(--btn-checkout); height:100%; width:${(hourMap[h]/maxHour)*100}%"></div></div></div>`;
@@ -1099,7 +1226,8 @@
     }
 
     function copyReportToClipboard() {
-        const ev = appData.events.find(e=>e.id==appData.currentEventId);
+        let ev = null;
+        for (let i = 0; i < appData.events.length; i++) { if (appData.events[i].id == appData.currentEventId) ev = appData.events[i]; }
         let total = 0, itemMap = {};
         ev.history.forEach(h => { 
             total += h.total; 
@@ -1107,25 +1235,37 @@
                 p = p.trim(); if(!p) return;
                 let n = p, c = 1; let m = p.match(/(.+)x([0-9]+)$/);
                 if(m) { n = m[1]; c = parseInt(m[2]); }
-                itemMap[n] = (itemMap[n]||0)+c;
+                if(!itemMap[n]) itemMap[n] = 0;
+                itemMap[n] += c;
             }); 
         });
         if(!ev.history.length) return alert('データがありません');
+        
+        const sortedItems = [];
+        for(let key in itemMap) sortedItems.push(key);
+        sortedItems.sort((a,b)=>itemMap[b]-itemMap[a]);
+        
         let txt = `【${ev.name} 売上レポート】\n総売上: ¥${total.toLocaleString()}\n会計回数: ${ev.history.length}回\n\n■ 商品別販売数\n` + 
-                  Object.keys(itemMap).sort((a,b)=>itemMap[b]-itemMap[a]).map(n=>`・${n} : ${itemMap[n]}個`).join("\n") + "\n\n#はづきれじ";
+                  sortedItems.map(n=>`・${n} : ${itemMap[n]}個`).join("\n") + "\n\n#はづきれじ";
         navigator.clipboard.writeText(txt).then(()=>alert('レポートをコピーしました！\nメモ帳とかに貼り付けれるよ。'));
     }
 
     function clearEventHistory() {
         if(confirm('このイベントの売上記録をすべて削除して0にしますか？')){
-            const ev = appData.events.find(e => e.id == appData.currentEventId);
+            let ev = null;
+            for (let i = 0; i < appData.events.length; i++) { if (appData.events[i].id == appData.currentEventId) ev = appData.events[i]; }
             ev.history = []; saveData(); renderAll();
         }
     }
     
     function exportCSV() {
-        const ev = appData.events.find(e=>e.id==appData.currentEventId);
-        let csv = "\uFEFF時間,内容,売上\n" + ev.history.map(h=>`"${h.time}","${h.detail}","${h.total}"`).join("\n");
+        let ev = null;
+        for (let i = 0; i < appData.events.length; i++) { if (appData.events[i].id == appData.currentEventId) ev = appData.events[i]; }
+        let csv = "\uFEFF時間,内容,売上\n";
+        for(let i=0; i<ev.history.length; i++) {
+            let h = ev.history[i];
+            csv += `"${h.time}","${h.detail}","${h.total}"\n`;
+        }
         const link = document.createElement('a'); link.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
         link.download = `${ev.name}_売上.csv`; link.click();
     }
@@ -1148,7 +1288,8 @@
                     if (scale > 1) scale = 1;
                     c.width = img.width * scale; c.height = img.height * scale;
                     ctx.drawImage(img, 0, 0, c.width, c.height);
-                    const ev = appData.events.find(e => e.id == appData.currentEventId);
+                    let ev = null;
+                    for (let i = 0; i < appData.events.length; i++) { if (appData.events[i].id == appData.currentEventId) ev = appData.events[i]; }
                     ev.mapImage = c.toDataURL('image/jpeg', 0.8);
                     saveData(); renderMap(); resetMap();
                 };
@@ -1160,7 +1301,8 @@
     
     function deleteMapImage() {
         if(confirm("マップ画像を削除しますか？\n※配置したピンもすべて消えます")){
-            const ev = appData.events.find(e => e.id == appData.currentEventId);
+            let ev = null;
+            for (let i = 0; i < appData.events.length; i++) { if (appData.events[i].id == appData.currentEventId) ev = appData.events[i]; }
             ev.mapImage = null; ev.pins = []; saveData(); renderMap();
         }
     }
@@ -1179,7 +1321,8 @@
     }
 
     function renderMap() {
-        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        let ev = null;
+        for (let i = 0; i < appData.events.length; i++) { if (appData.events[i].id == appData.currentEventId) ev = appData.events[i]; }
         const imgEl = document.getElementById('map-image');
         const pinsContainer = document.getElementById('pins-container');
         pinsContainer.innerHTML = '';
@@ -1304,7 +1447,8 @@
     function closePinModal() { document.getElementById('pin-modal').style.display = 'none'; }
     
     function savePin() {
-        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        let ev = null;
+        for (let i = 0; i < appData.events.length; i++) { if (appData.events[i].id == appData.currentEventId) ev = appData.events[i]; }
         const id = parseInt(document.getElementById('pin-id').value);
         const x = parseFloat(document.getElementById('pin-x').value); const y = parseFloat(document.getElementById('pin-y').value);
         const booth = document.getElementById('pin-booth').value; const author = document.getElementById('pin-author').value; const memo = document.getElementById('pin-memo').value;
@@ -1313,16 +1457,20 @@
         for(let i=0; i<radios.length; i++) { if(radios[i].checked) icon = radios[i].value; }
         const color = document.getElementById('pin-color').value;
 
-        const existing = ev.pins.find(p => p.id === id);
+        let existing = null;
+        for(let i=0; i<ev.pins.length; i++) { if(ev.pins[i].id === id) existing = ev.pins[i]; }
         if (existing) { existing.booth = booth; existing.author = author; existing.memo = memo; existing.icon = icon; existing.color = color; } 
-        else { ev.pins.push({ id, x, y, booth, author, memo, icon, color }); }
+        else { ev.pins.push({ id: id, x: x, y: y, booth: booth, author: author, memo: memo, icon: icon, color: color }); }
         saveData(); renderMap(); closePinModal();
     }
 
     function deletePin() {
         const id = parseInt(document.getElementById('pin-id').value);
-        const ev = appData.events.find(e => e.id == appData.currentEventId);
-        ev.pins = ev.pins.filter(p => p.id !== id);
+        let ev = null;
+        for (let i = 0; i < appData.events.length; i++) { if (appData.events[i].id == appData.currentEventId) ev = appData.events[i]; }
+        const newPins = [];
+        for(let i=0; i<ev.pins.length; i++) { if(ev.pins[i].id !== id) newPins.push(ev.pins[i]); }
+        ev.pins = newPins;
         saveData(); renderMap(); closePinModal();
     }
 
