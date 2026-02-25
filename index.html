@@ -9,44 +9,44 @@
     <style>
         /* --- テーマ設定 --- */
         :root {
-            --bg-color: #f0f4f8; --header-bg: rgba(255, 255, 255, 0.85); --tab-bg: rgba(255,255,255,0.7); --accent-color: #007aff;
+            --bg-color: #f0f4f8; --header-bg: rgba(255, 255, 255, 0.85); --tab-bg: rgba(255,255,255,0.5); --accent-color: #007aff;
             --tab-active-bg: #007aff; --tab-active-color: #fff;
             --card-bg: rgba(255, 255, 255, 0.35); --text-color: #333; --btn-checkout: #007aff;
             --app-font: 'Zen Maru Gothic', sans-serif;
             --grid-cols: 2; /* 列数の初期値 */
         }
         [data-theme="cute"] {
-            --bg-color: #fff0f5; --header-bg: rgba(255, 182, 193, 0.85); --tab-bg: rgba(255,255,255,0.7); --accent-color: #ff69b4;
+            --bg-color: #fff0f5; --header-bg: rgba(255, 182, 193, 0.85); --tab-bg: rgba(255,255,255,0.4); --accent-color: #ff69b4;
             --tab-active-bg: #ff69b4; --tab-active-color: #fff;
             --card-bg: rgba(255, 255, 255, 0.4); --text-color: #5d4037; --btn-checkout: #ff69b4;
             --app-font: 'Zen Maru Gothic', sans-serif; 
         }
         [data-theme="chocolate"] {
-            --bg-color: #f3e5f5; --header-bg: rgba(78, 52, 46, 0.85); --tab-bg: rgba(255,255,255,0.6); --accent-color: #8d6e63;
+            --bg-color: #f3e5f5; --header-bg: rgba(78, 52, 46, 0.85); --tab-bg: rgba(255,255,255,0.3); --accent-color: #8d6e63;
             --tab-active-bg: #8d6e63; --tab-active-color: #fff;
             --card-bg: rgba(255, 248, 225, 0.5); --text-color: #3e2723; --btn-checkout: #795548;
             --app-font: 'Kiwi Maru', serif;
         }
         [data-theme="matcha"] {
-            --bg-color: #f1f8e9; --header-bg: rgba(85, 139, 47, 0.85); --tab-bg: rgba(255,255,255,0.7); --accent-color: #7cb342;
+            --bg-color: #f1f8e9; --header-bg: rgba(85, 139, 47, 0.85); --tab-bg: rgba(255,255,255,0.4); --accent-color: #7cb342;
             --tab-active-bg: #7cb342; --tab-active-color: #fff;
             --card-bg: rgba(255, 255, 255, 0.4); --text-color: #2e7d32; --btn-checkout: #689f38;
             --app-font: 'Zen Maru Gothic', sans-serif;
         }
         [data-theme="visibility"] {
-            --bg-color: #f5f5f5; --header-bg: rgba(34, 34, 34, 0.95); --tab-bg: rgba(255,255,255,0.9); --accent-color: #ffeb3b;
+            --bg-color: #f5f5f5; --header-bg: rgba(34, 34, 34, 0.95); --tab-bg: rgba(255,255,255,0.8); --accent-color: #ffeb3b;
             --tab-active-bg: #222; --tab-active-color: #ffeb3b;
             --card-bg: rgba(255, 255, 255, 0.85); --text-color: #000; --btn-checkout: #2196f3;
             --app-font: 'Noto Sans JP', sans-serif;
         }
         [data-theme="cyber"] {
-            --bg-color: #0f0f1b; --header-bg: rgba(26, 26, 46, 0.95); --tab-bg: rgba(22,33,62,0.8); --accent-color: #00f0ff;
+            --bg-color: #0f0f1b; --header-bg: rgba(26, 26, 46, 0.95); --tab-bg: rgba(22,33,62,0.6); --accent-color: #00f0ff;
             --tab-active-bg: #e94560; --tab-active-color: #fff;
             --card-bg: rgba(26, 26, 46, 0.65); --text-color: #e0e0e0; --btn-checkout: #e94560;
             --app-font: 'Noto Sans JP', sans-serif;
         }
         [data-theme="ocean"] {
-            --bg-color: #e0f7fa; --header-bg: rgba(2, 136, 209, 0.85); --tab-bg: rgba(255,255,255,0.6); --accent-color: #26c6da;
+            --bg-color: #e0f7fa; --header-bg: rgba(2, 136, 209, 0.85); --tab-bg: rgba(255,255,255,0.3); --accent-color: #26c6da;
             --tab-active-bg: #26c6da; --tab-active-color: #fff;
             --card-bg: rgba(255, 255, 255, 0.4); --text-color: #006064; --btn-checkout: #00acc1;
             --app-font: 'Zen Maru Gothic', sans-serif;
@@ -92,11 +92,18 @@
         button:active { transform: scale(0.92); }
         input, select { font-family: inherit; }
 
+        /* ヘッダー・タブの固定エリア（Sticky） */
+        .sticky-top-wrapper {
+            position: sticky; top: 0; z-index: 105; padding-top: 5px;
+            /* 背景が透けすぎないようにわずかなグラデーション */
+            background: linear-gradient(to bottom, rgba(255,255,255,0.3) 0%, transparent 100%);
+        }
+
         /* ヘッダー */
         .preset-header { 
             background-color: var(--header-bg); padding: 12px 15px; display: flex; justify-content: space-between; 
-            align-items: center; gap: 8px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08); z-index: 101; position: relative; margin-bottom: 8px;
+            align-items: center; gap: 8px; border-radius: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08); position: relative; margin: 0 10px 8px 10px;
             backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
         }
         .preset-header select { 
@@ -104,17 +111,17 @@
             font-weight: 900; background: rgba(255,255,255,0.95); color: #333; box-shadow: 0 2px 10px rgba(0,0,0,0.05); min-width: 0;
         }
         .preset-btns { display: flex; gap: 6px; flex-shrink: 0; }
-        .preset-btn { background-color: rgba(0,0,0,0.15); color: #333; padding: 12px 14px; font-weight: 900; font-size: 0.9rem; }
+        .preset-btn { background-color: rgba(0,0,0,0.15); color: #333; padding: 12px 10px; font-weight: 900; font-size: 0.85rem; }
         .preset-btn.primary { background-color: #FFC107; color: #333; }
-        .preset-btn.danger { background-color: #f44336; color: white; padding: 12px 16px; font-size: 1.1rem;}
+        .preset-btn.danger { background-color: #f44336; color: white; padding: 12px 12px; font-size: 1rem;}
 
-        /* タブ (★ スクロール追従固定) */
+        /* タブ */
         .tabs { 
-            position: sticky; top: 10px; display: flex; background-color: var(--tab-bg); 
-            z-index: 1000; box-shadow: 0 8px 32px rgba(0,0,0,0.12); 
-            margin: 0 15px 15px 15px; border-radius: 24px; padding: 6px; 
+            position: relative; display: flex; background-color: var(--tab-bg); 
+            box-shadow: 0 8px 32px rgba(0,0,0,0.08); 
+            margin: 0 15px 10px 15px; border-radius: 24px; padding: 6px; 
             backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255,255,255,0.8);
+            border: 1px solid rgba(255,255,255,0.6);
         }
         .tab { 
             flex: 1; text-align: center; padding: 12px 0; color: var(--text-color); opacity: 0.6;
@@ -207,24 +214,10 @@
            ★ 子機用フルスクリーンUI（サイネージ）
            ========================================== */
         #client-display { display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:var(--bg-color); z-index:9999; flex-direction:column; overflow: hidden; font-family: 'Zen Maru Gothic', sans-serif; }
-        
         /* 離席中画面 */
-        #client-disconnect-overlay { 
-            display:none; position:absolute; top:0; left:0; width:100%; height:100%; 
-            background:rgba(0,0,0,0.65); z-index:10000; color:white; justify-content:center; align-items:center; 
-            flex-direction:column; text-align:center; padding:20px; box-sizing:border-box; 
-            backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
-        }
-        /* 離席中画面の背景スライドショー */
-        #client-disconnect-bg {
-            position: absolute; top:0; left:0; right:0; bottom:0; z-index:-1;
-            background-size: cover; background-position: center; 
-            filter: brightness(0.6); transition: background-image 1.5s ease-in-out;
-        }
-
+        #client-disconnect-overlay { display:none; position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:10000; color:white; justify-content:center; align-items:center; flex-direction:column; text-align:center; padding:20px; box-sizing:border-box; backdrop-filter:blur(15px); }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-30px); } }
-        .away-icon-anim { font-size:8rem; margin-bottom:30px; animation: bounce 2.5s infinite cubic-bezier(0.25, 0.1, 0.25, 1); text-shadow: 0 10px 20px rgba(0,0,0,0.5); }
-        .away-text-shadow { text-shadow: 0 4px 15px rgba(0,0,0,0.8); }
+        .away-icon-anim { font-size:8rem; margin-bottom:30px; animation: bounce 2.5s infinite cubic-bezier(0.25, 0.1, 0.25, 1); }
         
         /* 待機中スライドショー */
         #client-slideshow { position:absolute; top:0; left:0; width:100%; height:100%; z-index:1; background:#111; display:none; justify-content:center; align-items:center; }
@@ -249,20 +242,23 @@
 <div id="bg-color-layer"></div>
 <div id="app-background"></div>
 
-<div class="preset-header">
-    <select id="event-selector" onchange="changeEvent(this.value)"></select>
-    <div class="preset-btns">
-        <button class="preset-btn" onclick="renameCurrentEvent()">✏️ 名前</button>
-        <button class="preset-btn primary" onclick="createNewEvent()">➕ 新規</button>
-        <button class="preset-btn danger" onclick="deleteCurrentEvent()">🗑️</button>
+<div class="sticky-top-wrapper">
+    <div class="preset-header">
+        <select id="event-selector" onchange="changeEvent(this.value)"></select>
+        <div class="preset-btns">
+            <button id="btn-away-toggle" class="preset-btn" onclick="toggleAwayState()" style="background:#607d8b; color:white; padding:12px 14px;">🛌 離席</button>
+            <button class="preset-btn" onclick="renameCurrentEvent()">✏️ 名前</button>
+            <button class="preset-btn primary" onclick="createNewEvent()">➕ 新規</button>
+            <button class="preset-btn danger" onclick="deleteCurrentEvent()">🗑️</button>
+        </div>
     </div>
-</div>
 
-<div class="tabs" id="main-tabs">
-    <div class="tab-highlight" id="tab-highlight"></div>
-    <div class="tab active" onclick="switchTab('pos', this)">🛍️ レジ</div>
-    <div class="tab" onclick="switchTab('settings', this)">⚙️ 設定</div>
-    <div class="tab" onclick="switchTab('analytics', this)">📊 分析</div>
+    <div class="tabs" id="main-tabs">
+        <div class="tab-highlight" id="tab-highlight"></div>
+        <div class="tab active" onclick="switchTab('pos', this)">🛍️ レジ</div>
+        <div class="tab" onclick="switchTab('settings', this)">⚙️ 設定</div>
+        <div class="tab" onclick="switchTab('analytics', this)">📊 分析</div>
+    </div>
 </div>
 
 <div id="pos" class="tab-content active">
@@ -275,13 +271,6 @@
         <h3 style="margin-top:0; color:#1565c0; font-size:1.2rem;">📡 カスタマーディスプレイ（子機連携）</h3>
         <p style="font-size:0.85rem; color:#666; font-weight:700;">別の端末（iPadなど）をお客様用の表示画面として使えます。</p>
         
-        <div style="background:rgba(255,193,7,0.15); border-left:4px solid #FFC107; padding:12px; border-radius:8px; margin-bottom:15px;">
-            <p style="margin:0; font-size:0.85rem; color:#555; font-weight:700; line-height:1.4;">
-                💡 <strong>便利機能（自動離席モード）</strong><br>
-                連携中に親機の「🔄 離席・再接続」を押して通信を切断すると、子機は自動的に<strong>「離席中」</strong>画面に切り替わります。親機で再度起動すると、自動的に連携が復旧します！トイレ休憩などに活用してください。
-            </p>
-        </div>
-
         <div style="display:flex; gap:10px; margin-bottom:15px;">
             <button id="btn-host" onclick="startHostMode()" style="flex:1; background:var(--accent-color); color:white; padding:15px; font-weight:900; font-size:1.1rem; border-radius:14px; box-shadow: 0 4px 12px rgba(233,30,99,0.3);">📱 親機を起動</button>
             <button onclick="startClientMode()" style="flex:1; background:#4CAF50; color:white; padding:15px; font-weight:900; font-size:1.1rem; border-radius:14px; box-shadow: 0 4px 12px rgba(76,175,80,0.3);">📺 子機になる</button>
@@ -299,7 +288,7 @@
         <input type="file" id="setting-away-custom-img" accept="image/*" onchange="loadAwayCustomImage(this)" style="margin-bottom:10px; font-size:0.8rem;">
         <div id="away-image-preview" style="height:60px; margin-bottom:10px;"></div>
 
-        <h4 style="margin:20px 0 10px 0; font-size:1rem; border-top:1px solid rgba(0,0,0,0.1); padding-top:15px;">🖼️ 待機中（＆離席中背景）スライドショー画像</h4>
+        <h4 style="margin:20px 0 10px 0; font-size:1rem; border-top:1px solid rgba(0,0,0,0.1); padding-top:15px;">🖼️ 待機中スライドショー画像</h4>
         <input type="file" accept="image/*" multiple onclick="this.value=null;" onchange="loadSlideshowImages(this)" style="border:2px dashed rgba(0,0,0,0.15); padding:10px; background:transparent; width:100%; box-sizing:border-box; border-radius:12px;">
         <div id="slideshow-preview" style="display:flex; gap:8px; overflow-x:auto; margin-top:15px; padding-bottom:10px;"></div>
         <button onclick="clearSlideshowImages()" style="background:rgba(244,67,54,0.1); color:#f44336; border:2px solid #f44336; padding:10px; border-radius:12px; font-weight:900; font-size:0.95rem; margin-top:10px; width:100%;">🗑 スライドショー画像をクリア</button>
@@ -486,10 +475,9 @@
     <button class="client-exit-btn" onclick="exitClientMode()">✖</button>
 
     <div id="client-disconnect-overlay">
-        <div id="client-disconnect-bg"></div>
         <div id="away-icon-display" class="away-icon-anim">👨‍💼</div>
-        <h1 id="away-text-1-display" class="away-text-shadow" style="font-size:4rem; margin:0 0 20px 0; font-weight:900; letter-spacing:2px;">ただいま離席中です</h1>
-        <p id="away-text-2-display" class="away-text-shadow" style="font-size:2rem; color:#f0f0f0; font-weight:700;">すぐに戻ります。しばらくお待ちくださいませ。</p>
+        <h1 id="away-text-1-display" style="font-size:4rem; margin:0 0 20px 0; font-weight:900; letter-spacing:2px;">ただいま離席中です</h1>
+        <p id="away-text-2-display" style="font-size:2rem; color:#ddd; font-weight:700;">すぐに戻ります。しばらくお待ちくださいませ。</p>
     </div>
 
     <div id="client-menu-area" style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:1; background:var(--bg-color); display:none; flex-direction:column; padding:40px; box-sizing:border-box;">
@@ -539,6 +527,7 @@
     let cart = [];
     let displayedTotal = 0;
     let currentCheckoutTotal = 0;
+    let isAwayState = false; // 離席状態を管理するフラグ
 
     function initDB() {
         return new Promise((resolve, reject) => {
@@ -756,6 +745,21 @@
             if (id === 'analytics') renderAnalytics();
             window.scrollTo({top: 0, behavior: 'smooth'});
         } catch(e) { console.error(e); }
+    }
+
+    function toggleAwayState() {
+        isAwayState = !isAwayState;
+        const btn = document.getElementById('btn-away-toggle');
+        if (isAwayState) {
+            btn.innerHTML = '👨‍💼 戻る';
+            btn.style.background = '#ff9800';
+            btn.style.boxShadow = '0 2px 8px rgba(255,152,0,0.4)';
+        } else {
+            btn.innerHTML = '🛌 離席';
+            btn.style.background = '#607d8b';
+            btn.style.boxShadow = 'none';
+        }
+        syncStateToClient();
     }
 
     function exportAppData() {
@@ -1236,7 +1240,7 @@
     }
 
     // ==========================================
-    // 📡 【完全修復】PeerJS (子機連携＆サイネージ機能) 
+    // 📡 【完全修復・強力化】PeerJS (子機連携＆サイネージ機能) 
     // ==========================================
     let peer = null;
     let conn = null;
@@ -1244,15 +1248,13 @@
     let isClient = false;
     const PEER_PREFIX = 'hazuki-regi-momo-'; 
 
-    // ★ 4G/Wi-Fi間でも繋がりやすくするため、強力な公開STUNサーバーを複数設定
-    const customPeerConfig = {
+    // ★ 異なるネットワーク(Wi-Fi・4G)でも繋がりやすくする強力なSTUN設定
+    const PEER_CONFIG = {
         config: {
             iceServers: [
                 { urls: 'stun:stun.l.google.com:19302' },
                 { urls: 'stun:stun1.l.google.com:19302' },
                 { urls: 'stun:stun2.l.google.com:19302' },
-                { urls: 'stun:stun3.l.google.com:19302' },
-                { urls: 'stun:stun4.l.google.com:19302' },
                 { urls: 'stun:stun.cloudflare.com:3478' }
             ]
         }
@@ -1268,7 +1270,7 @@
         return true;
     }
 
-    // --- 親機モード（自動再接続の強化） ---
+    // --- 親機モード ---
     function saveSignageSettings() {
         appData.signageSettings = {
             awayText1: document.getElementById('setting-away-text1').value,
@@ -1312,7 +1314,7 @@
     }
 
     function startHostMode() {
-        // ★ 既に一度押されている場合はリロードで通信状態をクリアし「離席」状態にする
+        // 既に一度押されている場合はリロードで通信状態をクリアする
         if (isHost) {
             location.reload();
             return;
@@ -1323,16 +1325,15 @@
         const pin = appData.hostPin;
         const peerId = PEER_PREFIX + pin;
         
-        // ★ ボタンを離席・再接続（リロード）用に変更する
+        // ボタンを再接続（リロード）用に変更する
         const hostBtn = document.getElementById('btn-host');
-        hostBtn.innerHTML = `🔄 離席・再接続 (リロード)`;
-        hostBtn.style.background = '#ff9800'; // 注意を引くオレンジ色に
+        hostBtn.innerHTML = `🔄 再接続 (リロード)`;
+        hostBtn.style.background = '#ff9800'; 
         hostBtn.style.boxShadow = '0 4px 12px rgba(255, 152, 0, 0.3)';
 
         document.getElementById('sync-status').innerText = '接続待機中...';
         if(peer) peer.destroy();
-        // ★ ここでカスタムのSTUN設定を適用
-        peer = new Peer(peerId, customPeerConfig);
+        peer = new Peer(peerId, PEER_CONFIG);
         
         peer.on('open', (id) => {
             document.getElementById('sync-status').innerHTML = `📡 子機からの接続を待っています<br>（iPadに <span style="color:var(--accent-color); font-size:1.5em;">${pin}</span> を入力）`;
@@ -1374,7 +1375,8 @@
         if(!ev) return;
         sendSyncData('full_state', {
             items: ev.items, cart: cart, cartTotal: cart.reduce((s,i)=>s+i.price, 0),
-            signageSettings: appData.signageSettings || {}, slideshowImages: appData.slideshowImages || []
+            signageSettings: appData.signageSettings || {}, slideshowImages: appData.slideshowImages || [],
+            isAway: isAwayState // 手動離席状態も送信
         });
     }
 
@@ -1410,10 +1412,12 @@
         } else { container.innerHTML = '<span style="font-size:0.8rem; color:#888;">画像がありません</span>'; }
     }
 
-    // --- 子機モード（iPad用・自動再接続強化） ---
+    // --- 子機モード ---
     let targetHostPin = '';
     let lastPing = Date.now();
     let reconnectInterval = null;
+    let isParentAway = false;
+    let isClientDisconnected = true;
 
     function startClientMode() {
         if(!initPeer()) return;
@@ -1428,51 +1432,54 @@
     }
 
     function connectToHost() {
+        isClientDisconnected = true;
+        routeClientDisplay(); // まずはオフライン用画面へ
+
         if(peer) peer.destroy();
-        // ★ カスタムSTUNサーバーを使って初期化
-        peer = new Peer(customPeerConfig); 
+        peer = new Peer(PEER_CONFIG); 
         
         peer.on('open', () => {
             const targetId = PEER_PREFIX + targetHostPin;
             conn = peer.connect(targetId, { reliable: true });
             
             conn.on('open', () => {
-                hideDisconnectOverlay();
+                isClientDisconnected = false;
                 lastPing = Date.now();
+                routeClientDisplay();
                 if(reconnectInterval) { clearInterval(reconnectInterval); reconnectInterval = null; }
             });
             
             conn.on('data', (data) => {
                 if(data.type === 'ping') {
                     lastPing = Date.now();
-                    if(document.getElementById('client-disconnect-overlay').style.display !== 'none') {
-                        hideDisconnectOverlay();
+                    if(isClientDisconnected) {
+                        isClientDisconnected = false;
+                        routeClientDisplay();
                     }
                     return;
                 }
                 handleClientData(data);
             });
-            conn.on('close', () => { showDisconnectOverlay(); });
+            conn.on('close', () => { showDisconnectState(); });
         });
     }
 
     // ★ 子機の接続監視＆自動復旧ループ
     setInterval(() => {
         if (isClient) {
-            // 12秒間Pingが来なければ離席とみなす
-            if (Date.now() - lastPing > 12000) { 
-                showDisconnectOverlay();
-                
-                // 再接続を試みる（連打しないように5秒間隔で）
-                if (!reconnectInterval) {
-                    reconnectInterval = setInterval(() => {
-                        if (Date.now() - lastPing > 12000) {
-                            connectToHost();
-                        } else {
-                            clearInterval(reconnectInterval); reconnectInterval = null;
-                        }
-                    }, 5000);
-                }
+            // 12秒間Pingが来なければ切断とみなす
+            if (Date.now() - lastPing > 12000 && !isClientDisconnected) { 
+                showDisconnectState();
+            }
+            // 再接続を試みる
+            if (isClientDisconnected && !reconnectInterval) {
+                reconnectInterval = setInterval(() => {
+                    if (Date.now() - lastPing > 12000) {
+                        connectToHost();
+                    } else {
+                        clearInterval(reconnectInterval); reconnectInterval = null;
+                    }
+                }, 5000);
             }
         }
     }, 3000);
@@ -1482,58 +1489,30 @@
         if(peer) peer.destroy();
         if(reconnectInterval) clearInterval(reconnectInterval);
         stopSignageLoop();
-        stopDisconnectSlideshow();
         document.getElementById('client-display').style.display = 'none';
         try { document.exitFullscreen().catch(e=>console.log(e)); } catch(e) {}
     }
 
-    function showDisconnectOverlay() { 
-        document.getElementById('client-disconnect-overlay').style.display = 'flex'; 
-        stopSignageLoop();
-        startDisconnectSlideshow();
+    function showDisconnectState() { 
+        isClientDisconnected = true;
+        routeClientDisplay();
     }
-    function hideDisconnectOverlay() { 
-        document.getElementById('client-disconnect-overlay').style.display = 'none'; 
-        stopDisconnectSlideshow();
-        if(!clientData.cart || clientData.cart.length === 0) runSignageLoop();
-    }
-
-    // --- 子機の離席中画面 背景スライドショー ---
-    let disconnectSlideInterval = null;
-    let disconnectSlideIndex = 0;
-
-    function startDisconnectSlideshow() {
-        if (disconnectSlideInterval) clearInterval(disconnectSlideInterval);
-        const bgEl = document.getElementById('client-disconnect-bg');
-        // 子機側が保持している設定データを使う
-        if (clientData && clientData.slideshowImages && clientData.slideshowImages.length > 0) {
-            bgEl.style.backgroundImage = `url(${clientData.slideshowImages[disconnectSlideIndex]})`;
-            disconnectSlideInterval = setInterval(() => {
-                disconnectSlideIndex = (disconnectSlideIndex + 1) % clientData.slideshowImages.length;
-                bgEl.style.backgroundImage = `url(${clientData.slideshowImages[disconnectSlideIndex]})`;
-            }, 6000); // 離席中の背景切り替えは6秒ごと
-        } else {
-            bgEl.style.backgroundImage = 'none';
-        }
-    }
-    function stopDisconnectSlideshow() {
-        if (disconnectSlideInterval) clearInterval(disconnectSlideInterval);
-        disconnectSlideInterval = null;
-        document.getElementById('client-disconnect-bg').style.backgroundImage = 'none';
-    }
-
 
     // --- 子機の画面制御 ---
     let clientData = {};
     let signageMode = 'menu'; 
     let signageTimeout = null;
     let currentSlideIndex = 0;
+    let offlineSlideTimeout = null;
 
     function handleClientData(data) {
         if(data.type === 'full_state') {
             clientData = data.payload;
+            isParentAway = !!clientData.isAway;
+            isClientDisconnected = false;
+            
             updateAwayUI();
-            updateClientCartUI();
+            routeClientDisplay();
         }
         else if(data.type === 'checkout_open') {
             stopSignageLoop();
@@ -1563,14 +1542,70 @@
             document.getElementById('client-thanks').style.opacity = '1';
             document.getElementById('client-thanks').style.transform = 'translateY(0)';
             
+            // 5秒後に自動的にサンクス画面を閉じ、サイネージモードに戻る
             setTimeout(() => {
                 document.getElementById('client-checkout-area').style.display = 'none';
                 document.getElementById('client-thanks').style.opacity = '0';
                 document.getElementById('client-thanks').style.transform = 'translateY(20px)';
-                clientData.cart = [];
-                signageMode = 'menu';
-                runSignageLoop();
+                clientData.cart = []; // 視覚的にカートを空にする
+                if (!isParentAway && !isClientDisconnected) {
+                    signageMode = 'menu';
+                    runSignageLoop();
+                }
             }, 5000);
+        }
+    }
+
+    // ★ 子機の画面状態をコントロールするメインのルーティング
+    function routeClientDisplay() {
+        clearTimeout(signageTimeout);
+        clearTimeout(offlineSlideTimeout);
+        
+        if (isParentAway) {
+            // 親機から「手動で離席」にされた場合は、通信が途切れてもこの画面をキープ
+            document.getElementById('client-disconnect-overlay').style.display = 'flex';
+            document.getElementById('client-cart-area').style.display = 'none';
+            document.getElementById('client-checkout-area').style.display = 'none';
+            document.getElementById('client-menu-area').style.display = 'none';
+            document.getElementById('client-slideshow').style.display = 'none';
+        } else if (isClientDisconnected) {
+            // 意図せぬ切断 -> メニューを消してスライドショーのみを流す
+            document.getElementById('client-disconnect-overlay').style.display = 'none';
+            document.getElementById('client-cart-area').style.display = 'none';
+            document.getElementById('client-checkout-area').style.display = 'none';
+            document.getElementById('client-menu-area').style.display = 'none';
+            runOfflineSlideshowLoop();
+        } else {
+            // 正常に接続されている状態
+            document.getElementById('client-disconnect-overlay').style.display = 'none';
+            
+            // 会計中ならそのまま邪魔しない
+            if (document.getElementById('client-checkout-area').style.display === 'flex') return;
+            
+            if (clientData.cart && clientData.cart.length > 0) {
+                updateClientCartUI();
+            } else {
+                runSignageLoop(); // メニューとスライドの交互表示
+            }
+        }
+    }
+
+    function runOfflineSlideshowLoop() {
+        clearTimeout(signageTimeout);
+        clearTimeout(offlineSlideTimeout);
+        
+        if (clientData.slideshowImages && clientData.slideshowImages.length > 0) {
+            document.getElementById('client-slideshow').style.display = 'flex';
+            const imgEl = document.getElementById('slideshow-img');
+            imgEl.style.opacity = 0;
+            setTimeout(() => {
+                imgEl.src = clientData.slideshowImages[currentSlideIndex];
+                imgEl.style.opacity = 1;
+                currentSlideIndex = (currentSlideIndex + 1) % clientData.slideshowImages.length;
+            }, 500);
+            offlineSlideTimeout = setTimeout(runOfflineSlideshowLoop, 5000);
+        } else {
+            document.getElementById('client-slideshow').style.display = 'none';
         }
     }
 
@@ -1591,48 +1626,38 @@
     }
 
     function updateClientCartUI() {
+        document.getElementById('client-menu-area').style.display = 'none';
+        document.getElementById('client-slideshow').style.display = 'none';
+        document.getElementById('client-cart-area').style.display = 'flex';
+        
         const c = clientData.cart || [];
         const t = clientData.cartTotal || 0;
+        const list = document.getElementById('client-cart-list');
+        list.innerHTML = '';
         
-        if(document.getElementById('client-checkout-area').style.display === 'flex') return;
-        
-        if(c.length === 0) {
-            document.getElementById('client-cart-area').style.display = 'none';
-            if(!signageTimeout && document.getElementById('client-disconnect-overlay').style.display === 'none') { 
-                signageMode = 'menu'; runSignageLoop(); 
-            }
-        } else {
-            stopSignageLoop();
-            document.getElementById('client-menu-area').style.display = 'none';
-            document.getElementById('client-slideshow').style.display = 'none';
-            document.getElementById('client-cart-area').style.display = 'flex';
-            
-            const list = document.getElementById('client-cart-list');
-            list.innerHTML = '';
-            
-            const map = {}; 
-            c.forEach(i => { if(!map[i.id]) map[i.id] = {...i, count:0}; map[i.id].count++; });
-            Object.values(map).forEach(i => {
-                list.innerHTML += `
-                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:4px dashed rgba(0,0,0,0.1); padding:20px 0;">
-                    <div style="display:flex; align-items:center; gap:30px;">
-                        <img src="${i.image}" style="width:120px; height:120px; object-fit:contain; border-radius:20px; background:rgba(255,255,255,0.9); box-shadow:0 8px 20px rgba(0,0,0,0.15);">
-                        <div>
-                            <div style="font-weight:900; color:#333; font-size:3rem; line-height:1.2; margin-bottom:10px;">${i.name}</div>
-                            <div style="color:var(--accent-color); font-weight:900; font-size:2.5rem;">¥${i.price.toLocaleString()}</div>
-                        </div>
+        const map = {}; 
+        c.forEach(i => { if(!map[i.id]) map[i.id] = {...i, count:0}; map[i.id].count++; });
+        Object.values(map).forEach(i => {
+            list.innerHTML += `
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:4px dashed rgba(0,0,0,0.1); padding:20px 0;">
+                <div style="display:flex; align-items:center; gap:30px;">
+                    <img src="${i.image}" style="width:120px; height:120px; object-fit:contain; border-radius:20px; background:rgba(255,255,255,0.9); box-shadow:0 8px 20px rgba(0,0,0,0.15);">
+                    <div>
+                        <div style="font-weight:900; color:#333; font-size:3rem; line-height:1.2; margin-bottom:10px;">${i.name}</div>
+                        <div style="color:var(--accent-color); font-weight:900; font-size:2.5rem;">¥${i.price.toLocaleString()}</div>
                     </div>
-                    <div style="font-size:4rem; font-weight:900; color:#333;">x ${i.count}</div>
-                </div>`;
-            });
-            
-            animateValue(document.getElementById('client-subtotal'), parseInt(document.getElementById('client-subtotal').innerText.replace(/,/g, '')) || 0, t, 500);
-        }
+                </div>
+                <div style="font-size:4rem; font-weight:900; color:#333;">x ${i.count}</div>
+            </div>`;
+        });
+        
+        animateValue(document.getElementById('client-subtotal'), parseInt(document.getElementById('client-subtotal').innerText.replace(/,/g, '')) || 0, t, 500);
     }
 
-    // ★ 自動お品書き＆スライドのローテーション
+    // ★ 自動お品書き＆スライドのローテーション (接続時)
     function runSignageLoop() {
         clearTimeout(signageTimeout);
+        clearTimeout(offlineSlideTimeout);
         if(clientData.cart && clientData.cart.length > 0) return; 
         
         document.getElementById('client-cart-area').style.display = 'none';
@@ -1684,7 +1709,7 @@
     
     function stopSignageLoop() {
         clearTimeout(signageTimeout);
-        signageTimeout = null;
+        clearTimeout(offlineSlideTimeout);
         document.getElementById('client-menu-area').style.display = 'none';
         document.getElementById('client-slideshow').style.display = 'none';
     }
