@@ -92,18 +92,11 @@
         button:active { transform: scale(0.92); }
         input, select { font-family: inherit; }
 
-        /* ヘッダー・タブの固定エリア（Sticky） */
-        .sticky-top-wrapper {
-            position: sticky; top: 0; z-index: 105; padding-top: 5px;
-            /* 背景が透けすぎないようにわずかなグラデーション */
-            background: linear-gradient(to bottom, rgba(255,255,255,0.3) 0%, transparent 100%);
-        }
-
         /* ヘッダー */
         .preset-header { 
             background-color: var(--header-bg); padding: 12px 15px; display: flex; justify-content: space-between; 
-            align-items: center; gap: 8px; border-radius: 24px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08); position: relative; margin: 0 10px 8px 10px;
+            align-items: center; gap: 8px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08); z-index: 101; position: relative; margin-bottom: 8px;
             backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
         }
         .preset-header select { 
@@ -111,14 +104,14 @@
             font-weight: 900; background: rgba(255,255,255,0.95); color: #333; box-shadow: 0 2px 10px rgba(0,0,0,0.05); min-width: 0;
         }
         .preset-btns { display: flex; gap: 6px; flex-shrink: 0; }
-        .preset-btn { background-color: rgba(0,0,0,0.15); color: #333; padding: 12px 10px; font-weight: 900; font-size: 0.85rem; }
+        .preset-btn { background-color: rgba(0,0,0,0.15); color: #333; padding: 12px 14px; font-weight: 900; font-size: 0.9rem; }
         .preset-btn.primary { background-color: #FFC107; color: #333; }
-        .preset-btn.danger { background-color: #f44336; color: white; padding: 12px 12px; font-size: 1rem;}
+        .preset-btn.danger { background-color: #f44336; color: white; padding: 12px 16px; font-size: 1.1rem;}
 
-        /* タブ */
+        /* タブ (スクロール固定化) */
         .tabs { 
-            position: relative; display: flex; background-color: var(--tab-bg); 
-            box-shadow: 0 8px 32px rgba(0,0,0,0.08); 
+            position: sticky; top: 10px; display: flex; background-color: var(--tab-bg); 
+            z-index: 1000; box-shadow: 0 8px 32px rgba(0,0,0,0.08); 
             margin: 0 15px 10px 15px; border-radius: 24px; padding: 6px; 
             backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
             border: 1px solid rgba(255,255,255,0.6);
@@ -215,7 +208,7 @@
            ========================================== */
         #client-display { display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:var(--bg-color); z-index:9999; flex-direction:column; overflow: hidden; font-family: 'Zen Maru Gothic', sans-serif; }
         /* 離席中画面 */
-        #client-disconnect-overlay { display:none; position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:10000; color:white; justify-content:center; align-items:center; flex-direction:column; text-align:center; padding:20px; box-sizing:border-box; backdrop-filter:blur(15px); }
+        #client-away-overlay { display:none; position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:10000; color:white; justify-content:center; align-items:center; flex-direction:column; text-align:center; padding:20px; box-sizing:border-box; backdrop-filter:blur(15px); }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-30px); } }
         .away-icon-anim { font-size:8rem; margin-bottom:30px; animation: bounce 2.5s infinite cubic-bezier(0.25, 0.1, 0.25, 1); }
         
@@ -242,23 +235,20 @@
 <div id="bg-color-layer"></div>
 <div id="app-background"></div>
 
-<div class="sticky-top-wrapper">
-    <div class="preset-header">
-        <select id="event-selector" onchange="changeEvent(this.value)"></select>
-        <div class="preset-btns">
-            <button id="btn-away-toggle" class="preset-btn" onclick="toggleAwayState()" style="background:#607d8b; color:white; padding:12px 14px;">🛌 離席</button>
-            <button class="preset-btn" onclick="renameCurrentEvent()">✏️ 名前</button>
-            <button class="preset-btn primary" onclick="createNewEvent()">➕ 新規</button>
-            <button class="preset-btn danger" onclick="deleteCurrentEvent()">🗑️</button>
-        </div>
+<div class="preset-header">
+    <select id="event-selector" onchange="changeEvent(this.value)"></select>
+    <div class="preset-btns">
+        <button class="preset-btn" onclick="renameCurrentEvent()">✏️ 名前</button>
+        <button class="preset-btn primary" onclick="createNewEvent()">➕ 新規</button>
+        <button class="preset-btn danger" onclick="deleteCurrentEvent()">🗑️</button>
     </div>
+</div>
 
-    <div class="tabs" id="main-tabs">
-        <div class="tab-highlight" id="tab-highlight"></div>
-        <div class="tab active" onclick="switchTab('pos', this)">🛍️ レジ</div>
-        <div class="tab" onclick="switchTab('settings', this)">⚙️ 設定</div>
-        <div class="tab" onclick="switchTab('analytics', this)">📊 分析</div>
-    </div>
+<div class="tabs" id="main-tabs">
+    <div class="tab-highlight" id="tab-highlight"></div>
+    <div class="tab active" onclick="switchTab('pos', this)">🛍️ レジ</div>
+    <div class="tab" onclick="switchTab('settings', this)">⚙️ 設定</div>
+    <div class="tab" onclick="switchTab('analytics', this)">📊 分析</div>
 </div>
 
 <div id="pos" class="tab-content active">
@@ -268,14 +258,18 @@
 <div id="settings" class="tab-content">
     
     <div class="glass-card" style="padding: 20px; margin-bottom: 20px;">
-        <h3 style="margin-top:0; color:#1565c0; font-size:1.2rem;">📡 カスタマーディスプレイ（子機連携）</h3>
-        <p style="font-size:0.85rem; color:#666; font-weight:700;">別の端末（iPadなど）をお客様用の表示画面として使えます。</p>
+        <h3 style="margin-top:0; color:#1565c0; font-size:1.2rem;">📡 子機との連携</h3>
+        <p style="font-size:0.85rem; color:#666; font-weight:700;">別の端末（iPadやタブレットなど）をお客様用の表示画面として使えます。</p>
         
         <div style="display:flex; gap:10px; margin-bottom:15px;">
             <button id="btn-host" onclick="startHostMode()" style="flex:1; background:var(--accent-color); color:white; padding:15px; font-weight:900; font-size:1.1rem; border-radius:14px; box-shadow: 0 4px 12px rgba(233,30,99,0.3);">📱 親機を起動</button>
             <button onclick="startClientMode()" style="flex:1; background:#4CAF50; color:white; padding:15px; font-weight:900; font-size:1.1rem; border-radius:14px; box-shadow: 0 4px 12px rgba(76,175,80,0.3);">📺 子機になる</button>
         </div>
         <div id="sync-status" style="font-size:1rem; font-weight:900; color:#555; text-align:center; margin-bottom:20px; background:rgba(0,0,0,0.05); padding:10px; border-radius:10px;">未接続</div>
+
+        <div id="host-controls" style="display:none; margin-bottom:20px;">
+            <button id="btn-away-mode" onclick="toggleAwayMode()" style="width:100%; padding:15px; font-weight:900; font-size:1.1rem; border-radius:14px; color:white; box-shadow:0 4px 12px rgba(0,0,0,0.15); transition:background 0.3s;">🏃‍♂️ 離席モードにする</button>
+        </div>
 
         <h4 style="margin:20px 0 10px 0; font-size:1rem; border-top:1px solid rgba(0,0,0,0.1); padding-top:15px;">🛌 離席中画面のカスタマイズ</h4>
         <input type="text" id="setting-away-text1" placeholder="メイン文字 (例: ただいま離席中です)" onchange="saveSignageSettings()" style="width:100%; padding:12px; margin-bottom:10px; border-radius:12px; border:1px solid rgba(0,0,0,0.1); background:rgba(255,255,255,0.8); font-weight:900;">
@@ -452,9 +446,9 @@
         </div>
 
         <div class="tender-wrap" style="margin-bottom:15px;">
-            <div style="font-size:0.9rem; margin-bottom:6px; font-weight:900; color:#666;">お預かり金額（未入力でピッタリ会計）</div>
+            <div style="font-size:0.8rem; margin-bottom:6px; font-weight:900; color:#666;">お預かり（空欄でピッタリ）</div>
             <div style="display:flex; align-items:center; gap:8px;">
-                <input type="number" id="tender-input" class="tender-input" oninput="calculateChange()" inputmode="numeric" placeholder="未入力でピッタリ">
+                <input type="number" id="tender-input" class="tender-input" oninput="calculateChange()" inputmode="numeric" placeholder="空欄でピッタリ">
                 <span style="font-weight:900; font-size:1.4rem;">円</span>
             </div>
         </div>
@@ -474,7 +468,7 @@
 <div id="client-display">
     <button class="client-exit-btn" onclick="exitClientMode()">✖</button>
 
-    <div id="client-disconnect-overlay">
+    <div id="client-away-overlay">
         <div id="away-icon-display" class="away-icon-anim">👨‍💼</div>
         <h1 id="away-text-1-display" style="font-size:4rem; margin:0 0 20px 0; font-weight:900; letter-spacing:2px;">ただいま離席中です</h1>
         <p id="away-text-2-display" style="font-size:2rem; color:#ddd; font-weight:700;">すぐに戻ります。しばらくお待ちくださいませ。</p>
@@ -523,11 +517,20 @@
     const DB_NAME = 'HazukiRegiDB';
     const DB_VERSION = 1;
     let db;
-    let appData = { currentEventId: Date.now(), events: [], theme: 'default', gridColumns: 2, backgroundImage: null, hostPin: null, signageSettings: {}, slideshowImages: [] };
+    let appData = { currentEventId: Date.now(), events: [], theme: 'default', gridColumns: 2, backgroundImage: null, hostPin: null, signageSettings: {}, slideshowImages: [], isAwayMode: false };
     let cart = [];
     let displayedTotal = 0;
     let currentCheckoutTotal = 0;
-    let isAwayState = false; // 離席状態を管理するフラグ
+
+    // ★ STUNサーバーを設定して、異なる回線（Wi-Fi/4G）でも繋がりやすくする
+    const peerOptions = {
+        config: {
+            'iceServers': [
+                { urls: 'stun:stun.l.google.com:19302' },
+                { urls: 'stun:stun1.l.google.com:19302' }
+            ]
+        }
+    };
 
     function initDB() {
         return new Promise((resolve, reject) => {
@@ -548,7 +551,6 @@
         });
     }
 
-    // ★ データ初期化時の安全性を極限まで高める
     function loadDataFromDB() {
         return new Promise((resolve) => {
             try {
@@ -598,6 +600,7 @@
         document.getElementById('btn-host').innerHTML = `📱 親機を起動 (PIN: ${appData.hostPin})`;
         loadSignageSettingsUI();
         renderSlideshowPreview();
+        updateAwayButtonUI();
         
         document.body.setAttribute('data-theme', appData.theme || 'default');
         if(document.getElementById('theme-selector')) document.getElementById('theme-selector').value = appData.theme || 'default';
@@ -613,13 +616,11 @@
             if (activeTab) switchTab('pos', activeTab);
         }, 100);
         
-        saveData(); // ロード成功後に確実に保存
+        saveData(); 
     }
 
-    // ★ データを絶対に消さないためのデュアル保存
     function saveData() {
         let isSuccess = false;
-        // 1. IndexedDBへの保存 (ディープコピーで参照エラー防止)
         if (db) {
             try {
                 const transaction = db.transaction(['appData'], 'readwrite');
@@ -629,15 +630,11 @@
             } catch(e) { console.error("IDB Save Error:", e); }
         }
         
-        // 2. localStorageへのバックアップ保存
         try {
             localStorage.setItem('pos_app_data_backup', JSON.stringify(appData));
             isSuccess = true;
         } catch(e) { console.error("LocalStorage Save Error (容量オーバーの可能性)"); }
         
-        if(!isSuccess) {
-            console.error("データの保存に失敗しました");
-        }
         return isSuccess;
     }
 
@@ -747,43 +744,27 @@
         } catch(e) { console.error(e); }
     }
 
-    function toggleAwayState() {
-        isAwayState = !isAwayState;
-        const btn = document.getElementById('btn-away-toggle');
-        if (isAwayState) {
-            btn.innerHTML = '👨‍💼 戻る';
-            btn.style.background = '#ff9800';
-            btn.style.boxShadow = '0 2px 8px rgba(255,152,0,0.4)';
-        } else {
-            btn.innerHTML = '🛌 離席';
-            btn.style.background = '#607d8b';
-            btn.style.boxShadow = 'none';
-        }
-        syncStateToClient();
-    }
-
     function exportAppData() {
         const dataStr = JSON.stringify(appData); const blob = new Blob([dataStr], { type: "application/json" });
         const url = URL.createObjectURL(blob); const link = document.createElement('a'); link.href = url;
         let d = new Date(); let yyyy = d.getFullYear(); let mm = ('0' + (d.getMonth() + 1)).slice(-2); let dd = ('0' + d.getDate()).slice(-2);
-        link.download = `はづきれじ_バックアップ_${yyyy}${mm}${dd}.json`;
+        link.download = `はづきれじ_完全バックアップ_${yyyy}${mm}${dd}.json`;
         link.click(); URL.revokeObjectURL(url);
     }
+    
+    // ★ 丸ごとすべてを完璧に保存できるように上書きで読み込む
     function importAppData(input) {
         if (!input.files || !input.files[0]) return;
-        if (!confirm("読み込んだファイルは『新しいイベント』として追加されます。\nよろしいですか？")) { input.value = ""; return; }
+        if (!confirm("⚠️ 現在のデータをすべて消去し、ファイルの内容で完全に上書きします。\nよろしいですか？（別の端末での復元に最適です）")) { input.value = ""; return; }
         const reader = new FileReader();
         reader.onload = (e) => {
             try {
                 const importedData = JSON.parse(e.target.result);
                 if (importedData && importedData.events) {
-                    importedData.events.forEach(ev => {
-                        ev.id = Date.now() + Math.floor(Math.random() * 1000);
-                        ev.name = ev.name + " (読込)";
-                        appData.events.push(ev); appData.currentEventId = ev.id; 
-                    });
-                    saveData(); updateEventSelector(); renderAll(); alert("データの読み込みが完了しました！");
-                    syncStateToClient();
+                    appData = importedData;
+                    saveData();
+                    alert("データの完全な復元が完了しました！アプリを再読み込みします。");
+                    location.reload();
                 } else { alert("ファイルの形式が違います。"); }
             } catch (err) { alert("ファイルの読み込みに失敗しました。"); }
             input.value = "";
@@ -1240,25 +1221,13 @@
     }
 
     // ==========================================
-    // 📡 【完全修復・強力化】PeerJS (子機連携＆サイネージ機能) 
+    // 📡 【完全修復】PeerJS (子機連携＆サイネージ機能) 
     // ==========================================
     let peer = null;
     let conn = null;
     let isHost = false;
     let isClient = false;
     const PEER_PREFIX = 'hazuki-regi-momo-'; 
-
-    // ★ 異なるネットワーク(Wi-Fi・4G)でも繋がりやすくする強力なSTUN設定
-    const PEER_CONFIG = {
-        config: {
-            iceServers: [
-                { urls: 'stun:stun.l.google.com:19302' },
-                { urls: 'stun:stun1.l.google.com:19302' },
-                { urls: 'stun:stun2.l.google.com:19302' },
-                { urls: 'stun:stun.cloudflare.com:3478' }
-            ]
-        }
-    };
 
     function initPeer() {
         if(!peer) {
@@ -1270,7 +1239,26 @@
         return true;
     }
 
-    // --- 親機モード ---
+    // --- 親機モード（手動離席・自動再接続強化） ---
+    function toggleAwayMode() {
+        appData.isAwayMode = !appData.isAwayMode;
+        saveData();
+        updateAwayButtonUI();
+        syncStateToClient();
+    }
+
+    function updateAwayButtonUI() {
+        const btn = document.getElementById('btn-away-mode');
+        if(!btn) return;
+        if(appData.isAwayMode) {
+            btn.innerText = "🛌 離席モード：ON（解除する）";
+            btn.style.background = "#ff9800";
+        } else {
+            btn.innerText = "🏃‍♂️ 離席モードにする";
+            btn.style.background = "var(--accent-color)";
+        }
+    }
+
     function saveSignageSettings() {
         appData.signageSettings = {
             awayText1: document.getElementById('setting-away-text1').value,
@@ -1314,7 +1302,6 @@
     }
 
     function startHostMode() {
-        // 既に一度押されている場合はリロードで通信状態をクリアする
         if (isHost) {
             location.reload();
             return;
@@ -1325,15 +1312,17 @@
         const pin = appData.hostPin;
         const peerId = PEER_PREFIX + pin;
         
-        // ボタンを再接続（リロード）用に変更する
         const hostBtn = document.getElementById('btn-host');
         hostBtn.innerHTML = `🔄 再接続 (リロード)`;
         hostBtn.style.background = '#ff9800'; 
         hostBtn.style.boxShadow = '0 4px 12px rgba(255, 152, 0, 0.3)';
 
+        // 離席コントロールパネルを表示
+        document.getElementById('host-controls').style.display = 'block';
+
         document.getElementById('sync-status').innerText = '接続待機中...';
         if(peer) peer.destroy();
-        peer = new Peer(peerId, PEER_CONFIG);
+        peer = new Peer(peerId, peerOptions);
         
         peer.on('open', (id) => {
             document.getElementById('sync-status').innerHTML = `📡 子機からの接続を待っています<br>（iPadに <span style="color:var(--accent-color); font-size:1.5em;">${pin}</span> を入力）`;
@@ -1351,13 +1340,12 @@
 
     function setupHostConnection() {
         conn.on('open', () => {
-            document.getElementById('sync-status').innerText = '✅ 子機(iPad)と接続中！';
+            document.getElementById('sync-status').innerText = '✅ 子機と接続中！';
             syncStateToClient(); 
         });
         conn.on('close', () => { document.getElementById('sync-status').innerText = '❌ 子機が切断されました'; });
     }
 
-    // ★ 親機側の生存アピールループ
     setInterval(() => {
         if (isHost && peer) {
             if (peer.disconnected && !peer.destroyed) { peer.reconnect(); }
@@ -1376,7 +1364,7 @@
         sendSyncData('full_state', {
             items: ev.items, cart: cart, cartTotal: cart.reduce((s,i)=>s+i.price, 0),
             signageSettings: appData.signageSettings || {}, slideshowImages: appData.slideshowImages || [],
-            isAway: isAwayState // 手動離席状態も送信
+            isAwayMode: !!appData.isAwayMode
         });
     }
 
@@ -1416,8 +1404,7 @@
     let targetHostPin = '';
     let lastPing = Date.now();
     let reconnectInterval = null;
-    let isParentAway = false;
-    let isClientDisconnected = true;
+    let clientIsAway = false; // 子機側の手動離席状態の記憶
 
     function startClientMode() {
         if(!initPeer()) return;
@@ -1432,54 +1419,55 @@
     }
 
     function connectToHost() {
-        isClientDisconnected = true;
-        routeClientDisplay(); // まずはオフライン用画面へ
-
         if(peer) peer.destroy();
-        peer = new Peer(PEER_CONFIG); 
+        peer = new Peer(peerOptions); 
         
         peer.on('open', () => {
             const targetId = PEER_PREFIX + targetHostPin;
             conn = peer.connect(targetId, { reliable: true });
             
             conn.on('open', () => {
-                isClientDisconnected = false;
                 lastPing = Date.now();
-                routeClientDisplay();
                 if(reconnectInterval) { clearInterval(reconnectInterval); reconnectInterval = null; }
             });
             
             conn.on('data', (data) => {
                 if(data.type === 'ping') {
                     lastPing = Date.now();
-                    if(isClientDisconnected) {
-                        isClientDisconnected = false;
-                        routeClientDisplay();
-                    }
                     return;
                 }
                 handleClientData(data);
             });
-            conn.on('close', () => { showDisconnectState(); });
+            
+            // 通信切断時は、以前のように強制オーバーレイは出さず、内部状態（clientIsAway）に従う
+            conn.on('close', () => { 
+                evaluateClientDisplay();
+            });
         });
     }
 
     // ★ 子機の接続監視＆自動復旧ループ
     setInterval(() => {
         if (isClient) {
-            // 12秒間Pingが来なければ切断とみなす
-            if (Date.now() - lastPing > 12000 && !isClientDisconnected) { 
-                showDisconnectState();
-            }
-            // 再接続を試みる
-            if (isClientDisconnected && !reconnectInterval) {
-                reconnectInterval = setInterval(() => {
-                    if (Date.now() - lastPing > 12000) {
-                        connectToHost();
-                    } else {
-                        clearInterval(reconnectInterval); reconnectInterval = null;
-                    }
-                }, 5000);
+            // 12秒間Pingが来なければ通信遮断とみなす
+            if (Date.now() - lastPing > 12000) { 
+                
+                // 通信遮断時、手動離席モードでなければカートを空にしてサイネージを回す
+                if (!clientIsAway) {
+                    clientData.cart = [];
+                    runSignageLoop();
+                }
+
+                // 裏で再接続を試みる
+                if (!reconnectInterval) {
+                    reconnectInterval = setInterval(() => {
+                        if (Date.now() - lastPing > 12000) {
+                            connectToHost();
+                        } else {
+                            clearInterval(reconnectInterval); reconnectInterval = null;
+                        }
+                    }, 5000);
+                }
             }
         }
     }, 3000);
@@ -1493,9 +1481,14 @@
         try { document.exitFullscreen().catch(e=>console.log(e)); } catch(e) {}
     }
 
-    function showDisconnectState() { 
-        isClientDisconnected = true;
-        routeClientDisplay();
+    function evaluateClientDisplay() {
+        if (clientIsAway) {
+            document.getElementById('client-away-overlay').style.display = 'flex'; 
+            stopSignageLoop();
+        } else {
+            document.getElementById('client-away-overlay').style.display = 'none'; 
+            if(!clientData.cart || clientData.cart.length === 0) runSignageLoop();
+        }
     }
 
     // --- 子機の画面制御 ---
@@ -1503,16 +1496,16 @@
     let signageMode = 'menu'; 
     let signageTimeout = null;
     let currentSlideIndex = 0;
-    let offlineSlideTimeout = null;
 
     function handleClientData(data) {
         if(data.type === 'full_state') {
             clientData = data.payload;
-            isParentAway = !!clientData.isAway;
-            isClientDisconnected = false;
-            
+            clientIsAway = !!clientData.isAwayMode;
             updateAwayUI();
-            routeClientDisplay();
+            evaluateClientDisplay();
+            if(!clientIsAway) {
+                updateClientCartUI();
+            }
         }
         else if(data.type === 'checkout_open') {
             stopSignageLoop();
@@ -1542,70 +1535,16 @@
             document.getElementById('client-thanks').style.opacity = '1';
             document.getElementById('client-thanks').style.transform = 'translateY(0)';
             
-            // 5秒後に自動的にサンクス画面を閉じ、サイネージモードに戻る
             setTimeout(() => {
                 document.getElementById('client-checkout-area').style.display = 'none';
                 document.getElementById('client-thanks').style.opacity = '0';
                 document.getElementById('client-thanks').style.transform = 'translateY(20px)';
-                clientData.cart = []; // 視覚的にカートを空にする
-                if (!isParentAway && !isClientDisconnected) {
+                clientData.cart = []; 
+                if(!clientIsAway) {
                     signageMode = 'menu';
                     runSignageLoop();
                 }
             }, 5000);
-        }
-    }
-
-    // ★ 子機の画面状態をコントロールするメインのルーティング
-    function routeClientDisplay() {
-        clearTimeout(signageTimeout);
-        clearTimeout(offlineSlideTimeout);
-        
-        if (isParentAway) {
-            // 親機から「手動で離席」にされた場合は、通信が途切れてもこの画面をキープ
-            document.getElementById('client-disconnect-overlay').style.display = 'flex';
-            document.getElementById('client-cart-area').style.display = 'none';
-            document.getElementById('client-checkout-area').style.display = 'none';
-            document.getElementById('client-menu-area').style.display = 'none';
-            document.getElementById('client-slideshow').style.display = 'none';
-        } else if (isClientDisconnected) {
-            // 意図せぬ切断 -> メニューを消してスライドショーのみを流す
-            document.getElementById('client-disconnect-overlay').style.display = 'none';
-            document.getElementById('client-cart-area').style.display = 'none';
-            document.getElementById('client-checkout-area').style.display = 'none';
-            document.getElementById('client-menu-area').style.display = 'none';
-            runOfflineSlideshowLoop();
-        } else {
-            // 正常に接続されている状態
-            document.getElementById('client-disconnect-overlay').style.display = 'none';
-            
-            // 会計中ならそのまま邪魔しない
-            if (document.getElementById('client-checkout-area').style.display === 'flex') return;
-            
-            if (clientData.cart && clientData.cart.length > 0) {
-                updateClientCartUI();
-            } else {
-                runSignageLoop(); // メニューとスライドの交互表示
-            }
-        }
-    }
-
-    function runOfflineSlideshowLoop() {
-        clearTimeout(signageTimeout);
-        clearTimeout(offlineSlideTimeout);
-        
-        if (clientData.slideshowImages && clientData.slideshowImages.length > 0) {
-            document.getElementById('client-slideshow').style.display = 'flex';
-            const imgEl = document.getElementById('slideshow-img');
-            imgEl.style.opacity = 0;
-            setTimeout(() => {
-                imgEl.src = clientData.slideshowImages[currentSlideIndex];
-                imgEl.style.opacity = 1;
-                currentSlideIndex = (currentSlideIndex + 1) % clientData.slideshowImages.length;
-            }, 500);
-            offlineSlideTimeout = setTimeout(runOfflineSlideshowLoop, 5000);
-        } else {
-            document.getElementById('client-slideshow').style.display = 'none';
         }
     }
 
@@ -1626,38 +1565,47 @@
     }
 
     function updateClientCartUI() {
-        document.getElementById('client-menu-area').style.display = 'none';
-        document.getElementById('client-slideshow').style.display = 'none';
-        document.getElementById('client-cart-area').style.display = 'flex';
-        
         const c = clientData.cart || [];
         const t = clientData.cartTotal || 0;
-        const list = document.getElementById('client-cart-list');
-        list.innerHTML = '';
         
-        const map = {}; 
-        c.forEach(i => { if(!map[i.id]) map[i.id] = {...i, count:0}; map[i.id].count++; });
-        Object.values(map).forEach(i => {
-            list.innerHTML += `
-            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:4px dashed rgba(0,0,0,0.1); padding:20px 0;">
-                <div style="display:flex; align-items:center; gap:30px;">
-                    <img src="${i.image}" style="width:120px; height:120px; object-fit:contain; border-radius:20px; background:rgba(255,255,255,0.9); box-shadow:0 8px 20px rgba(0,0,0,0.15);">
-                    <div>
-                        <div style="font-weight:900; color:#333; font-size:3rem; line-height:1.2; margin-bottom:10px;">${i.name}</div>
-                        <div style="color:var(--accent-color); font-weight:900; font-size:2.5rem;">¥${i.price.toLocaleString()}</div>
+        if(document.getElementById('client-checkout-area').style.display === 'flex') return;
+        
+        if(c.length === 0) {
+            document.getElementById('client-cart-area').style.display = 'none';
+            if(!signageTimeout) { signageMode = 'menu'; runSignageLoop(); }
+        } else {
+            stopSignageLoop();
+            document.getElementById('client-menu-area').style.display = 'none';
+            document.getElementById('client-slideshow').style.display = 'none';
+            document.getElementById('client-cart-area').style.display = 'flex';
+            
+            const list = document.getElementById('client-cart-list');
+            list.innerHTML = '';
+            
+            const map = {}; 
+            c.forEach(i => { if(!map[i.id]) map[i.id] = {...i, count:0}; map[i.id].count++; });
+            Object.values(map).forEach(i => {
+                list.innerHTML += `
+                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:4px dashed rgba(0,0,0,0.1); padding:20px 0;">
+                    <div style="display:flex; align-items:center; gap:30px;">
+                        <img src="${i.image}" style="width:120px; height:120px; object-fit:contain; border-radius:20px; background:rgba(255,255,255,0.9); box-shadow:0 8px 20px rgba(0,0,0,0.15);">
+                        <div>
+                            <div style="font-weight:900; color:#333; font-size:3rem; line-height:1.2; margin-bottom:10px;">${i.name}</div>
+                            <div style="color:var(--accent-color); font-weight:900; font-size:2.5rem;">¥${i.price.toLocaleString()}</div>
+                        </div>
                     </div>
-                </div>
-                <div style="font-size:4rem; font-weight:900; color:#333;">x ${i.count}</div>
-            </div>`;
-        });
-        
-        animateValue(document.getElementById('client-subtotal'), parseInt(document.getElementById('client-subtotal').innerText.replace(/,/g, '')) || 0, t, 500);
+                    <div style="font-size:4rem; font-weight:900; color:#333;">x ${i.count}</div>
+                </div>`;
+            });
+            
+            animateValue(document.getElementById('client-subtotal'), parseInt(document.getElementById('client-subtotal').innerText.replace(/,/g, '')) || 0, t, 500);
+        }
     }
 
-    // ★ 自動お品書き＆スライドのローテーション (接続時)
+    // ★ 自動お品書き＆スライドのローテーション
     function runSignageLoop() {
         clearTimeout(signageTimeout);
-        clearTimeout(offlineSlideTimeout);
+        if(clientIsAway) return;
         if(clientData.cart && clientData.cart.length > 0) return; 
         
         document.getElementById('client-cart-area').style.display = 'none';
@@ -1709,7 +1657,7 @@
     
     function stopSignageLoop() {
         clearTimeout(signageTimeout);
-        clearTimeout(offlineSlideTimeout);
+        signageTimeout = null;
         document.getElementById('client-menu-area').style.display = 'none';
         document.getElementById('client-slideshow').style.display = 'none';
     }
