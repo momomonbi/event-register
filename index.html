@@ -502,7 +502,7 @@
                 <span style="color:#666;">お釣り</span><span style="color:#f44336;">¥<span id="client-change">0</span></span>
             </div>
         </div>
-        <div id="client-thanks" style="font-size:4rem; font-weight:900; color:var(--accent-color); margin-top:50px; opacity:0; transition:opacity 0.6s, transform 0.6s; transform:translateY(20px);">ありがとうございました！✨</div>
+        <div id="client-thanks" style="font-size:4rem; font-weight:900; color:var(--accent-color); margin-top:50px; opacity:0; transition:opacity 0.6s, transform 0.6s; transform:translateY(20px); text-align:center; line-height:1.2;">ありがとう<br>ございました！✨</div>
     </div>
 </div>
 
@@ -1276,11 +1276,23 @@
     }
 
     function startHostMode() {
+        // ★ 既に一度押されている場合はリロードで通信状態をクリアする
+        if (isHost) {
+            location.reload();
+            return;
+        }
+
         if(!initPeer()) return;
         isHost = true;
         const pin = appData.hostPin;
         const peerId = PEER_PREFIX + pin;
         
+        // ★ ボタンを再接続（リロード）用に変更する
+        const hostBtn = document.getElementById('btn-host');
+        hostBtn.innerHTML = `🔄 再接続 (リロード)`;
+        hostBtn.style.background = '#ff9800'; // 注意を引くオレンジ色に
+        hostBtn.style.boxShadow = '0 4px 12px rgba(255, 152, 0, 0.3)';
+
         document.getElementById('sync-status').innerText = '接続待機中...';
         if(peer) peer.destroy();
         peer = new Peer(peerId);
@@ -1325,7 +1337,8 @@
         const ev = appData.events.find(e => e.id == appData.currentEventId);
         if(!ev) return;
         sendSyncData('full_state', {
-            items: ev.items, cart: cart, cartTotal: displayedTotal,
+            // ★ アニメーション中の遅延した数値ではなく、現在のカートから直接計算して送信
+            items: ev.items, cart: cart, cartTotal: cart.reduce((s,i)=>s+i.price, 0),
             signageSettings: appData.signageSettings || {}, slideshowImages: appData.slideshowImages || []
         });
     }
@@ -1485,6 +1498,16 @@
         else if(data.type === 'checkout_done') {
             document.getElementById('client-thanks').style.opacity = '1';
             document.getElementById('client-thanks').style.transform = 'translateY(0)';
+            
+            // ★ 5秒後に自動的にサンクス画面を閉じ、サイネージモードに戻る
+            setTimeout(() => {
+                document.getElementById('client-checkout-area').style.display = 'none';
+                document.getElementById('client-thanks').style.opacity = '0';
+                document.getElementById('client-thanks').style.transform = 'translateY(20px)';
+                clientData.cart = []; // 視覚的にカートを空にする
+                signageMode = 'menu';
+                runSignageLoop();
+            }, 5000);
         }
     }
 
