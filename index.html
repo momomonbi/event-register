@@ -13,7 +13,7 @@
             --tab-active-bg: #007aff; --tab-active-color: #fff;
             --card-bg: rgba(255, 255, 255, 0.35); --text-color: #333; --btn-checkout: #007aff;
             --app-font: 'Zen Maru Gothic', sans-serif;
-            --grid-cols: 2;
+            --grid-cols: 2; /* 列数の初期値 */
         }
         [data-theme="cute"] {
             --bg-color: #fff0f5; --header-bg: rgba(255, 182, 193, 0.85); --tab-bg: rgba(255,255,255,0.7); --accent-color: #ff69b4;
@@ -46,7 +46,7 @@
             --app-font: 'Noto Sans JP', sans-serif;
         }
         [data-theme="ocean"] {
-            --bg-color: #e0f7fa; --header-bg: rgba(2, 136, 209, 0.85); --tab-bg: rgba(255,255,255,0.7); --accent-color: #26c6da;
+            --bg-color: #e0f7fa; --header-bg: rgba(2, 136, 209, 0.85); --tab-bg: rgba(255,255,255,0.6); --accent-color: #26c6da;
             --tab-active-bg: #26c6da; --tab-active-color: #fff;
             --card-bg: rgba(255, 255, 255, 0.4); --text-color: #006064; --btn-checkout: #00acc1;
             --app-font: 'Zen Maru Gothic', sans-serif;
@@ -71,6 +71,7 @@
             opacity: 0.4; pointer-events: none;
         }
 
+        /* 極上のすりガラス効果 */
         .glass-card {
             background: var(--card-bg);
             backdrop-filter: blur(28px) saturate(160%); -webkit-backdrop-filter: blur(28px) saturate(160%);
@@ -107,18 +108,17 @@
         .preset-btn.primary { background-color: #FFC107; color: #333; }
         .preset-btn.danger { background-color: #f44336; color: white; padding: 12px 16px; font-size: 1.1rem;}
 
-        /* タブ (固定化) */
+        /* タブ (★ スクロール追従固定) */
         .tabs { 
-            position: sticky; top: 5px; z-index: 150; 
-            display: flex; background-color: var(--tab-bg); 
-            box-shadow: 0 8px 32px rgba(0,0,0,0.15); 
+            position: sticky; top: 10px; display: flex; background-color: var(--tab-bg); 
+            z-index: 1000; box-shadow: 0 8px 32px rgba(0,0,0,0.12); 
             margin: 0 15px 15px 15px; border-radius: 24px; padding: 6px; 
             backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
             border: 1px solid rgba(255,255,255,0.8);
         }
         .tab { 
             flex: 1; text-align: center; padding: 12px 0; color: var(--text-color); opacity: 0.6;
-            font-weight: 900; font-size: 0.95rem; white-space: nowrap; border-radius: 18px; 
+            font-weight: 900; font-size: 0.9rem; white-space: nowrap; border-radius: 18px; 
             cursor: pointer; position: relative; z-index: 2; transition: color 0.3s;
         }
         .tab.active { opacity: 1; color: var(--tab-active-color); }
@@ -150,7 +150,7 @@
             background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(28px) saturate(160%); -webkit-backdrop-filter: blur(28px) saturate(160%);
             padding: 15px 20px; border-radius: 30px; 
             box-shadow: 0 15px 40px rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.8);
-            display: flex; flex-direction: column; gap: 12px; z-index: 160; 
+            display: flex; flex-direction: column; gap: 12px; z-index: 90; 
         }
         .cart-status { display: flex; justify-content: space-between; align-items: center; width: 100%; }
         .action-btn { padding: 12px; background: rgba(0,0,0,0.08); border: none; font-size: 1.4rem; font-weight: 900; color: #444; border-radius: 16px; aspect-ratio: 1/1;}
@@ -209,12 +209,22 @@
         #client-display { display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:var(--bg-color); z-index:9999; flex-direction:column; overflow: hidden; font-family: 'Zen Maru Gothic', sans-serif; }
         
         /* 離席中画面 */
-        #client-disconnect-overlay { display:none; position:absolute; top:0; left:0; width:100%; height:100%; z-index:10000; color:white; justify-content:center; align-items:center; flex-direction:column; text-align:center; padding:20px; box-sizing:border-box; }
-        #away-slideshow-bg { position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:-2; opacity:0; transition: opacity 1s cubic-bezier(0.25, 0.1, 0.25, 1); }
-        .away-overlay-darken { position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); z-index:-1; }
-        
+        #client-disconnect-overlay { 
+            display:none; position:absolute; top:0; left:0; width:100%; height:100%; 
+            background:rgba(0,0,0,0.65); z-index:10000; color:white; justify-content:center; align-items:center; 
+            flex-direction:column; text-align:center; padding:20px; box-sizing:border-box; 
+            backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+        }
+        /* 離席中画面の背景スライドショー */
+        #client-disconnect-bg {
+            position: absolute; top:0; left:0; right:0; bottom:0; z-index:-1;
+            background-size: cover; background-position: center; 
+            filter: brightness(0.6); transition: background-image 1.5s ease-in-out;
+        }
+
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-30px); } }
-        .away-icon-anim { font-size:8rem; margin-bottom:30px; animation: bounce 2.5s infinite cubic-bezier(0.25, 0.1, 0.25, 1); }
+        .away-icon-anim { font-size:8rem; margin-bottom:30px; animation: bounce 2.5s infinite cubic-bezier(0.25, 0.1, 0.25, 1); text-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        .away-text-shadow { text-shadow: 0 4px 15px rgba(0,0,0,0.8); }
         
         /* 待機中スライドショー */
         #client-slideshow { position:absolute; top:0; left:0; width:100%; height:100%; z-index:1; background:#111; display:none; justify-content:center; align-items:center; }
@@ -265,8 +275,15 @@
         <h3 style="margin-top:0; color:#1565c0; font-size:1.2rem;">📡 カスタマーディスプレイ（子機連携）</h3>
         <p style="font-size:0.85rem; color:#666; font-weight:700;">別の端末（iPadなど）をお客様用の表示画面として使えます。</p>
         
+        <div style="background:rgba(255,193,7,0.15); border-left:4px solid #FFC107; padding:12px; border-radius:8px; margin-bottom:15px;">
+            <p style="margin:0; font-size:0.85rem; color:#555; font-weight:700; line-height:1.4;">
+                💡 <strong>便利機能（自動離席モード）</strong><br>
+                連携中に親機の「🔄 離席・再接続」を押して通信を切断すると、子機は自動的に<strong>「離席中」</strong>画面に切り替わります。親機で再度起動すると、自動的に連携が復旧します！トイレ休憩などに活用してください。
+            </p>
+        </div>
+
         <div style="display:flex; gap:10px; margin-bottom:15px;">
-            <button id="btn-host" onclick="startHostMode()" style="flex:1; background:var(--accent-color); color:white; padding:15px; font-weight:900; font-size:1.1rem; border-radius:14px; box-shadow: 0 4px 12px rgba(233,30,99,0.3); transition:all 0.3s;">📱 親機を起動</button>
+            <button id="btn-host" onclick="startHostMode()" style="flex:1; background:var(--accent-color); color:white; padding:15px; font-weight:900; font-size:1.1rem; border-radius:14px; box-shadow: 0 4px 12px rgba(233,30,99,0.3);">📱 親機を起動</button>
             <button onclick="startClientMode()" style="flex:1; background:#4CAF50; color:white; padding:15px; font-weight:900; font-size:1.1rem; border-radius:14px; box-shadow: 0 4px 12px rgba(76,175,80,0.3);">📺 子機になる</button>
         </div>
         <div id="sync-status" style="font-size:1rem; font-weight:900; color:#555; text-align:center; margin-bottom:20px; background:rgba(0,0,0,0.05); padding:10px; border-radius:10px;">未接続</div>
@@ -282,7 +299,7 @@
         <input type="file" id="setting-away-custom-img" accept="image/*" onchange="loadAwayCustomImage(this)" style="margin-bottom:10px; font-size:0.8rem;">
         <div id="away-image-preview" style="height:60px; margin-bottom:10px;"></div>
 
-        <h4 style="margin:20px 0 10px 0; font-size:1rem; border-top:1px solid rgba(0,0,0,0.1); padding-top:15px;">🖼️ 待機中スライドショー画像</h4>
+        <h4 style="margin:20px 0 10px 0; font-size:1rem; border-top:1px solid rgba(0,0,0,0.1); padding-top:15px;">🖼️ 待機中（＆離席中背景）スライドショー画像</h4>
         <input type="file" accept="image/*" multiple onclick="this.value=null;" onchange="loadSlideshowImages(this)" style="border:2px dashed rgba(0,0,0,0.15); padding:10px; background:transparent; width:100%; box-sizing:border-box; border-radius:12px;">
         <div id="slideshow-preview" style="display:flex; gap:8px; overflow-x:auto; margin-top:15px; padding-bottom:10px;"></div>
         <button onclick="clearSlideshowImages()" style="background:rgba(244,67,54,0.1); color:#f44336; border:2px solid #f44336; padding:10px; border-radius:12px; font-weight:900; font-size:0.95rem; margin-top:10px; width:100%;">🗑 スライドショー画像をクリア</button>
@@ -469,14 +486,10 @@
     <button class="client-exit-btn" onclick="exitClientMode()">✖</button>
 
     <div id="client-disconnect-overlay">
-        <img id="away-slideshow-bg">
-        <div class="away-overlay-darken"></div>
-        
-        <div style="z-index:1; display:flex; flex-direction:column; align-items:center;">
-            <div id="away-icon-display" class="away-icon-anim">👨‍💼</div>
-            <h1 id="away-text-1-display" style="font-size:4rem; margin:0 0 20px 0; font-weight:900; letter-spacing:2px;">ただいま離席中です</h1>
-            <p id="away-text-2-display" style="font-size:2rem; color:#ddd; font-weight:700;">すぐに戻ります。しばらくお待ちくださいませ。</p>
-        </div>
+        <div id="client-disconnect-bg"></div>
+        <div id="away-icon-display" class="away-icon-anim">👨‍💼</div>
+        <h1 id="away-text-1-display" class="away-text-shadow" style="font-size:4rem; margin:0 0 20px 0; font-weight:900; letter-spacing:2px;">ただいま離席中です</h1>
+        <p id="away-text-2-display" class="away-text-shadow" style="font-size:2rem; color:#f0f0f0; font-weight:700;">すぐに戻ります。しばらくお待ちくださいませ。</p>
     </div>
 
     <div id="client-menu-area" style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:1; background:var(--bg-color); display:none; flex-direction:column; padding:40px; box-sizing:border-box;">
@@ -617,6 +630,7 @@
     // ★ データを絶対に消さないためのデュアル保存
     function saveData() {
         let isSuccess = false;
+        // 1. IndexedDBへの保存 (ディープコピーで参照エラー防止)
         if (db) {
             try {
                 const transaction = db.transaction(['appData'], 'readwrite');
@@ -625,10 +639,16 @@
                 isSuccess = true;
             } catch(e) { console.error("IDB Save Error:", e); }
         }
+        
+        // 2. localStorageへのバックアップ保存
         try {
             localStorage.setItem('pos_app_data_backup', JSON.stringify(appData));
             isSuccess = true;
-        } catch(e) { console.error("LocalStorage Save Error"); }
+        } catch(e) { console.error("LocalStorage Save Error (容量オーバーの可能性)"); }
+        
+        if(!isSuccess) {
+            console.error("データの保存に失敗しました");
+        }
         return isSuccess;
     }
 
@@ -1224,13 +1244,16 @@
     let isClient = false;
     const PEER_PREFIX = 'hazuki-regi-momo-'; 
 
-    // ★ 異なる通信回線（Wi-Fi / 4G等）でも繋がりやすくするため、Googleの公開STUNサーバーを複数指定
-    const peerConfig = {
+    // ★ 4G/Wi-Fi間でも繋がりやすくするため、強力な公開STUNサーバーを複数設定
+    const customPeerConfig = {
         config: {
             iceServers: [
                 { urls: 'stun:stun.l.google.com:19302' },
                 { urls: 'stun:stun1.l.google.com:19302' },
-                { urls: 'stun:stun2.l.google.com:19302' }
+                { urls: 'stun:stun2.l.google.com:19302' },
+                { urls: 'stun:stun3.l.google.com:19302' },
+                { urls: 'stun:stun4.l.google.com:19302' },
+                { urls: 'stun:stun.cloudflare.com:3478' }
             ]
         }
     };
@@ -1289,7 +1312,7 @@
     }
 
     function startHostMode() {
-        // ★ 親機稼働中にボタンが押された場合はリロードして通信をクリア（子機を離席状態へ）
+        // ★ 既に一度押されている場合はリロードで通信状態をクリアし「離席」状態にする
         if (isHost) {
             location.reload();
             return;
@@ -1300,15 +1323,16 @@
         const pin = appData.hostPin;
         const peerId = PEER_PREFIX + pin;
         
-        // ★ 親機の操作を明示的に説明
+        // ★ ボタンを離席・再接続（リロード）用に変更する
         const hostBtn = document.getElementById('btn-host');
-        hostBtn.innerHTML = `⏸️ 通信を切断（子機を「離席中」にする）`;
-        hostBtn.style.background = '#ff9800'; 
+        hostBtn.innerHTML = `🔄 離席・再接続 (リロード)`;
+        hostBtn.style.background = '#ff9800'; // 注意を引くオレンジ色に
         hostBtn.style.boxShadow = '0 4px 12px rgba(255, 152, 0, 0.3)';
 
         document.getElementById('sync-status').innerText = '接続待機中...';
         if(peer) peer.destroy();
-        peer = new Peer(peerId, peerConfig);
+        // ★ ここでカスタムのSTUN設定を適用
+        peer = new Peer(peerId, customPeerConfig);
         
         peer.on('open', (id) => {
             document.getElementById('sync-status').innerHTML = `📡 子機からの接続を待っています<br>（iPadに <span style="color:var(--accent-color); font-size:1.5em;">${pin}</span> を入力）`;
@@ -1326,19 +1350,13 @@
 
     function setupHostConnection() {
         conn.on('open', () => {
-            // ★ 離席モードの挙動がわかるように案内テキストを追加
-            document.getElementById('sync-status').innerHTML = `
-                <div style="color: #4CAF50; font-size: 1.1rem; margin-bottom: 6px;">✅ 子機(iPad)と自動連携中！</div>
-                <div style="font-size: 0.85rem; color: #666; font-weight: 700;">
-                    💡 上のオレンジのボタンを押すと、連携を一時的に解除して子機を『離席中（スライドショー）』状態にできます。<br>
-                    戻る時は再度「親機を起動」を押せば自動で再接続されます。
-                </div>
-            `;
+            document.getElementById('sync-status').innerText = '✅ 子機(iPad)と接続中！';
             syncStateToClient(); 
         });
         conn.on('close', () => { document.getElementById('sync-status').innerText = '❌ 子機が切断されました'; });
     }
 
+    // ★ 親機側の生存アピールループ
     setInterval(() => {
         if (isHost && peer) {
             if (peer.disconnected && !peer.destroyed) { peer.reconnect(); }
@@ -1411,7 +1429,8 @@
 
     function connectToHost() {
         if(peer) peer.destroy();
-        peer = new Peer(peerConfig); 
+        // ★ カスタムSTUNサーバーを使って初期化
+        peer = new Peer(customPeerConfig); 
         
         peer.on('open', () => {
             const targetId = PEER_PREFIX + targetHostPin;
@@ -1437,10 +1456,14 @@
         });
     }
 
+    // ★ 子機の接続監視＆自動復旧ループ
     setInterval(() => {
         if (isClient) {
+            // 12秒間Pingが来なければ離席とみなす
             if (Date.now() - lastPing > 12000) { 
                 showDisconnectOverlay();
+                
+                // 再接続を試みる（連打しないように5秒間隔で）
                 if (!reconnectInterval) {
                     reconnectInterval = setInterval(() => {
                         if (Date.now() - lastPing > 12000) {
@@ -1458,54 +1481,47 @@
         isClient = false;
         if(peer) peer.destroy();
         if(reconnectInterval) clearInterval(reconnectInterval);
-        stopSignageLoop(); stopAwaySlideshow();
+        stopSignageLoop();
+        stopDisconnectSlideshow();
         document.getElementById('client-display').style.display = 'none';
         try { document.exitFullscreen().catch(e=>console.log(e)); } catch(e) {}
-    }
-
-    // ★ 離席中用の背景スライドショー制御
-    let awaySlideInterval = null;
-    let awaySlideIndex = 0;
-
-    function startAwaySlideshow() {
-        if (awaySlideInterval) clearInterval(awaySlideInterval);
-        const imgEl = document.getElementById('away-slideshow-bg');
-        const images = clientData.slideshowImages || [];
-        
-        if (images.length === 0) {
-            imgEl.style.opacity = 0;
-            return;
-        }
-        
-        awaySlideIndex = 0;
-        const showNext = () => {
-            imgEl.style.opacity = 0;
-            setTimeout(() => {
-                imgEl.src = images[awaySlideIndex];
-                imgEl.style.opacity = 0.5; // 少し暗くして文字を目立たせる
-                awaySlideIndex = (awaySlideIndex + 1) % images.length;
-            }, 1000); // フェードインの余裕を持たせる
-        };
-        showNext();
-        awaySlideInterval = setInterval(showNext, 6000);
-    }
-
-    function stopAwaySlideshow() {
-        if (awaySlideInterval) clearInterval(awaySlideInterval);
-        document.getElementById('away-slideshow-bg').style.opacity = 0;
     }
 
     function showDisconnectOverlay() { 
         document.getElementById('client-disconnect-overlay').style.display = 'flex'; 
         stopSignageLoop();
-        startAwaySlideshow();
+        startDisconnectSlideshow();
     }
-    
     function hideDisconnectOverlay() { 
         document.getElementById('client-disconnect-overlay').style.display = 'none'; 
-        stopAwaySlideshow();
+        stopDisconnectSlideshow();
         if(!clientData.cart || clientData.cart.length === 0) runSignageLoop();
     }
+
+    // --- 子機の離席中画面 背景スライドショー ---
+    let disconnectSlideInterval = null;
+    let disconnectSlideIndex = 0;
+
+    function startDisconnectSlideshow() {
+        if (disconnectSlideInterval) clearInterval(disconnectSlideInterval);
+        const bgEl = document.getElementById('client-disconnect-bg');
+        // 子機側が保持している設定データを使う
+        if (clientData && clientData.slideshowImages && clientData.slideshowImages.length > 0) {
+            bgEl.style.backgroundImage = `url(${clientData.slideshowImages[disconnectSlideIndex]})`;
+            disconnectSlideInterval = setInterval(() => {
+                disconnectSlideIndex = (disconnectSlideIndex + 1) % clientData.slideshowImages.length;
+                bgEl.style.backgroundImage = `url(${clientData.slideshowImages[disconnectSlideIndex]})`;
+            }, 6000); // 離席中の背景切り替えは6秒ごと
+        } else {
+            bgEl.style.backgroundImage = 'none';
+        }
+    }
+    function stopDisconnectSlideshow() {
+        if (disconnectSlideInterval) clearInterval(disconnectSlideInterval);
+        disconnectSlideInterval = null;
+        document.getElementById('client-disconnect-bg').style.backgroundImage = 'none';
+    }
+
 
     // --- 子機の画面制御 ---
     let clientData = {};
@@ -1551,7 +1567,7 @@
                 document.getElementById('client-checkout-area').style.display = 'none';
                 document.getElementById('client-thanks').style.opacity = '0';
                 document.getElementById('client-thanks').style.transform = 'translateY(20px)';
-                clientData.cart = []; 
+                clientData.cart = [];
                 signageMode = 'menu';
                 runSignageLoop();
             }, 5000);
@@ -1582,7 +1598,9 @@
         
         if(c.length === 0) {
             document.getElementById('client-cart-area').style.display = 'none';
-            if(!signageTimeout) { signageMode = 'menu'; runSignageLoop(); }
+            if(!signageTimeout && document.getElementById('client-disconnect-overlay').style.display === 'none') { 
+                signageMode = 'menu'; runSignageLoop(); 
+            }
         } else {
             stopSignageLoop();
             document.getElementById('client-menu-area').style.display = 'none';
@@ -1612,6 +1630,7 @@
         }
     }
 
+    // ★ 自動お品書き＆スライドのローテーション
     function runSignageLoop() {
         clearTimeout(signageTimeout);
         if(clientData.cart && clientData.cart.length > 0) return; 
