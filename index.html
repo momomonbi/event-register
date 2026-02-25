@@ -62,7 +62,7 @@
 
         /* 極上のすりガラス効果 */
         .glass-card { background: var(--card-bg); backdrop-filter: blur(28px) saturate(160%); -webkit-backdrop-filter: blur(28px) saturate(160%); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); border: 1px solid rgba(255, 255, 255, 0.6); border-radius: 20px; }
-        .accent-glass { background: var(--accent-color); opacity: 0.9; backdrop-filter: blur(24px) saturate(150%); -webkit-backdrop-filter: blur(24px) saturate(150%); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 24px; color: white; }
+        .accent-glass { background: color-mix(in srgb, var(--accent-color) 80%, transparent); backdrop-filter: blur(24px) saturate(150%); -webkit-backdrop-filter: blur(24px) saturate(150%); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 24px; color: white; }
 
         button { touch-action: manipulation; font-family: inherit; cursor: pointer; border: none; border-radius: 14px; transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s; }
         button:active { transform: scale(0.92); }
@@ -76,7 +76,7 @@
         .preset-btn.primary { background-color: #FFC107; color: #333; }
         .preset-btn.danger { background-color: #f44336; color: white; padding: 12px 16px; font-size: 1.1rem;}
 
-        /* タブ（スクロール固定復活） */
+        /* タブ（スクロール固定） */
         .tabs { position: sticky; display: flex; background-color: var(--tab-bg); top: 10px; z-index: 110; box-shadow: 0 8px 32px rgba(0,0,0,0.08); margin: 0 15px 10px 15px; border-radius: 24px; padding: 6px; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.6); }
         .tab { flex: 1; text-align: center; padding: 12px 0; color: var(--text-color); opacity: 0.6; font-weight: 900; font-size: 0.9rem; white-space: nowrap; border-radius: 18px; cursor: pointer; position: relative; z-index: 2; transition: color 0.3s; }
         .tab.active { opacity: 1; color: var(--tab-active-color); }
@@ -250,6 +250,7 @@
             <label>商品画像を選択：</label>
             <img id="edit-image-preview" style="display:none; width: 80px; height: 80px; object-fit: contain; margin-bottom: 10px; border-radius:12px; background:#fff; box-shadow:0 2px 8px rgba(0,0,0,0.1);">
             <input type="file" id="itemImage" accept="image/*" style="border:none; padding:5px 0; background:transparent;" onclick="this.value=null;">
+            <div id="image-hint" style="display:none; font-size:0.8rem; color:#888; margin-top:5px;">※変更しない場合は選択不要です</div>
         </div>
         
         <button class="save-btn" id="save-product-btn" onclick="addNewItem()">✨ この内容で登録する</button>
@@ -443,7 +444,7 @@
 
 <script>
     // ==========================================
-    // 🚀 【完全復旧＆安定化】データ保存システム
+    // 🚀 【完全復旧＆超・安定化】データ保存システム
     // ==========================================
     const DB_NAME = 'HazukiRegiDB';
     const DB_VERSION = 1;
@@ -512,7 +513,6 @@
             appData.currentEventId = initialId;
         }
         
-        // ★ イベントIDの不整合バグを自動修復
         let currentEv = null;
         for (let i = 0; i < appData.events.length; i++) {
             if (appData.events[i].id == appData.currentEventId) currentEv = appData.events[i];
@@ -556,8 +556,11 @@
         saveData(); 
     }
 
+    // ★ データを絶対に消さないための「スマート・デュアル保存」
     function saveData() {
         let isSuccess = false;
+        
+        // 1. IndexedDBに完全なデータを保存（画像含む）
         if (db) {
             try {
                 const transaction = db.transaction(['appData'], 'readwrite');
@@ -567,8 +570,12 @@
             } catch(e) {}
         }
         
-        // ★ 画像を含めない「超・軽量バックアップ」でクラッシュを完全に防ぐ
+        // 2. localStorageには「画像を除いた軽量バックアップ」だけを保存し、クラッシュを完全防止
         try {
+            // ★ 過去の巨大なゴミデータが残っていたら破壊して容量を空ける
+            localStorage.removeItem('pos_app_data');
+            localStorage.removeItem('pos_app_data_backup');
+            
             let safeSignage = {};
             if (appData.signageSettings) {
                 safeSignage.awayText1 = appData.signageSettings.awayText1;
@@ -588,6 +595,7 @@
                     return {
                         id: ev.id, name: ev.name, history: ev.history,
                         items: ev.items.map(item => {
+                            // 画像は null にして文字データだけを確実に保護
                             return { id: item.id, name: item.name, price: item.price, stock: item.stock, image: null };
                         })
                     };
@@ -634,8 +642,8 @@
     function hardResetApp() {
         if(confirm("【⚠️警告】\nすべてのデータを完全に消去して初期状態に戻します。\n本当に実行しますか？")) {
             if(confirm("本当に消去してよろしいですか？（取り消せません）")) {
-                if(db) {
-                    try { indexedDB.deleteDatabase(DB_NAME); } catch(e){}
+                if(window.indexedDB) {
+                    try { window.indexedDB.deleteDatabase(DB_NAME); } catch(e){}
                 }
                 localStorage.removeItem('pos_app_data_backup');
                 localStorage.removeItem('pos_app_data_light_backup');
@@ -780,6 +788,7 @@
         closePriceModal();
     }
 
+    // ★ 商品登録（フリーズバグを完全解消）
     function addNewItem() {
         try {
             const nEl = document.getElementById('itemName');
@@ -816,7 +825,10 @@
                 } else {
                     ev.items.push({ id: Date.now(), name: n, price: p, stock: s, image: img || 'https://placehold.co/200x200/e0e0e0/666666?text=No+Image' });
                 }
-                saveData(); renderAll(); cancelEdit(); alert('✅ 保存しました！');
+                saveData(); 
+                renderAll(); 
+                cancelEdit(); 
+                alert('✅ 保存しました！');
                 syncStateToClient(); 
             };
 
@@ -837,8 +849,13 @@
                 };
                 r.onerror = () => { alert("⚠️ ファイルの読み込みに失敗しました。"); finalize(null); };
                 r.readAsDataURL(f.files[0]);
-            } else { finalize(null); }
-        } catch (error) { console.error(error); alert("⚠️ エラーが発生しました"); }
+            } else { 
+                finalize(null); 
+            }
+        } catch (error) { 
+            console.error(error); 
+            alert("⚠️ 予期せぬエラーが発生しました。"); 
+        }
     }
 
     function startEdit(id) {
@@ -856,7 +873,10 @@
         
         const preview = document.getElementById('edit-image-preview');
         preview.src = item.image; preview.style.display = 'block';
-        document.getElementById('image-hint').style.display = 'block';
+        
+        // ★ バグの原因だった「null操作」を防止
+        const hint = document.getElementById('image-hint');
+        if (hint) hint.style.display = 'block';
 
         document.getElementById('form-title').innerText = "✏️ 商品編集";
         document.getElementById('save-product-btn').innerText = "💾 変更を保存する";
@@ -867,7 +887,12 @@
     function cancelEdit() {
         document.getElementById('itemName').value = ''; document.getElementById('itemPrice').value = ''; document.getElementById('itemPriceDisplay').value = '';
         document.getElementById('itemStock').value = ''; document.getElementById('edit-item-id').value = ''; document.getElementById('itemImage').value = '';
-        document.getElementById('edit-image-preview').style.display = 'none'; document.getElementById('image-hint').style.display = 'none';
+        document.getElementById('edit-image-preview').style.display = 'none'; 
+        
+        // ★ バグの原因だった「null操作」を防止
+        const hint = document.getElementById('image-hint');
+        if (hint) hint.style.display = 'none';
+        
         document.getElementById('form-title').innerText = "📦 商品登録";
         document.getElementById('save-product-btn').innerText = "✨ この内容で登録する"; document.getElementById('cancel-edit-btn').style.display = "none";
     }
@@ -1290,7 +1315,7 @@
                     ctx.drawImage(img, 0, 0, c.width, c.height);
                     let ev = null;
                     for (let i = 0; i < appData.events.length; i++) { if (appData.events[i].id == appData.currentEventId) ev = appData.events[i]; }
-                    ev.mapImage = c.toDataURL('image/jpeg', 0.8);
+                    if(ev) ev.mapImage = c.toDataURL('image/jpeg', 0.8);
                     saveData(); renderMap(); resetMap();
                 };
                 img.src = e.target.result;
@@ -1303,7 +1328,8 @@
         if(confirm("マップ画像を削除しますか？\n※配置したピンもすべて消えます")){
             let ev = null;
             for (let i = 0; i < appData.events.length; i++) { if (appData.events[i].id == appData.currentEventId) ev = appData.events[i]; }
-            ev.mapImage = null; ev.pins = []; saveData(); renderMap();
+            if(ev) { ev.mapImage = null; ev.pins = []; }
+            saveData(); renderMap();
         }
     }
 
@@ -1449,6 +1475,7 @@
     function savePin() {
         let ev = null;
         for (let i = 0; i < appData.events.length; i++) { if (appData.events[i].id == appData.currentEventId) ev = appData.events[i]; }
+        if(!ev) return;
         const id = parseInt(document.getElementById('pin-id').value);
         const x = parseFloat(document.getElementById('pin-x').value); const y = parseFloat(document.getElementById('pin-y').value);
         const booth = document.getElementById('pin-booth').value; const author = document.getElementById('pin-author').value; const memo = document.getElementById('pin-memo').value;
@@ -1468,6 +1495,7 @@
         const id = parseInt(document.getElementById('pin-id').value);
         let ev = null;
         for (let i = 0; i < appData.events.length; i++) { if (appData.events[i].id == appData.currentEventId) ev = appData.events[i]; }
+        if(!ev) return;
         const newPins = [];
         for(let i=0; i<ev.pins.length; i++) { if(ev.pins[i].id !== id) newPins.push(ev.pins[i]); }
         ev.pins = newPins;
