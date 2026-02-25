@@ -104,6 +104,7 @@
         .checkout-btn { background-color: var(--btn-checkout); color: white; padding: 16px; font-size: 1.3rem; font-weight: 900; width: 100%; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);}
         .checkout-btn:disabled { background-color: #ddd; color: #888; box-shadow: none;}
         .total-amount-display { font-weight: 900; font-size: 2.6rem; color: #333; line-height: 1; letter-spacing: -1px;}
+
         .grid-selector { padding: 0 10px; font-size: 1.1rem; font-weight: 900; border: none; border-radius: 16px; background: rgba(0,0,0,0.08); color: var(--text-color); cursor: pointer; text-align: center; width: 85px;}
 
         /* 設定・分析等 */
@@ -131,7 +132,7 @@
         .money-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; }
         .money-btn { background: #e3f2fd; color: #1565c0; padding: 18px 5px; font-size: 1.1rem; font-weight: 900; border-radius: 14px;}
         .tender-input { width: 100%; padding: 16px; font-size: 2rem; font-weight: 900; text-align: right; border: 3px solid var(--btn-checkout); border-radius: 16px; box-sizing: border-box; background: #fff;}
-        .change-box { background: #fff0f5; padding: 10px; border-radius: 16px; text-align: center; margin-bottom: 20px; border: 3px dashed var(--accent-color); }
+        .change-box { background: #fff0f5; padding: 15px; border-radius: 16px; text-align: center; margin-bottom: 20px; border: 3px dashed var(--accent-color); }
         .change-val { font-size: 2.6rem; font-weight: 900; color: var(--accent-color); line-height: 1; margin-top: 5px;}
         
         @keyframes popValue { 0% { transform: scale(1); } 50% { transform: scale(1.15); color: var(--accent-color); } 100% { transform: scale(1); } }
@@ -161,7 +162,6 @@
         
         #client-checkout-area { position:absolute; top:0; left:0; width:100%; height:100%; z-index:3; background:var(--bg-color); display:none; flex-direction:column; justify-content:center; align-items:center; padding:20px; box-sizing:border-box; }
         
-        /* ★ 子機終了ボタン（上に上げて被らないように修正） */
         .client-exit-btn { position:absolute; bottom:140px; right:30px; z-index:20000; background:rgba(0,0,0,0.15); color:#333; border-radius:50%; width:60px; height:60px; font-size:2rem; opacity:0.4; display:flex; align-items:center; justify-content:center; transition:opacity 0.2s; border: 2px solid rgba(255,255,255,0.5);}
         .client-exit-btn:active { opacity:1; }
     </style>
@@ -438,7 +438,7 @@
                 <span style="color:#666;">お釣り</span><span style="color:#f44336;">¥<span id="client-change">0</span></span>
             </div>
         </div>
-        <div id="client-thanks" style="font-size:3.5rem; font-weight:900; color:var(--accent-color); margin-top:50px; opacity:0; transition:opacity 0.6s, transform 0.6s; transform:translateY(20px); text-align:center;">ありがとうございました！<br>✨</div>
+        <div id="client-thanks" style="font-size:3.5rem; font-weight:900; color:var(--accent-color); margin-top:50px; opacity:0; transition:opacity 0.6s, transform 0.6s; transform:translateY(20px); text-align:center;">お買い上げ<br>ありがとうございました！✨</div>
     </div>
 </div>
 
@@ -498,9 +498,7 @@
     function recoverFromLocalStorage() {
         const backup = localStorage.getItem('pos_app_data_backup') || localStorage.getItem('pos_app_data');
         if (backup) {
-            try {
-                appData = JSON.parse(backup);
-            } catch(e) { /* ignore */ }
+            try { appData = JSON.parse(backup); } catch(e) { /* ignore */ }
         }
     }
 
@@ -514,11 +512,6 @@
             if (!ev.history) ev.history = []; if (!ev.items) ev.items = [];
         });
         
-        if(!appData.hostPin) {
-            appData.hostPin = Math.floor(1000 + Math.random() * 9000).toString();
-        }
-        
-        document.getElementById('btn-host').innerHTML = `📱 親機を起動 (PIN: ${appData.hostPin})`;
         loadSignageSettingsUI();
         renderSlideshowPreview();
         
@@ -830,16 +823,21 @@
         const ev = appData.events.find(e => e.id == appData.currentEventId);
         const item = ev.items.find(i => i.id === itemId);
         cart.push(item); updateCartButton();
-        flyToCart(event, () => syncCartTotalAnimated());
+        
+        // ★ 最初の商品でも瞬時に計算して子機に送るための処理
+        displayedTotal = cart.reduce((s,i)=>s+i.price, 0); 
+        syncCartTotalInstant(); 
+        syncStateToClient(); // ★ ここで即座に送信
+        
+        flyToCart(event);
         renderPos(); if(navigator.vibrate) navigator.vibrate(50);
-        syncStateToClient(); // ★ 商品追加時に即時同期
     }
 
-    function flyToCart(event, callback) {
+    function flyToCart(event) {
         const itemContainer = event.currentTarget || event.target.closest('.item');
         const img = itemContainer ? itemContainer.querySelector('img') : null;
         const btn = document.getElementById('checkout-btn');
-        if (!img || !btn) { if(callback) callback(); return; }
+        if (!img || !btn) return;
 
         const rect = img.getBoundingClientRect(); const target = btn.getBoundingClientRect();
         const flier = document.createElement('div');
@@ -850,7 +848,7 @@
             flier.style.left = (target.left + target.width/2) + 'px'; flier.style.top = (target.top + target.height/2) + 'px';
             flier.style.width = '20px'; flier.style.height = '20px'; flier.style.opacity = '0'; flier.style.transform = 'translate(-50%, -50%) rotate(360deg)';
         }, 10);
-        setTimeout(() => { flier.remove(); btn.style.transform = 'scale(1.05)'; setTimeout(() => btn.style.transform = 'scale(1)', 100); if(callback) callback(); }, 400);
+        setTimeout(() => { flier.remove(); btn.style.transform = 'scale(1.05)'; setTimeout(() => btn.style.transform = 'scale(1)', 100); }, 400);
     }
 
     function animateValue(obj, start, end, duration) {
@@ -891,12 +889,17 @@
         b.innerText = cart.length ? "会計へ進む (" + cart.length + ")" : "会計へ進む"; 
     }
     
-    // ★ 戻すときの切ないアニメーション
     function undoLastCartItem() { 
         if(cart.length){ 
             const removedItem = cart.pop(); 
-            updateCartButton(); syncCartTotalAnimated(); renderPos(); 
+            updateCartButton(); 
+            
+            // ★ 即座に計算して送信
+            displayedTotal = cart.reduce((s,i)=>s+i.price, 0); 
+            syncCartTotalInstant(); 
             syncStateToClient(); 
+            
+            renderPos(); 
             
             const btn = document.querySelector('.action-btn'); 
             const btnRect = btn.getBoundingClientRect();
@@ -909,7 +912,6 @@
             }
 
             const flier = document.createElement('div');
-            // ★ 色あせながらフラフラ戻る
             flier.style.cssText = `position:fixed; left:${btnRect.left + btnRect.width/2}px; top:${btnRect.top}px; width:40px; height:40px; background-image:url(${removedItem.image}); background-size:contain; background-repeat:no-repeat; background-position:center; z-index:9999; pointer-events:none; transition:all 1.2s cubic-bezier(0.25, 0.1, 0.25, 1); transform:translate(-50%, -50%); opacity: 0.8; filter: grayscale(30%) sepia(20%); border-radius: 8px;`;
             document.body.appendChild(flier);
             
@@ -958,10 +960,13 @@
     function modifyQty(id, delta) {
         if(delta > 0) { const it = appData.events.find(e=>e.id==appData.currentEventId).items.find(x=>x.id==id); cart.push(it); }
         else { for(let i=cart.length-1; i>=0; i--) if(cart[i].id==id){ cart.splice(i,1); break; } }
-        renderPos(); updateCartButton(); syncCartTotalInstant(); syncStateToClient();
+        renderPos(); updateCartButton(); 
+        displayedTotal = cart.reduce((s,i)=>s+i.price, 0); 
+        syncCartTotalInstant(); 
+        syncStateToClient();
         if(!cart.length) closeCartModal(); else renderCartModalItems();
     }
-    function clearCart() { if(confirm('空にしますか？')){ cart=[]; updateCartButton(); syncCartTotalInstant(); renderPos(); closeCartModal(); syncStateToClient(); } }
+    function clearCart() { if(confirm('空にしますか？')){ cart=[]; updateCartButton(); displayedTotal=0; syncCartTotalInstant(); renderPos(); closeCartModal(); syncStateToClient(); } }
 
     function openCheckoutModal() {
         currentCheckoutTotal = cart.reduce((s,i)=>s+i.price, 0);
@@ -1019,11 +1024,11 @@
         const detail = Object.entries(map).map(([n,c]) => c>1 ? n+"x"+c : n).join(', ');
         ev.history.unshift({ id:Date.now(), time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}), detail, total:currentCheckoutTotal });
         cart.forEach(ci => { const i = ev.items.find(x=>x.id==ci.id); if(i) i.stock--; });
-        saveData(); closeCheckoutModal(); cart=[]; updateCartButton(); syncCartTotalInstant(); renderAll();
+        saveData(); closeCheckoutModal(); cart=[]; updateCartButton(); displayedTotal=0; syncCartTotalInstant(); renderAll();
         if(navigator.vibrate) navigator.vibrate([100, 50, 100]); 
         
         sendSyncData('checkout_done', {});
-        // ★ お会計完了から5秒後にサイネージに戻る
+        // ★ 5秒後にサイネージへ戻す
         setTimeout(() => { syncStateToClient(); }, 5000); 
     }
 
@@ -1216,10 +1221,11 @@
         
         if(!initPeer()) return;
         isHost = true;
-        const pin = appData.hostPin;
+        
+        // ★ ID被りを防ぐため、起動時に新しいPINを発行
+        const pin = Math.floor(1000 + Math.random() * 9000).toString();
         const peerId = PEER_PREFIX + pin;
         
-        // ★ ボタンを「終了（リロード）」に変化させる
         const btn = document.getElementById('btn-host');
         btn.innerHTML = `📱 親機を終了 (リロード)`;
         btn.style.background = '#f44336';
@@ -1227,21 +1233,34 @@
         
         document.getElementById('sync-status').innerText = '接続待機中...';
         if(peer) peer.destroy();
-        peer = new Peer(peerId);
         
-        peer.on('open', (id) => {
-            document.getElementById('sync-status').innerHTML = `📡 子機からの接続を待っています<br>（iPadに <span style="color:var(--accent-color); font-size:1.5em;">${pin}</span> を入力）`;
-        });
-        
-        peer.on('connection', (connection) => {
-            conn = connection;
-            setupHostConnection();
-        });
-        
-        peer.on('disconnected', () => {
-            // テザリング切断等でシグナルサーバーから切れたら再接続
-            if (isHost && !peer.destroyed) peer.reconnect();
-        });
+        setTimeout(() => {
+            peer = new Peer(peerId);
+            
+            peer.on('open', (id) => {
+                document.getElementById('sync-status').innerHTML = `📡 子機からの接続を待っています<br>（iPadに <span style="color:var(--accent-color); font-size:1.5em;">${pin}</span> を入力）`;
+            });
+            
+            peer.on('connection', (connection) => {
+                conn = connection;
+                setupHostConnection();
+            });
+            
+            peer.on('disconnected', () => {
+                if (isHost && !peer.destroyed) peer.reconnect();
+            });
+
+            peer.on('error', (err) => {
+                console.error(err);
+                if (err.type === 'unavailable-id') {
+                    // もし偶然IDが被ったら再試行
+                    isHost = false;
+                    startHostMode();
+                } else {
+                    document.getElementById('sync-status').innerHTML = `❌ 通信エラー<br><button onclick="location.reload()" style="padding:5px 10px; margin-top:5px; border-radius:4px;">リロード</button>`;
+                }
+            });
+        }, 100);
     }
 
     function setupHostConnection() {
@@ -1264,12 +1283,13 @@
         if(conn && conn.open) { conn.send({ type, payload }); }
     }
 
-    // ★ 全データを子機へ送る（計算のズレをなくすため実際の小計を送る）
+    // ★ 全データを子機へ送る
     function syncStateToClient() {
         if(!conn || !conn.open) return;
         const ev = appData.events.find(e => e.id == appData.currentEventId);
         if(!ev) return;
         
+        // ★ 実際の小計を確実に送る
         const actualTotal = cart.reduce((s,i)=>s+i.price, 0);
 
         sendSyncData('full_state', {
@@ -1332,30 +1352,37 @@
 
     function connectToHost() {
         if(peer) peer.destroy();
-        peer = new Peer(); 
         
-        peer.on('open', () => {
-            const targetId = PEER_PREFIX + targetHostPin;
-            conn = peer.connect(targetId, { reliable: true });
-            
-            conn.on('open', () => {
-                hideDisconnectOverlay();
-                lastPing = Date.now();
-                if(reconnectInterval) { clearInterval(reconnectInterval); reconnectInterval = null; }
-            });
-            
-            conn.on('data', (data) => {
-                if(data.type === 'ping') {
+        setTimeout(() => {
+            peer = new Peer(); 
+            peer.on('open', () => {
+                const targetId = PEER_PREFIX + targetHostPin;
+                conn = peer.connect(targetId, { reliable: true });
+                
+                conn.on('open', () => {
+                    hideDisconnectOverlay();
                     lastPing = Date.now();
-                    if(document.getElementById('client-disconnect-overlay').style.display !== 'none') {
-                        hideDisconnectOverlay();
+                    if(reconnectInterval) { clearInterval(reconnectInterval); reconnectInterval = null; }
+                });
+                
+                conn.on('data', (data) => {
+                    if(data.type === 'ping') {
+                        lastPing = Date.now();
+                        if(document.getElementById('client-disconnect-overlay').style.display !== 'none') {
+                            hideDisconnectOverlay();
+                        }
+                        return;
                     }
-                    return;
-                }
-                handleClientData(data);
+                    handleClientData(data);
+                });
+                conn.on('close', () => { showDisconnectOverlay(); });
+                conn.on('error', (err) => { console.error(err); });
             });
-            conn.on('close', () => { showDisconnectOverlay(); });
-        });
+            peer.on('error', (err) => { 
+                console.error(err); 
+                showDisconnectOverlay();
+            });
+        }, 100);
     }
 
     // 子機の接続監視＆自動復旧ループ
@@ -1492,6 +1519,7 @@
                 </div>`;
             });
             
+            // ★ 即座に小計をアニメーション更新
             animateValue(document.getElementById('client-subtotal'), parseInt(document.getElementById('client-subtotal').innerText.replace(/,/g, '')) || 0, t, 500);
         }
     }
