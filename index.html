@@ -13,12 +13,13 @@
             --tab-active-bg: #007aff; --tab-active-color: #fff;
             --card-bg: rgba(255, 255, 255, 0.35); --text-color: #333; --btn-checkout: #007aff;
             --app-font: 'Zen Maru Gothic', sans-serif;
-            --grid-cols: 2;
+            --grid-cols: 2; /* 列数の初期値 */
         }
         [data-theme="cute"] {
             --bg-color: #fff0f5; --header-bg: rgba(255, 182, 193, 0.85); --tab-bg: rgba(255,255,255,0.4); --accent-color: #ff69b4;
             --tab-active-bg: #ff69b4; --tab-active-color: #fff;
             --card-bg: rgba(255, 255, 255, 0.4); --text-color: #5d4037; --btn-checkout: #ff69b4;
+            --app-font: 'Zen Maru Gothic', sans-serif; 
         }
         [data-theme="chocolate"] {
             --bg-color: #f3e5f5; --header-bg: rgba(78, 52, 46, 0.85); --tab-bg: rgba(255,255,255,0.3); --accent-color: #8d6e63;
@@ -30,6 +31,7 @@
             --bg-color: #f1f8e9; --header-bg: rgba(85, 139, 47, 0.85); --tab-bg: rgba(255,255,255,0.4); --accent-color: #7cb342;
             --tab-active-bg: #7cb342; --tab-active-color: #fff;
             --card-bg: rgba(255, 255, 255, 0.4); --text-color: #2e7d32; --btn-checkout: #689f38;
+            --app-font: 'Zen Maru Gothic', sans-serif;
         }
         [data-theme="visibility"] {
             --bg-color: #f5f5f5; --header-bg: rgba(34, 34, 34, 0.95); --tab-bg: rgba(255,255,255,0.8); --accent-color: #ffeb3b;
@@ -47,37 +49,85 @@
             --bg-color: #e0f7fa; --header-bg: rgba(2, 136, 209, 0.85); --tab-bg: rgba(255,255,255,0.3); --accent-color: #26c6da;
             --tab-active-bg: #26c6da; --tab-active-color: #fff;
             --card-bg: rgba(255, 255, 255, 0.4); --text-color: #006064; --btn-checkout: #00acc1;
+            --app-font: 'Zen Maru Gothic', sans-serif;
         }
 
         /* --- 全体レイアウト --- */
         body { 
-            font-family: var(--app-font); margin: 0; padding: 0; background-color: transparent; 
-            color: var(--text-color); padding-bottom: 160px; touch-action: manipulation; 
+            font-family: var(--app-font); margin: 0; padding: 0; 
+            background-color: transparent; 
+            color: var(--text-color); padding-bottom: 160px; 
+            touch-action: manipulation; 
         }
-        #bg-color-layer { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -2; background-color: var(--bg-color); transition: background-color 0.4s; }
-        #app-background { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; background-size: cover; background-position: center; background-repeat: no-repeat; opacity: 0.4; pointer-events: none; }
+        
+        #bg-color-layer {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -2;
+            background-color: var(--bg-color); transition: background-color 0.4s;
+        }
+
+        #app-background {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1;
+            background-size: cover; background-position: center; background-repeat: no-repeat;
+            opacity: 0.4; pointer-events: none;
+        }
 
         /* 極上のすりガラス効果 */
-        .glass-card { background: var(--card-bg); backdrop-filter: blur(28px) saturate(160%); -webkit-backdrop-filter: blur(28px) saturate(160%); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); border: 1px solid rgba(255, 255, 255, 0.6); border-radius: 20px; }
-        .accent-glass { background: color-mix(in srgb, var(--accent-color) 80%, transparent); backdrop-filter: blur(24px) saturate(150%); -webkit-backdrop-filter: blur(24px) saturate(150%); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 24px; color: white; }
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(28px) saturate(160%); -webkit-backdrop-filter: blur(28px) saturate(160%);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.6); border-radius: 20px;
+        }
+        .accent-glass {
+            background: color-mix(in srgb, var(--accent-color) 80%, transparent);
+            backdrop-filter: blur(24px) saturate(150%); -webkit-backdrop-filter: blur(24px) saturate(150%);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 24px; color: white;
+        }
 
-        button { touch-action: manipulation; font-family: inherit; cursor: pointer; border: none; border-radius: 14px; transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s; }
+        button { 
+            touch-action: manipulation; font-family: inherit; cursor: pointer; border: none; 
+            border-radius: 14px; transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s; 
+        }
         button:active { transform: scale(0.92); }
         input, select { font-family: inherit; }
 
         /* ヘッダー */
-        .preset-header { background-color: var(--header-bg); padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; gap: 8px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); z-index: 101; position: relative; margin-bottom: 8px; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); }
-        .preset-header select { flex-grow: 1; padding: 12px; border-radius: 14px; font-size: 1rem; border: none; font-weight: 900; background: rgba(255,255,255,0.95); color: #333; box-shadow: 0 2px 10px rgba(0,0,0,0.05); min-width: 0; }
+        .preset-header { 
+            background-color: var(--header-bg); padding: 12px 15px; display: flex; justify-content: space-between; 
+            align-items: center; gap: 8px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08); z-index: 101; position: relative; margin-bottom: 8px;
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+        }
+        .preset-header select { 
+            flex-grow: 1; padding: 12px; border-radius: 14px; font-size: 1rem; border: none; 
+            font-weight: 900; background: rgba(255,255,255,0.95); color: #333; box-shadow: 0 2px 10px rgba(0,0,0,0.05); min-width: 0;
+        }
         .preset-btns { display: flex; gap: 6px; flex-shrink: 0; }
         .preset-btn { background-color: rgba(0,0,0,0.15); color: #333; padding: 12px 14px; font-weight: 900; font-size: 0.9rem; }
         .preset-btn.primary { background-color: #FFC107; color: #333; }
         .preset-btn.danger { background-color: #f44336; color: white; padding: 12px 16px; font-size: 1.1rem;}
 
         /* タブ */
-        .tabs { position: relative; display: flex; background-color: var(--tab-bg); top: 0; z-index: 100; box-shadow: 0 8px 32px rgba(0,0,0,0.08); margin: 0 15px 10px 15px; border-radius: 24px; padding: 6px; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.6); }
-        .tab { flex: 1; text-align: center; padding: 12px 0; color: var(--text-color); opacity: 0.6; font-weight: 900; font-size: 0.9rem; white-space: nowrap; border-radius: 18px; cursor: pointer; position: relative; z-index: 2; transition: color 0.3s; }
+        .tabs { 
+            position: relative; display: flex; background-color: var(--tab-bg); 
+            top: 0; z-index: 100; box-shadow: 0 8px 32px rgba(0,0,0,0.08); 
+            margin: 0 15px 10px 15px; border-radius: 24px; padding: 6px; 
+            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255,255,255,0.6);
+        }
+        .tab { 
+            flex: 1; text-align: center; padding: 12px 0; color: var(--text-color); opacity: 0.6;
+            font-weight: 900; font-size: 0.9rem; white-space: nowrap; border-radius: 18px; 
+            cursor: pointer; position: relative; z-index: 2; transition: color 0.3s;
+        }
         .tab.active { opacity: 1; color: var(--tab-active-color); }
-        .tab-highlight { position: absolute; top: 6px; bottom: 6px; left: 6px; width: 0; background: var(--tab-active-bg); border-radius: 18px; z-index: 1; transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
+        .tab-highlight {
+            position: absolute; top: 6px; bottom: 6px; left: 6px; width: 0;
+            background: var(--tab-active-bg); border-radius: 18px; z-index: 1;
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
         
         @keyframes tabFadeIn { 0% { opacity: 0; transform: translateY(40px) scale(0.97); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
         .tab-content { display: none; padding: 0 15px; }
@@ -95,24 +145,36 @@
         .sold-out { position: absolute; top:0; left:0; right:0; bottom:0; background: rgba(255,255,255,0.85); display:flex; align-items:center; justify-content:center; font-weight:900; color:#f44336; font-size:1.4rem; pointer-events:none; border: 3px dashed #f44336; z-index: 5; border-radius: 16px;}
         
         /* カートバー */
-        .bottom-bar { position: fixed; bottom: 10px; left: 15px; right: 15px; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(28px) saturate(160%); -webkit-backdrop-filter: blur(28px) saturate(160%); padding: 15px 20px; border-radius: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.8); display: flex; flex-direction: column; gap: 12px; z-index: 90; }
+        .bottom-bar { 
+            position: fixed; bottom: 10px; left: 15px; right: 15px; 
+            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(28px) saturate(160%); -webkit-backdrop-filter: blur(28px) saturate(160%);
+            padding: 15px 20px; border-radius: 30px; 
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.8);
+            display: flex; flex-direction: column; gap: 12px; z-index: 90; 
+        }
         .cart-status { display: flex; justify-content: space-between; align-items: center; width: 100%; }
         .action-btn { padding: 12px; background: rgba(0,0,0,0.08); border: none; font-size: 1.4rem; font-weight: 900; color: #444; border-radius: 16px; aspect-ratio: 1/1;}
         .checkout-btn { background-color: var(--btn-checkout); color: white; padding: 16px; font-size: 1.3rem; font-weight: 900; width: 100%; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);}
         .checkout-btn:disabled { background-color: #ddd; color: #888; box-shadow: none;}
         .total-amount-display { font-weight: 900; font-size: 2.6rem; color: #333; line-height: 1; letter-spacing: -1px;}
-        .grid-selector { padding: 0 10px; font-size: 1.1rem; font-weight: 900; border: none; border-radius: 16px; background: rgba(0,0,0,0.08); color: var(--text-color); cursor: pointer; text-align: center; width: 85px;}
 
-        /* 設定・分析等 */
+        .grid-selector { 
+            padding: 0 10px; font-size: 1.1rem; font-weight: 900; border: none; 
+            border-radius: 16px; background: rgba(0,0,0,0.08); color: var(--text-color); cursor: pointer; text-align: center; width: 85px;
+        }
+
+        /* 設定画面 */
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; font-size: 0.9rem; color: #666; margin-bottom: 6px; font-weight: 700;}
         .form-group input, .form-group select { width: 100%; padding: 15px; box-sizing: border-box; border: 1px solid rgba(0,0,0,0.05); border-radius: 16px; font-size: 1.1rem; color: #333; background: rgba(255,255,255,0.9); font-weight: 700;}
         .save-btn { background-color: var(--accent-color); color: white; padding: 18px; width: 100%; font-size: 1.2rem; font-weight: 900; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);}
+        
         .list-item { padding: 10px; border-bottom: 1px solid rgba(0,0,0,0.05); display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
         .list-item img { width: 45px; height: 45px; object-fit: contain; background: rgba(255,255,255,0.9); border-radius: 10px; }
         .list-btn { padding: 8px 12px; font-size: 0.85rem; font-weight: 900; border-radius: 10px;}
         .order-btn { background: rgba(0,0,0,0.05); border: none; color: #333; font-size: 1.1rem; padding: 6px 10px; border-radius: 8px; font-weight: 900; }
         
+        /* 分析画面 */
         .history-card { padding: 15px 20px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
         .history-info { display: flex; align-items: center; gap: 12px; flex-grow: 1; overflow: hidden; }
         .history-time { font-size: 0.85rem; color: #666; background: rgba(0,0,0,0.05); padding: 4px 8px; border-radius: 8px; white-space: nowrap; font-weight: 900;}
@@ -158,13 +220,13 @@
         #client-menu-area { position:absolute; top:0; left:0; width:100%; height:100%; z-index:1; background:var(--bg-color); display:flex; flex-direction:column; padding:40px; box-sizing:border-box; }
         
         /* レジカート画面 */
-        #client-cart-area { position:absolute; top:0; left:0; width:100%; height:100%; z-index:2; background:rgba(255,255,255,0.9); backdrop-filter:blur(30px); -webkit-backdrop-filter:blur(30px); display:none; flex-direction:column; padding:30px 40px; box-sizing:border-box; }
+        #client-cart-area { position:absolute; top:0; left:0; width:100%; height:100%; z-index:2; background:rgba(255,255,255,0.9); backdrop-filter:blur(30px); -webkit-backdrop-filter:blur(30px); display:none; flex-direction:column; padding:40px 40px 100px 40px; box-sizing:border-box; }
         
         /* お会計完了画面 */
         #client-checkout-area { position:absolute; top:0; left:0; width:100%; height:100%; z-index:3; background:var(--bg-color); display:none; flex-direction:column; justify-content:center; align-items:center; padding:20px; box-sizing:border-box; }
         
-        /* 子機終了ボタン（右下） */
-        .client-exit-btn { position:absolute; bottom:20px; right:20px; z-index:20000; background:rgba(0,0,0,0.1); color:#333; border-radius:50%; width:60px; height:60px; font-size:2rem; opacity:0.3; display:flex; align-items:center; justify-content:center; transition:opacity 0.2s; }
+        /* ★ 子機終了ボタン（位置調整） */
+        .client-exit-btn { position:absolute; bottom:80px; right:20px; z-index:20000; background:rgba(0,0,0,0.15); color:#333; border-radius:50%; width:60px; height:60px; font-size:2rem; opacity:0.4; display:flex; align-items:center; justify-content:center; transition:opacity 0.2s; border: 2px solid rgba(255,255,255,0.5);}
         .client-exit-btn:active { opacity:1; }
     </style>
 </head>
@@ -197,13 +259,13 @@
     
     <div class="glass-card" style="padding: 20px; margin-bottom: 20px;">
         <h3 style="margin-top:0; color:#1565c0; font-size:1.2rem;">📡 カスタマーディスプレイ（子機連携）</h3>
-        <p style="font-size:0.85rem; color:#666; font-weight:700;">iPadなどをお客様用画面（サイネージ＆レジ表示）にします。</p>
+        <p style="font-size:0.85rem; color:#666; font-weight:700;">別の端末（iPadなど）をお客様用の表示画面として使えます。</p>
         
         <div style="display:flex; gap:10px; margin-bottom:15px;">
-            <button onclick="startHostMode()" style="flex:1; background:var(--accent-color); color:white; padding:15px; font-weight:900; font-size:1.1rem; border-radius:14px; box-shadow: 0 4px 12px rgba(233,30,99,0.3);">📱 親機を起動</button>
+            <button id="btn-host" onclick="startHostMode()" style="flex:1; background:var(--accent-color); color:white; padding:15px; font-weight:900; font-size:1.1rem; border-radius:14px; box-shadow: 0 4px 12px rgba(233,30,99,0.3);">📱 親機を起動</button>
             <button onclick="startClientMode()" style="flex:1; background:#4CAF50; color:white; padding:15px; font-weight:900; font-size:1.1rem; border-radius:14px; box-shadow: 0 4px 12px rgba(76,175,80,0.3);">📺 子機になる</button>
         </div>
-        <div id="sync-status" style="font-size:1.1rem; font-weight:900; color:#555; text-align:center; margin-bottom:20px; background:rgba(0,0,0,0.05); padding:10px; border-radius:10px;">未接続</div>
+        <div id="sync-status" style="font-size:1rem; font-weight:900; color:#555; text-align:center; margin-bottom:20px; background:rgba(0,0,0,0.05); padding:10px; border-radius:10px;">未接続</div>
 
         <h4 style="margin:20px 0 10px 0; font-size:1rem; border-top:1px solid rgba(0,0,0,0.1); padding-top:15px;">🛌 離席中画面のカスタマイズ</h4>
         <input type="text" id="setting-away-text1" placeholder="メイン文字 (例: ただいま離席中です)" onchange="saveSignageSettings()" style="width:100%; padding:12px; margin-bottom:10px; border-radius:12px; border:1px solid rgba(0,0,0,0.1); background:rgba(255,255,255,0.8); font-weight:900;">
@@ -418,10 +480,11 @@
         <img id="slideshow-img">
     </div>
 
-    <div id="client-cart-area" style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:2; background:rgba(255,255,255,0.9); backdrop-filter:blur(30px); -webkit-backdrop-filter:blur(30px); display:none; flex-direction:column; padding:40px; box-sizing:border-box;">
+    <div id="client-cart-area" style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:2; background:rgba(255,255,255,0.9); backdrop-filter:blur(30px); -webkit-backdrop-filter:blur(30px); display:none; flex-direction:column; padding:40px 40px 100px 40px; box-sizing:border-box;">
         <h2 style="font-size:2.5rem; margin:0 0 30px 0; color:var(--accent-color); text-align:center; font-weight:900;">🛒 お買い上げ内容</h2>
         <div id="client-cart-list" style="flex-grow:1; overflow-y:auto; display:flex; flex-direction:column; gap:20px; padding:0 20px;"></div>
-        <div style="flex-shrink:0; margin-top:30px; border-top:4px dashed rgba(0,0,0,0.1); padding-top:30px; text-align:right;">
+        
+        <div style="flex-shrink:0; margin-top:10px; border-top:4px dashed rgba(0,0,0,0.1); padding-top:20px; text-align:right; margin-bottom: 20px;">
             <div style="font-size:2.5rem; color:#666; font-weight:900;">小計</div>
             <div style="font-size:6rem; font-weight:900; color:#333; line-height:1;">¥<span id="client-subtotal">0</span></div>
         </div>
@@ -444,6 +507,9 @@
 </div>
 
 <script>
+    // ==========================================
+    // 🚀 【鉄壁化】IndexedDB ＆ デュアル保存システム
+    // ==========================================
     const DB_NAME = 'HazukiRegiDB';
     const DB_VERSION = 1;
     let db;
@@ -455,7 +521,11 @@
     function initDB() {
         return new Promise((resolve, reject) => {
             const request = indexedDB.open(DB_NAME, DB_VERSION);
-            request.onerror = (event) => { alert("データベースの起動に失敗しました。"); reject(event); };
+            request.onerror = (event) => { 
+                console.error("IndexedDB起動失敗、localStorageから復旧します"); 
+                recoverFromLocalStorage(); 
+                resolve(); 
+            };
             request.onupgradeneeded = (event) => {
                 db = event.target.result;
                 if (!db.objectStoreNames.contains('appData')) db.createObjectStore('appData', { keyPath: 'id' });
@@ -467,67 +537,102 @@
         });
     }
 
+    // ★ データ初期化時の安全性を極限まで高める
     function loadDataFromDB() {
         return new Promise((resolve) => {
-            const transaction = db.transaction(['appData'], 'readonly');
-            const store = transaction.objectStore('appData');
-            const request = store.get('main');
-            request.onsuccess = (event) => {
-                if (request.result) {
-                    appData = request.result.data;
-                    if (!appData.events || appData.events.length === 0) {
-                        const initialId = Date.now();
-                        appData.events = [{ id: initialId, name: "イベント①", items: [], history: [] }];
-                        appData.currentEventId = initialId;
+            try {
+                const transaction = db.transaction(['appData'], 'readonly');
+                const store = transaction.objectStore('appData');
+                const request = store.get('main');
+                request.onsuccess = (event) => {
+                    if (request.result && request.result.data) {
+                        appData = request.result.data;
+                    } else {
+                        recoverFromLocalStorage();
                     }
-                    appData.events.forEach(ev => { if (!ev.history) ev.history = []; if (!ev.items) ev.items = []; });
-                } else {
-                    const initialId = Date.now();
-                    appData = {
-                        currentEventId: initialId, events: [{ id: initialId, name: "イベント①", items: [], history: [] }],
-                        theme: 'default', gridColumns: 2, backgroundImage: null, hostPin: null, signageSettings: {}, slideshowImages: []
-                    };
-                    saveDataToDB();
-                }
-                
-                // 親機PINの自動発行（固定）
-                if(!appData.hostPin) {
-                    appData.hostPin = Math.floor(1000 + Math.random() * 9000).toString();
-                    saveDataToDB();
-                }
-                document.getElementById('btn-host').innerHTML = `📱 親機を起動 (PIN: ${appData.hostPin})`;
-                loadSignageSettingsUI();
-                renderSlideshowPreview();
-                
-                document.body.setAttribute('data-theme', appData.theme || 'default');
-                if(document.getElementById('theme-selector')) document.getElementById('theme-selector').value = appData.theme || 'default';
-                
-                const cols = appData.gridColumns || 2;
-                document.documentElement.style.setProperty('--grid-cols', cols);
-                if(document.getElementById('grid-columns-select')) document.getElementById('grid-columns-select').value = cols;
-
-                applyBackgroundImage(); updateEventSelector(); renderAll(); 
-                
-                setTimeout(() => {
-                    const activeTab = document.querySelector('.tab.active');
-                    if (activeTab) switchTab('pos', activeTab);
-                }, 100);
-                resolve();
-            };
+                    finalizeLoad();
+                    resolve();
+                };
+                request.onerror = () => { recoverFromLocalStorage(); finalizeLoad(); resolve(); };
+            } catch(e) {
+                recoverFromLocalStorage(); finalizeLoad(); resolve();
+            }
         });
     }
 
-    function saveDataToDB() {
-        try {
-            const transaction = db.transaction(['appData'], 'readwrite');
-            const store = transaction.objectStore('appData');
-            store.put({ id: 'main', data: appData });
-            return true;
-        } catch(e) { return false; }
+    function recoverFromLocalStorage() {
+        const backup = localStorage.getItem('pos_app_data_backup') || localStorage.getItem('pos_app_data');
+        if (backup) {
+            try {
+                appData = JSON.parse(backup);
+                console.log("localStorageからデータを復旧しました");
+            } catch(e) { /* ignore */ }
+        }
     }
-    function saveData() { return saveDataToDB(); }
+
+    function finalizeLoad() {
+        if (!appData.events || appData.events.length === 0) {
+            const initialId = Date.now();
+            appData.events = [{ id: initialId, name: "イベント①", items: [], history: [] }];
+            appData.currentEventId = initialId;
+        }
+        appData.events.forEach(ev => {
+            if (!ev.history) ev.history = []; if (!ev.items) ev.items = [];
+        });
+        
+        if(!appData.hostPin) {
+            appData.hostPin = Math.floor(1000 + Math.random() * 9000).toString();
+        }
+        
+        document.getElementById('btn-host').innerHTML = `📱 親機を起動 (PIN: ${appData.hostPin})`;
+        loadSignageSettingsUI();
+        renderSlideshowPreview();
+        
+        document.body.setAttribute('data-theme', appData.theme || 'default');
+        if(document.getElementById('theme-selector')) document.getElementById('theme-selector').value = appData.theme || 'default';
+        
+        const cols = appData.gridColumns || 2;
+        document.documentElement.style.setProperty('--grid-cols', cols);
+        if(document.getElementById('grid-columns-select')) document.getElementById('grid-columns-select').value = cols;
+
+        applyBackgroundImage(); updateEventSelector(); renderAll(); 
+        
+        setTimeout(() => {
+            const activeTab = document.querySelector('.tab.active');
+            if (activeTab) switchTab('pos', activeTab);
+        }, 100);
+        
+        saveData(); // ロード成功後に確実に保存
+    }
+
+    // ★ データを絶対に消さないためのデュアル保存
+    function saveData() {
+        let isSuccess = false;
+        // 1. IndexedDBへの保存 (ディープコピーで参照エラー防止)
+        if (db) {
+            try {
+                const transaction = db.transaction(['appData'], 'readwrite');
+                const store = transaction.objectStore('appData');
+                store.put({ id: 'main', data: JSON.parse(JSON.stringify(appData)) });
+                isSuccess = true;
+            } catch(e) { console.error("IDB Save Error:", e); }
+        }
+        
+        // 2. localStorageへのバックアップ保存
+        try {
+            localStorage.setItem('pos_app_data_backup', JSON.stringify(appData));
+            isSuccess = true;
+        } catch(e) { console.error("LocalStorage Save Error (容量オーバーの可能性)"); }
+        
+        if(!isSuccess) {
+            console.error("データの保存に失敗しました");
+        }
+        return isSuccess;
+    }
+
     window.onload = () => { initDB(); };
 
+    // --- 背景画像 ---
     function loadBackgroundImage(input) {
         if (input.files && input.files[0]) {
             const reader = new FileReader();
@@ -558,8 +663,10 @@
     function hardResetApp() {
         if(confirm("【⚠️警告】\nすべてのデータを完全に消去して初期状態に戻します。\n本当に実行しますか？")) {
             if(confirm("本当に消去してよろしいですか？（取り消せません）")) {
-                const req = indexedDB.deleteDatabase(DB_NAME);
-                req.onsuccess = () => { location.reload(); };
+                if(db) indexedDB.deleteDatabase(DB_NAME);
+                localStorage.removeItem('pos_app_data_backup');
+                localStorage.removeItem('pos_app_data');
+                location.reload();
             }
         }
     }
@@ -579,7 +686,7 @@
     function changeEvent(id) {
         if (cart.length > 0 && !confirm('カートを空にして移動しますか？')) { updateEventSelector(); return; }
         appData.currentEventId = parseInt(id); cart = []; saveData(); syncCartTotalInstant(); updateCartButton(); renderAll();
-        syncStateToClient();
+        syncStateToClient(); 
     }
     function createNewEvent() {
         const name = prompt('イベント名を入力');
@@ -714,7 +821,7 @@
                     ev.items.push({ id: Date.now(), name: n, price: p, stock: s, image: img || 'https://placehold.co/200x200/e0e0e0/666666?text=No+Image' });
                 }
                 saveData(); renderAll(); cancelEdit(); alert('✅ 保存しました！');
-                syncStateToClient();
+                syncStateToClient(); 
             };
 
             if (f.files && f.files[0]) {
@@ -1107,10 +1214,12 @@
     }
 
     // ==========================================
-    // 📡 PeerJS (子機連携＆サイネージ機能) 完全版
+    // 📡 【完全修復】PeerJS (子機連携＆サイネージ機能) 
     // ==========================================
     let peer = null;
     let conn = null;
+    let isHost = false;
+    let isClient = false;
     const PEER_PREFIX = 'hazuki-regi-momo-'; 
 
     function initPeer() {
@@ -1123,7 +1232,7 @@
         return true;
     }
 
-    // --- 親機モード（PIN固定化＆設定UI同期） ---
+    // --- 親機モード（自動再接続の強化） ---
     function saveSignageSettings() {
         appData.signageSettings = {
             awayText1: document.getElementById('setting-away-text1').value,
@@ -1131,8 +1240,7 @@
             awayIconType: document.getElementById('setting-away-icon').value,
             awayCustomImage: appData.signageSettings?.awayCustomImage || null
         };
-        saveData();
-        syncStateToClient();
+        saveData(); syncStateToClient();
     }
     
     function loadAwayCustomImage(input) {
@@ -1143,14 +1251,12 @@
             img.onload = () => {
                 const c = document.createElement('canvas'); const ctx = c.getContext('2d');
                 const max = 400; let scale = max / Math.max(img.width, img.height);
-                if (scale > 1) scale = 1;
-                c.width = img.width * scale; c.height = img.height * scale;
+                if (scale > 1) scale = 1; c.width = img.width * scale; c.height = img.height * scale;
                 ctx.drawImage(img, 0, 0, c.width, c.height);
                 if(!appData.signageSettings) appData.signageSettings = {};
                 appData.signageSettings.awayCustomImage = c.toDataURL('image/jpeg', 0.8);
                 document.getElementById('setting-away-icon').value = 'custom';
-                saveSignageSettings();
-                loadSignageSettingsUI();
+                saveSignageSettings(); loadSignageSettingsUI();
             };
             img.src = e.target.result;
         };
@@ -1166,13 +1272,12 @@
         const preview = document.getElementById('away-image-preview');
         if(s.awayIconType === 'custom' && s.awayCustomImage) {
             preview.innerHTML = `<img src="${s.awayCustomImage}" style="height:100%; border-radius:8px;">`;
-        } else {
-            preview.innerHTML = '';
-        }
+        } else { preview.innerHTML = ''; }
     }
 
     function startHostMode() {
         if(!initPeer()) return;
+        isHost = true;
         const pin = appData.hostPin;
         const peerId = PEER_PREFIX + pin;
         
@@ -1188,44 +1293,46 @@
             conn = connection;
             setupHostConnection();
         });
+        
+        peer.on('disconnected', () => {
+            // テザリング切断等でシグナルサーバーから切れたら再接続
+            if (isHost && !peer.destroyed) peer.reconnect();
+        });
     }
 
     function setupHostConnection() {
         conn.on('open', () => {
             document.getElementById('sync-status').innerText = '✅ 子機(iPad)と接続中！';
             syncStateToClient(); 
-            
-            // ハートビート
-            setInterval(() => {
-                if(conn && conn.open) conn.send({type: 'ping'});
-            }, 3000);
         });
-        conn.on('close', () => { document.getElementById('sync-status').innerText = '❌ 接続が切れました（自動再接続を待ちます）'; });
+        conn.on('close', () => { document.getElementById('sync-status').innerText = '❌ 子機が切断されました'; });
     }
+
+    // ★ 親機側の生存アピールループ
+    setInterval(() => {
+        if (isHost && peer) {
+            if (peer.disconnected && !peer.destroyed) { peer.reconnect(); }
+            if (conn && conn.open) { conn.send({type: 'ping'}); }
+        }
+    }, 3000);
 
     function sendSyncData(type, payload) {
         if(conn && conn.open) { conn.send({ type, payload }); }
     }
 
-    // 全データを子機へ送る
     function syncStateToClient() {
         if(!conn || !conn.open) return;
         const ev = appData.events.find(e => e.id == appData.currentEventId);
         if(!ev) return;
-        
         sendSyncData('full_state', {
-            items: ev.items,
-            cart: cart,
-            cartTotal: displayedTotal,
-            signageSettings: appData.signageSettings || {},
-            slideshowImages: appData.slideshowImages || []
+            items: ev.items, cart: cart, cartTotal: displayedTotal,
+            signageSettings: appData.signageSettings || {}, slideshowImages: appData.slideshowImages || []
         });
     }
 
     function loadSlideshowImages(input) {
         if(!input.files || input.files.length === 0) return;
         if(!appData.slideshowImages) appData.slideshowImages = [];
-        
         Array.from(input.files).forEach(file => {
             const reader = new FileReader();
             reader.onload = (e) => {
@@ -1233,8 +1340,7 @@
                 img.onload = () => {
                     const c = document.createElement('canvas'); const ctx = c.getContext('2d');
                     const max = 1500; let scale = max / Math.max(img.width, img.height);
-                    if (scale > 1) scale = 1;
-                    c.width = img.width * scale; c.height = img.height * scale;
+                    if (scale > 1) scale = 1; c.width = img.width * scale; c.height = img.height * scale;
                     ctx.drawImage(img, 0, 0, c.width, c.height);
                     appData.slideshowImages.push(c.toDataURL('image/jpeg', 0.8));
                     saveData(); renderSlideshowPreview(); syncStateToClient();
@@ -1245,26 +1351,21 @@
         });
     }
 
-    function clearSlideshowImages() {
-        appData.slideshowImages = []; saveData(); renderSlideshowPreview(); syncStateToClient();
-    }
+    function clearSlideshowImages() { appData.slideshowImages = []; saveData(); renderSlideshowPreview(); syncStateToClient(); }
 
     function renderSlideshowPreview() {
-        const container = document.getElementById('slideshow-preview');
-        container.innerHTML = '';
+        const container = document.getElementById('slideshow-preview'); container.innerHTML = '';
         if(appData.slideshowImages && appData.slideshowImages.length > 0) {
             appData.slideshowImages.forEach(src => {
                 container.innerHTML += `<img src="${src}" style="height:60px; border-radius:8px; border:1px solid rgba(0,0,0,0.1);">`;
             });
-        } else {
-            container.innerHTML = '<span style="font-size:0.8rem; color:#888;">画像がありません</span>';
-        }
+        } else { container.innerHTML = '<span style="font-size:0.8rem; color:#888;">画像がありません</span>'; }
     }
 
-    // --- 子機モード（iPad用） ---
-    let isClient = false;
+    // --- 子機モード（iPad用・自動再接続強化） ---
     let targetHostPin = '';
     let lastPing = Date.now();
+    let reconnectInterval = null;
 
     function startClientMode() {
         if(!initPeer()) return;
@@ -1273,8 +1374,6 @@
         
         isClient = true;
         document.getElementById('client-display').style.display = 'flex';
-        
-        // 全画面化（iOS対策）
         try { document.documentElement.requestFullscreen().catch(e=>console.log(e)); } catch(e) {}
         
         connectToHost();
@@ -1286,11 +1385,12 @@
         
         peer.on('open', () => {
             const targetId = PEER_PREFIX + targetHostPin;
-            conn = peer.connect(targetId);
+            conn = peer.connect(targetId, { reliable: true });
             
             conn.on('open', () => {
                 hideDisconnectOverlay();
                 lastPing = Date.now();
+                if(reconnectInterval) { clearInterval(reconnectInterval); reconnectInterval = null; }
             });
             
             conn.on('data', (data) => {
@@ -1303,28 +1403,36 @@
                 }
                 handleClientData(data);
             });
-            
             conn.on('close', () => { showDisconnectOverlay(); });
         });
     }
 
-    // 離席監視＆自動再接続ループ
+    // ★ 子機の接続監視＆自動復旧ループ
     setInterval(() => {
-        if(isClient) {
+        if (isClient) {
             // 12秒間Pingが来なければ離席とみなす
-            if(Date.now() - lastPing > 12000) { 
+            if (Date.now() - lastPing > 12000) { 
                 showDisconnectOverlay();
-                // 接続が切れていたら再接続を試みる
-                if(!conn || !conn.open) {
-                    connectToHost();
+                
+                // 再接続を試みる（連打しないように5秒間隔で）
+                if (!reconnectInterval) {
+                    reconnectInterval = setInterval(() => {
+                        if (Date.now() - lastPing > 12000) {
+                            connectToHost();
+                        } else {
+                            clearInterval(reconnectInterval); reconnectInterval = null;
+                        }
+                    }, 5000);
                 }
             }
         }
-    }, 4000);
+    }, 3000);
 
     function exitClientMode() {
         isClient = false;
         if(peer) peer.destroy();
+        if(reconnectInterval) clearInterval(reconnectInterval);
+        stopSignageLoop();
         document.getElementById('client-display').style.display = 'none';
         try { document.exitFullscreen().catch(e=>console.log(e)); } catch(e) {}
     }
@@ -1370,11 +1478,8 @@
             const changeEl = document.getElementById('client-change');
             
             const currentChange = parseInt(changeEl.innerText.replace(/,/g, '')) || 0;
-            if(c >= 0) {
-                animateValue(changeEl, currentChange, c, 500);
-            } else {
-                changeEl.innerText = Math.abs(c).toLocaleString();
-            }
+            if(c >= 0) { animateValue(changeEl, currentChange, c, 500); } 
+            else { changeEl.innerText = Math.abs(c).toLocaleString(); }
             changeEl.parentElement.style.color = c < 0 ? '#f44336' : 'var(--accent-color)';
         }
         else if(data.type === 'checkout_done') {
@@ -1403,18 +1508,12 @@
         const c = clientData.cart || [];
         const t = clientData.cartTotal || 0;
         
-        // お会計画面を開いている最中なら何もしない
         if(document.getElementById('client-checkout-area').style.display === 'flex') return;
         
         if(c.length === 0) {
-            // カートが空ならサイネージ開始
             document.getElementById('client-cart-area').style.display = 'none';
-            if(!signageTimeout) {
-                signageMode = 'menu';
-                runSignageLoop();
-            }
+            if(!signageTimeout) { signageMode = 'menu'; runSignageLoop(); }
         } else {
-            // カートに物が入った
             stopSignageLoop();
             document.getElementById('client-menu-area').style.display = 'none';
             document.getElementById('client-slideshow').style.display = 'none';
@@ -1446,7 +1545,7 @@
     // ★ 自動お品書き＆スライドのローテーション
     function runSignageLoop() {
         clearTimeout(signageTimeout);
-        if(clientData.cart && clientData.cart.length > 0) return; // 安全装置
+        if(clientData.cart && clientData.cart.length > 0) return; 
         
         document.getElementById('client-cart-area').style.display = 'none';
         document.getElementById('client-checkout-area').style.display = 'none';
@@ -1455,7 +1554,6 @@
             document.getElementById('client-slideshow').style.display = 'none';
             document.getElementById('client-menu-area').style.display = 'flex';
             
-            // お品書きの描画
             const list = document.getElementById('client-menu-list');
             list.innerHTML = '';
             (clientData.items || []).forEach(i => {
@@ -1472,7 +1570,7 @@
             });
 
             signageMode = 'slide';
-            signageTimeout = setTimeout(runSignageLoop, 15000); // 15秒お品書き
+            signageTimeout = setTimeout(runSignageLoop, 15000); 
         } 
         else {
             if(clientData.slideshowImages && clientData.slideshowImages.length > 0) {
@@ -1488,10 +1586,10 @@
                 }, 500);
 
                 signageMode = 'menu';
-                signageTimeout = setTimeout(runSignageLoop, 5000); // 5秒スライド
+                signageTimeout = setTimeout(runSignageLoop, 5000); 
             } else {
                 signageMode = 'menu';
-                runSignageLoop(); // スライドがない場合はお品書きに戻す
+                runSignageLoop(); 
             }
         }
     }
