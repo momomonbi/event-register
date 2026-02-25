@@ -7,10 +7,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;700&family=Noto+Sans+JP:wght@400;700&family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
     <style>
-        /* ★ はみ出し防止の基本設定 */
-        *, *::before, *::after {
-            box-sizing: border-box;
-        }
+        /* はみ出し防止の基本設定 */
+        *, *::before, *::after { box-sizing: border-box; }
 
         /* --- テーマ設定 --- */
         :root {
@@ -57,9 +55,8 @@
         /* --- 全体レイアウト --- */
         body { 
             font-family: var(--app-font); margin: 0; padding: 0; 
-            background-color: transparent; 
-            color: var(--text-color); padding-bottom: 160px; 
-            touch-action: manipulation; 
+            background-color: transparent; color: var(--text-color); 
+            padding-bottom: 160px; touch-action: manipulation; 
         }
         
         #bg-color-layer { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -2; background-color: var(--bg-color); transition: background-color 0.4s; }
@@ -72,48 +69,22 @@
         button:active { transform: scale(0.92); }
         input, select { font-family: inherit; }
 
-        /* ★ ヘッダーとタブをまとめて上部に固定表示するコンテナ */
-        #sticky-header-container {
-            position: sticky; top: 0; z-index: 1000;
-            padding-bottom: 10px;
-        }
+        /* ヘッダーとタブを上部に固定 */
+        #sticky-header-container { position: sticky; top: 0; z-index: 1000; padding-bottom: 10px; }
 
         /* ヘッダー */
-        .preset-header { 
-            background-color: var(--header-bg); padding: 12px 15px; display: flex; justify-content: space-between; 
-            align-items: center; gap: 8px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08); position: relative; margin-bottom: 8px;
-            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-        }
-        .preset-header select { 
-            flex-grow: 1; padding: 12px; border-radius: 14px; font-size: 1rem; border: none; 
-            font-weight: 900; background: rgba(255,255,255,0.95); color: #333; box-shadow: 0 2px 10px rgba(0,0,0,0.05); min-width: 0;
-        }
+        .preset-header { background-color: var(--header-bg); padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; gap: 8px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); position: relative; margin-bottom: 8px; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); }
+        .preset-header select { flex-grow: 1; padding: 12px; border-radius: 14px; font-size: 1rem; border: none; font-weight: 900; background: rgba(255,255,255,0.95); color: #333; box-shadow: 0 2px 10px rgba(0,0,0,0.05); min-width: 0; }
         .preset-btns { display: flex; gap: 6px; flex-shrink: 0; }
         .preset-btn { background-color: rgba(0,0,0,0.15); color: #333; padding: 12px 14px; font-weight: 900; font-size: 0.9rem; }
         .preset-btn.primary { background-color: #FFC107; color: #333; }
         .preset-btn.danger { background-color: #f44336; color: white; padding: 12px 16px; font-size: 1.1rem;}
 
         /* タブ */
-        .tabs { 
-            position: relative; display: flex; background-color: var(--tab-bg); 
-            box-shadow: 0 8px 32px rgba(0,0,0,0.08); 
-            margin: 0 15px; border-radius: 24px; padding: 6px; 
-            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255,255,255,0.6);
-        }
-        .tab { 
-            flex: 1; text-align: center; padding: 12px 0; color: var(--text-color); opacity: 0.6;
-            font-weight: 900; font-size: 0.9rem; white-space: nowrap; border-radius: 18px; 
-            cursor: pointer; position: relative; z-index: 2; transition: color 0.3s;
-        }
+        .tabs { position: relative; display: flex; background-color: var(--tab-bg); box-shadow: 0 8px 32px rgba(0,0,0,0.08); margin: 0 15px; border-radius: 24px; padding: 6px; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.6); }
+        .tab { flex: 1; text-align: center; padding: 12px 0; color: var(--text-color); opacity: 0.6; font-weight: 900; font-size: 0.9rem; white-space: nowrap; border-radius: 18px; cursor: pointer; position: relative; z-index: 2; transition: color 0.3s; }
         .tab.active { opacity: 1; color: var(--tab-active-color); }
-        .tab-highlight {
-            position: absolute; top: 6px; bottom: 6px; left: 6px; width: 0;
-            background: var(--tab-active-bg); border-radius: 18px; z-index: 1;
-            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.3s;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-        }
+        .tab-highlight { position: absolute; top: 6px; bottom: 6px; left: 6px; width: 0; background: var(--tab-active-bg); border-radius: 18px; z-index: 1; transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
         
         @keyframes tabFadeIn { 0% { opacity: 0; transform: translateY(40px) scale(0.97); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
         .tab-content { display: none; padding: 0 15px; }
@@ -131,13 +102,7 @@
         .sold-out { position: absolute; top:0; left:0; right:0; bottom:0; background: rgba(255,255,255,0.85); display:flex; align-items:center; justify-content:center; font-weight:900; color:#f44336; font-size:1.4rem; pointer-events:none; border: 3px dashed #f44336; z-index: 5; border-radius: 16px;}
         
         /* カートバー */
-        .bottom-bar { 
-            position: fixed; bottom: 10px; left: 15px; right: 15px; 
-            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(28px) saturate(160%); -webkit-backdrop-filter: blur(28px) saturate(160%);
-            padding: 15px 20px; border-radius: 30px; 
-            box-shadow: 0 15px 40px rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.8);
-            display: flex; flex-direction: column; gap: 12px; z-index: 90; 
-        }
+        .bottom-bar { position: fixed; bottom: 10px; left: 15px; right: 15px; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(28px) saturate(160%); -webkit-backdrop-filter: blur(28px) saturate(160%); padding: 15px 20px; border-radius: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.8); display: flex; flex-direction: column; gap: 12px; z-index: 90; }
         .cart-status { display: flex; justify-content: space-between; align-items: center; width: 100%; }
         .action-btn { padding: 12px; background: rgba(0,0,0,0.08); border: none; font-size: 1.4rem; font-weight: 900; color: #444; border-radius: 16px; aspect-ratio: 1/1;}
         .checkout-btn { background-color: var(--btn-checkout); color: white; padding: 16px; font-size: 1.3rem; font-weight: 900; width: 100%; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);}
@@ -150,7 +115,6 @@
         .form-group label { display: block; font-size: 0.9rem; color: #666; margin-bottom: 6px; font-weight: 700;}
         .form-group input, .form-group select { width: 100%; padding: 15px; border: 1px solid rgba(0,0,0,0.05); border-radius: 16px; font-size: 1.1rem; color: #333; background: rgba(255,255,255,0.9); font-weight: 700;}
         .save-btn { background-color: var(--accent-color); color: white; padding: 18px; width: 100%; font-size: 1.2rem; font-weight: 900; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);}
-        
         .list-item { padding: 10px; border-bottom: 1px solid rgba(0,0,0,0.05); display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
         .list-item img { width: 45px; height: 45px; object-fit: contain; background: rgba(255,255,255,0.9); border-radius: 10px; }
         .list-btn { padding: 8px 12px; font-size: 0.85rem; font-weight: 900; border-radius: 10px;}
@@ -179,7 +143,7 @@
 
         .cart-item-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed rgba(0,0,0,0.1); padding: 15px 0; gap: 10px;}
         .cart-item-info { display: flex; align-items: flex-start; gap: 12px; flex-grow: 1; overflow: hidden; }
-        .qty-btn { width: 38px; height: 38px; border-radius: 12px; background: #eee; font-size: 1.4rem; font-weight: 900; color: #333; flex-shrink: 0;}
+        .qty-btn { width: 38px; height: 38px; border-radius: 12px; border: none; background: #eee; font-size: 1.4rem; font-weight: 900; color: #333; flex-shrink: 0;}
         .modal-large-btn { width: 100%; padding: 18px; font-size: 1.2rem; font-weight: 900; margin-bottom: 12px; border-radius: 16px;}
 
         /* ==========================================
@@ -187,10 +151,13 @@
            ========================================== */
         #client-display { display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:var(--bg-color); z-index:9999; flex-direction:column; overflow: hidden; font-family: 'Zen Maru Gothic', sans-serif; }
         
-        /* 離席中画面 */
-        #client-disconnect-overlay { display:none; position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.65); z-index:10000; color:white; justify-content:center; align-items:center; flex-direction:column; text-align:center; padding:20px; backdrop-filter:blur(8px); }
+        /* ★ 離席中画面のぼかしを弱め、背景を透けさせる */
+        #client-disconnect-overlay { display:none; position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.45); z-index:10000; color:white; justify-content:center; align-items:center; flex-direction:column; text-align:center; padding:20px; backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); }
+        /* 文字が背景に紛れないよう影を強く */
+        #client-disconnect-overlay h1, #client-disconnect-overlay p { text-shadow: 0 4px 15px rgba(0,0,0,0.8); }
+        
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-30px); } }
-        .away-icon-anim { font-size:8rem; margin-bottom:30px; animation: bounce 2.5s infinite cubic-bezier(0.25, 0.1, 0.25, 1); }
+        .away-icon-anim { font-size:8rem; margin-bottom:30px; animation: bounce 2.5s infinite cubic-bezier(0.25, 0.1, 0.25, 1); filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5));}
         
         /* 待機中スライドショー */
         #client-slideshow { position:absolute; top:0; left:0; width:100%; height:100%; z-index:1; background:#000; display:none; justify-content:center; align-items:center; }
@@ -205,7 +172,7 @@
         /* お会計完了画面 */
         #client-checkout-area { position:absolute; top:0; left:0; width:100%; height:100%; z-index:3; background:var(--bg-color); display:none; flex-direction:column; justify-content:center; align-items:center; padding:20px; }
         
-        /* 子機終了ボタン（位置調整） */
+        /* 子機終了ボタン */
         .client-exit-btn { position:absolute; bottom:30px; right:30px; z-index:20000; background:rgba(0,0,0,0.2); color:#fff; border-radius:50%; width:60px; height:60px; font-size:2rem; opacity:0.6; display:flex; align-items:center; justify-content:center; transition:opacity 0.2s; border: 2px solid rgba(255,255,255,0.5);}
         .client-exit-btn:active { opacity:1; }
         
@@ -245,11 +212,22 @@
         <h3 style="margin-top:0; color:#1565c0; font-size:1.2rem;">📡 カスタマーディスプレイ（子機連携）</h3>
         <p style="font-size:0.85rem; color:#666; font-weight:700;">iPadなどをお客様用画面（サイネージ＆レジ表示）にします。</p>
         
-        <div style="display:flex; gap:10px; margin-bottom:15px;">
-            <button id="btn-host" onclick="startHostMode()" style="flex:1; background:var(--accent-color); color:white; padding:15px; font-weight:900; font-size:1.1rem; border-radius:14px; box-shadow: 0 4px 12px rgba(233,30,99,0.3);">📱 親機を起動</button>
-            <button onclick="startClientMode()" style="flex:1; background:#4CAF50; color:white; padding:15px; font-weight:900; font-size:1.1rem; border-radius:14px; box-shadow: 0 4px 12px rgba(76,175,80,0.3);">📺 子機になる</button>
+        <div class="form-group" style="margin-bottom:15px;">
+            <label style="color:#007aff;">🔑 親機のPINコード（子機に入力する合言葉）</label>
+            <div style="display:flex; gap:10px;">
+                <input type="text" id="setting-host-pin" value="" onchange="saveSignageSettings()" placeholder="例: 1234" style="width:120px; text-align:center; font-size:1.3rem; letter-spacing:2px; font-weight:900;">
+                <div style="font-size:0.75rem; color:#666; align-self:center; line-height:1.3;">好きな数字（2〜4桁）に変更できます。<br>会場で他の人と被らない番号にしてください。</div>
+            </div>
         </div>
-        <div id="sync-status" style="font-size:1.1rem; font-weight:900; color:#555; text-align:center; margin-bottom:20px; background:rgba(0,0,0,0.05); padding:10px; border-radius:10px;">未接続</div>
+
+        <div style="display:flex; gap:10px; margin-bottom:10px;">
+            <button onclick="startHostMode()" style="flex:1; background:var(--accent-color); color:white; padding:15px; font-weight:900; font-size:1.1rem; border-radius:14px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">📱 親機を起動</button>
+            <button onclick="startClientMode()" style="flex:1; background:#4CAF50; color:white; padding:15px; font-weight:900; font-size:1.1rem; border-radius:14px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">📺 子機になる</button>
+        </div>
+        
+        <div id="sync-status" style="font-size:1rem; font-weight:900; color:#555; text-align:center; margin-bottom:15px; background:rgba(0,0,0,0.05); padding:10px; border-radius:10px;">未接続</div>
+        
+        <button onclick="disconnectPeer()" style="width:100%; padding:12px; margin-bottom:20px; background:rgba(0,0,0,0.3); color:white; font-weight:900; font-size:1rem; border-radius:12px;">🛑 接続を切って初期状態に戻す</button>
 
         <button id="btn-toggle-away" onclick="toggleAwayMode()" style="width:100%; padding:15px; margin-bottom: 10px; background:#FF9800; color:white; font-weight:900; font-size:1.2rem; border-radius:14px; box-shadow: 0 4px 12px rgba(255,152,0,0.3);">🏃‍♂️ 離席モードをONにする</button>
 
@@ -461,7 +439,7 @@
 <div id="client-display">
     <button class="client-exit-btn" onclick="exitClientMode()">✖</button>
 
-    <div id="client-slideshow" style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:1; background:#111; display:none; justify-content:center; align-items:center;">
+    <div id="client-slideshow" style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:1; background:#000; display:none; justify-content:center; align-items:center;">
         <img id="slideshow-img" style="max-width:100%; max-height:100%; object-fit:contain; transition: opacity 1s cubic-bezier(0.25, 0.1, 0.25, 1); opacity:0;">
     </div>
 
@@ -509,11 +487,7 @@
     const DB_NAME = 'HazukiRegiDB';
     const DB_VERSION = 1;
     let db;
-    
-    // ★ 親機のPINは「1004」で完全固定
-    const FIXED_PIN = '1004';
-    
-    let appData = { currentEventId: Date.now(), events: [], theme: 'default', gridColumns: 2, backgroundImage: null, isAwayMode: false, signageSettings: { slideDuration: 5, menuDuration: 15 }, slideshowImages: [] };
+    let appData = { currentEventId: Date.now(), events: [], theme: 'default', gridColumns: 2, backgroundImage: null, hostPin: null, signageSettings: { slideDuration: 5, menuDuration: 15 }, slideshowImages: [] };
     let cart = [];
     let displayedTotal = 0;
     let currentCheckoutTotal = 0;
@@ -569,7 +543,9 @@
         if(!appData.signageSettings.slideDuration) appData.signageSettings.slideDuration = 5;
         if(!appData.signageSettings.menuDuration) appData.signageSettings.menuDuration = 15;
         
-        document.getElementById('btn-host').innerHTML = `📱 親機を起動 (PIN: ${FIXED_PIN})`;
+        // ★ 親機のPINがなければランダム発行
+        if(!appData.hostPin) { appData.hostPin = Math.floor(1000 + Math.random() * 9000).toString(); }
+        
         loadSignageSettingsUI(); renderSlideshowPreview(); updateAwayButtonUI();
         
         document.body.setAttribute('data-theme', appData.theme || 'default');
@@ -635,6 +611,7 @@
     }
 
     function changeGridColumns(val) { document.documentElement.style.setProperty('--grid-cols', val); appData.gridColumns = parseInt(val); saveData(); }
+    
     function hardResetApp() {
         if(confirm("【⚠️警告】\nすべてのデータを完全に消去して初期状態に戻します。\n本当に実行しますか？")) {
             if(confirm("本当に消去してよろしいですか？（取り消せません）")) {
@@ -644,6 +621,7 @@
             }
         }
     }
+
     function changeTheme(name) { appData.theme = name; document.body.setAttribute('data-theme', name); saveData(); }
     
     function updateEventSelector() {
@@ -690,6 +668,7 @@
         try {
             document.querySelectorAll('.tab, .tab-content').forEach(el => el.classList.remove('active'));
             if (!tabElement) tabElement = document.querySelector(`.tab[onclick*="${id}"]`);
+            
             if (tabElement) {
                 tabElement.classList.add('active');
                 const highlight = document.getElementById('tab-highlight');
@@ -697,6 +676,7 @@
                 highlight.style.width = tabElement.offsetWidth + 'px';
                 highlight.style.transform = `translateX(${leftPos - 6}px)`;
             }
+            
             const content = document.getElementById(id);
             if(content) content.classList.add('active');
             
@@ -1173,7 +1153,7 @@
     }
 
     // ==========================================
-    // 📡 【完全修復】PeerJS (子機連携＆サイネージ機能)
+    // 📡 【完全版】PeerJS (子機連携＆サイネージ機能)
     // ==========================================
     let peer = null;
     let conn = null;
@@ -1187,7 +1167,7 @@
         return true;
     }
 
-    // --- ★ 手動「離席モード」のトグル処理 ---
+    // --- ★ 親機の手動離席モードトグル ---
     function toggleAwayMode() {
         appData.isAwayMode = !appData.isAwayMode;
         saveData(); updateAwayButtonUI(); syncStateToClient();
@@ -1209,6 +1189,7 @@
 
     // --- 親機モード ---
     function saveSignageSettings() {
+        appData.hostPin = document.getElementById('setting-host-pin').value || '1004';
         appData.signageSettings = {
             awayText1: document.getElementById('setting-away-text1').value,
             awayText2: document.getElementById('setting-away-text2').value,
@@ -1241,6 +1222,8 @@
     }
 
     function loadSignageSettingsUI() {
+        document.getElementById('setting-host-pin').value = appData.hostPin || '1004';
+        
         const s = appData.signageSettings || {};
         if(s.awayText1) document.getElementById('setting-away-text1').value = s.awayText1;
         if(s.awayText2) document.getElementById('setting-away-text2').value = s.awayText2;
@@ -1254,17 +1237,30 @@
         } else { preview.innerHTML = ''; }
     }
 
+    // ★ 通信切断ボタン
+    function disconnectPeer() {
+        if(conn) { conn.close(); conn = null; }
+        if(peer) { peer.destroy(); peer = null; }
+        isHost = false; isClient = false;
+        if(reconnectInterval) { clearInterval(reconnectInterval); reconnectInterval = null; }
+        stopSignageLoop();
+        document.getElementById('client-display').style.display = 'none';
+        document.getElementById('sync-status').innerText = '未接続';
+        try { document.exitFullscreen().catch(e=>console.log(e)); } catch(e) {}
+    }
+
     function startHostMode() {
         if(!initPeer()) return;
         isHost = true;
-        const peerId = 'hazuki-regi-momo-' + FIXED_PIN;
+        const pin = appData.hostPin || '1004';
+        const peerId = 'hazuki-regi-momo-' + pin;
         
-        document.getElementById('sync-status').innerText = '接続待機中...';
+        document.getElementById('sync-status').innerHTML = '⏳ 通信サーバーへ接続しています...<br><span style="font-size:0.8rem;color:#888;">※この表示が変わるまでお待ちください</span>';
         if(peer) peer.destroy();
         peer = new Peer(peerId);
         
         peer.on('open', (id) => {
-            document.getElementById('sync-status').innerHTML = `📡 子機からの接続を待っています<br>（iPadで「📺子機になる」を押すだけ）`;
+            document.getElementById('sync-status').innerHTML = `📡 子機からの接続を待っています<br>（iPadで「📺子機になる」を押し、PIN <span style="color:var(--accent-color); font-size:1.5em;">${pin}</span> を入力）`;
         });
         
         peer.on('connection', (connection) => {
@@ -1283,10 +1279,13 @@
         conn.on('close', () => { document.getElementById('sync-status').innerText = '❌ 子機が切断されました'; });
     }
 
+    // ★ 親機側の生存アピールループ（エラー落ちを防ぐ）
     setInterval(() => {
         if (isHost && peer) {
-            if (peer.disconnected && !peer.destroyed) { peer.reconnect(); }
-            if (conn && conn.open) { conn.send({type: 'ping'}); }
+            try {
+                if (peer.disconnected && !peer.destroyed) { peer.reconnect(); }
+                if (conn && conn.open) { conn.send({type: 'ping'}); }
+            } catch(e) {}
         }
     }, 3000);
 
@@ -1298,7 +1297,7 @@
         if(!ev) return;
         sendSyncData('full_state', {
             items: ev.items, cart: cart, cartTotal: displayedTotal,
-            isAwayMode: appData.isAwayMode || false, // ★ 手動離席フラグも同期
+            isAwayMode: appData.isAwayMode || false, 
             signageSettings: appData.signageSettings || {}, slideshowImages: appData.slideshowImages || []
         });
     }
@@ -1333,15 +1332,21 @@
         } else { container.innerHTML = '<span style="font-size:0.8rem; color:#888;">画像がありません</span>'; }
     }
 
-    // --- 子機モード（iPad用・自動再接続強化＆手動離席対応） ---
+    // --- 子機モード（iPad用・自動再接続の完全化） ---
+    let targetHostPin = '';
+    let lastPing = Date.now();
     let reconnectInterval = null;
 
     function startClientMode() {
         if(!initPeer()) return;
+        targetHostPin = prompt('親機に設定されているPIN（合言葉）を入力してください', appData.hostPin || '1004');
+        if(!targetHostPin) return;
+        
         isClient = true;
         document.getElementById('client-display').style.display = 'flex';
-        // ★ PIN入力を廃止し、即座に全画面化
+        // 一発で全画面化
         try { document.documentElement.requestFullscreen().catch(e=>console.log(e)); } catch(e) {}
+        
         connectToHost();
     }
 
@@ -1350,26 +1355,27 @@
         peer = new Peer(); 
         
         peer.on('open', () => {
-            const targetId = 'hazuki-regi-momo-' + FIXED_PIN;
+            const targetId = 'hazuki-regi-momo-' + targetHostPin;
             conn = peer.connect(targetId, { reliable: true });
             
             conn.on('open', () => {
+                lastPing = Date.now();
                 if(reconnectInterval) { clearInterval(reconnectInterval); reconnectInterval = null; }
             });
             
             conn.on('data', (data) => {
-                if(data.type === 'ping') return;
+                if(data.type === 'ping') {
+                    lastPing = Date.now();
+                    return;
+                }
                 handleClientData(data);
             });
             
-            // ★ 親機が閉じた・切断された時は、サイネージに戻る（勝手に離席画面にしない）
-            conn.on('close', () => { 
-                handleDisconnect(); 
-            });
+            conn.on('close', () => { handleDisconnect(); });
         });
     }
 
-    // 子機の接続監視＆自動復旧ループ
+    // ★ 子機の接続監視＆自動復旧（離席画面にはしない）
     setInterval(() => {
         if (isClient) {
             if (!conn || !conn.open) {
@@ -1391,11 +1397,10 @@
         try { document.exitFullscreen().catch(e=>console.log(e)); } catch(e) {}
     }
 
-    // 通信切断時は、離席画面ではなく通常のサイネージに戻る
     function handleDisconnect() {
         document.getElementById('client-checkout-area').style.display = 'none';
         document.getElementById('client-cart-area').style.display = 'none';
-        clientData.cart = []; // カートをリセット
+        clientData.cart = []; 
         runSignageLoop();
     }
 
@@ -1481,15 +1486,15 @@
             c.forEach(i => { if(!map[i.id]) map[i.id] = {...i, count:0}; map[i.id].count++; });
             Object.values(map).forEach(i => {
                 list.innerHTML += `
-                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:4px dashed rgba(0,0,0,0.1); padding:15px 0;">
-                    <div style="display:flex; align-items:center; gap:20px;">
-                        <img src="${i.image}" style="width:90px; height:90px; object-fit:contain; border-radius:16px; background:rgba(255,255,255,0.9); box-shadow:0 8px 20px rgba(0,0,0,0.15);">
+                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:4px dashed rgba(0,0,0,0.1); padding:20px 0;">
+                    <div style="display:flex; align-items:center; gap:30px;">
+                        <img src="${i.image}" style="width:80px; height:80px; object-fit:contain; border-radius:16px; background:rgba(255,255,255,0.9); box-shadow:0 8px 20px rgba(0,0,0,0.15);">
                         <div>
-                            <div style="font-weight:900; color:#333; font-size:2.2rem; line-height:1.2; margin-bottom:5px;">${i.name}</div>
-                            <div style="color:var(--accent-color); font-weight:900; font-size:2rem;">¥${i.price.toLocaleString()}</div>
+                            <div style="font-weight:900; color:#333; font-size:3rem; line-height:1.2; margin-bottom:5px;">${i.name}</div>
+                            <div style="color:var(--accent-color); font-weight:900; font-size:2.5rem;">¥${i.price.toLocaleString()}</div>
                         </div>
                     </div>
-                    <div style="font-size:3rem; font-weight:900; color:#333;">x ${i.count}</div>
+                    <div style="font-size:4rem; font-weight:900; color:#333;">x ${i.count}</div>
                 </div>`;
             });
             
@@ -1501,7 +1506,6 @@
     function runSignageLoop() {
         clearTimeout(signageTimeout);
         
-        // カートに物が入っている場合はサイネージは動かさない（離席モード中以外）
         if(clientData.cart && clientData.cart.length > 0 && !clientData.isAwayMode) return; 
 
         // 離席モードの処理
