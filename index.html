@@ -76,15 +76,8 @@
         .preset-btn.primary { background-color: #FFC107; color: #333; }
         .preset-btn.danger { background-color: #f44336; color: white; padding: 12px 16px; font-size: 1.1rem;}
 
-        /* ★ タブ（スクロールで上に張り付く sticky の復活！） */
-        .tabs { 
-            position: sticky; /* relative から sticky に修正 */
-            display: flex; background-color: var(--tab-bg); 
-            top: 10px; z-index: 110; box-shadow: 0 8px 32px rgba(0,0,0,0.08); 
-            margin: 0 15px 10px 15px; border-radius: 24px; padding: 6px; 
-            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); 
-            border: 1px solid rgba(255,255,255,0.6); 
-        }
+        /* タブ */
+        .tabs { position: sticky; display: flex; background-color: var(--tab-bg); top: 10px; z-index: 110; box-shadow: 0 8px 32px rgba(0,0,0,0.08); margin: 0 15px 10px 15px; border-radius: 24px; padding: 6px; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.6); }
         .tab { flex: 1; text-align: center; padding: 12px 0; color: var(--text-color); opacity: 0.6; font-weight: 900; font-size: 0.9rem; white-space: nowrap; border-radius: 18px; cursor: pointer; position: relative; z-index: 2; transition: color 0.3s; }
         .tab.active { opacity: 1; color: var(--tab-active-color); }
         .tab-highlight { position: absolute; top: 6px; bottom: 6px; left: 6px; width: 0; background: var(--tab-active-bg); border-radius: 18px; z-index: 1; transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
@@ -414,7 +407,8 @@
 
     <div id="client-menu-area" style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:1; background:var(--bg-color); display:none; flex-direction:column; padding:40px; box-sizing:border-box;">
         <h2 style="font-size:3.5rem; margin:0 0 30px 0; text-align:center; color:#333; font-weight:900; letter-spacing:4px; border-bottom:4px dashed rgba(0,0,0,0.1); padding-bottom:20px;">📋 おしながき</h2>
-        <div id="client-menu-list" style="display:grid; grid-template-columns:1fr 1fr; gap:30px; overflow-y:auto; padding:20px;"></div>
+        <div id="client-menu-list" style="display:grid; grid-template-columns:1fr 1fr; gap:30px; overflow-y:auto; padding:20px;">
+            </div>
     </div>
 
     <div id="client-slideshow">
@@ -500,7 +494,8 @@
     }
 
     function recoverFromLocalStorage() {
-        const backup = localStorage.getItem('pos_app_data_backup') || localStorage.getItem('pos_app_data');
+        // 新しい軽量バックアップを優先して読み込む
+        const backup = localStorage.getItem('pos_app_data_light_backup') || localStorage.getItem('pos_app_data_backup') || localStorage.getItem('pos_app_data');
         if (backup) {
             try { appData = JSON.parse(backup); } catch(e) {}
         }
@@ -512,6 +507,18 @@
             appData.events = [{ id: initialId, name: "イベント①", items: [], history: [] }];
             appData.currentEventId = initialId;
         }
+        
+        // ★ イベントIDの不整合バグを自動修復
+        if (!appData.events.find(e => e.id == appData.currentEventId)) {
+            if(appData.events.length > 0) {
+                appData.currentEventId = appData.events[0].id;
+            } else {
+                const initialId = Date.now();
+                appData.events = [{ id: initialId, name: "イベント①", items: [], history: [] }];
+                appData.currentEventId = initialId;
+            }
+        }
+        
         appData.events.forEach(ev => {
             if (!ev.history) ev.history = []; if (!ev.items) ev.items = [];
         });
@@ -533,23 +540,41 @@
             if (activeTab) switchTab('pos', activeTab);
         }, 100);
         
-        saveData(); 
+        saveData(); // ロード成功後に確実に保存
     }
 
     function saveData() {
         let isSuccess = false;
+        
+        // 1. IndexedDBに完全なデータを保存（クラッシュ防止のため直接代入）
         if (db) {
             try {
                 const transaction = db.transaction(['appData'], 'readwrite');
                 const store = transaction.objectStore('appData');
-                store.put({ id: 'main', data: JSON.parse(JSON.stringify(appData)) });
+                store.put({ id: 'main', data: appData }); 
                 isSuccess = true;
-            } catch(e) {}
+            } catch(e) { console.error("IDB Save Error:", e); }
         }
+        
+        // 2. localStorageに画像抜きの「軽量バックアップ」を保存（5MB制限回避）
         try {
-            localStorage.setItem('pos_app_data_backup', JSON.stringify(appData));
+            const lightData = {
+                currentEventId: appData.currentEventId,
+                theme: appData.theme,
+                gridColumns: appData.gridColumns,
+                hostPin: appData.hostPin,
+                signageSettings: { ...appData.signageSettings, awayCustomImage: null },
+                events: appData.events.map(ev => ({
+                    id: ev.id, name: ev.name, history: ev.history,
+                    items: ev.items.map(item => ({
+                        id: item.id, name: item.name, price: item.price, stock: item.stock, image: null
+                    }))
+                }))
+            };
+            localStorage.setItem('pos_app_data_light_backup', JSON.stringify(lightData));
             isSuccess = true;
         } catch(e) {}
+        
         return isSuccess;
     }
 
@@ -588,6 +613,7 @@
             if(confirm("本当に消去してよろしいですか？（取り消せません）")) {
                 if(db) indexedDB.deleteDatabase(DB_NAME);
                 localStorage.removeItem('pos_app_data_backup');
+                localStorage.removeItem('pos_app_data_light_backup');
                 localStorage.removeItem('pos_app_data');
                 location.reload();
             }
@@ -735,7 +761,7 @@
             if (isNaN(s)) return alert('⚠️ 在庫数を入力してください。');
 
             const ev = appData.events.find(e => e.id == appData.currentEventId);
-            if(!ev) return;
+            if(!ev) return alert("⚠️ エラー：イベントが見つかりません。画面をリロードしてください。");
 
             const finalize = (img) => {
                 if (editId) {
@@ -826,7 +852,6 @@
         const item = ev.items.find(i => i.id === itemId);
         cart.push(item); updateCartButton();
         
-        // ★ 即座に計算して送信
         displayedTotal = cart.reduce((s,i)=>s+i.price, 0); 
         syncCartTotalInstant(); 
         syncStateToClient(); 
@@ -1105,439 +1130,200 @@
         link.download = `${ev.name}_売上.csv`; link.click();
     }
 
-    // ==========================================
-    // 📡 【WebRTC 通信強化版】 PeerJS
-    // ==========================================
-    let peer = null;
-    let conn = null;
-    let isHost = false;
-    let isClient = false;
-    const PEER_PREFIX = 'hazuki-regi-momo-'; 
-    
-    // ★ 壁を越えるための強力なSTUNサーバー設定
-    const peerOptions = {
-        config: {
-            'iceServers': [
-                { urls: 'stun:stun.l.google.com:19302' },
-                { urls: 'stun:global.stun.twilio.com:3478' }
-            ]
-        }
-    };
+    // --- ★ マップ機能 ---
+    let mapScale = 1, mapTx = 0, mapTy = 0;
+    let isPanning = false, startTx = 0, startTy = 0;
+    let initialDist = null, lastScale = 1;
+    let isPinMode = false, showLabels = true;
+    let isPlacingPin = false; 
 
-    function initPeer() {
-        if(!peer) {
-            if(typeof Peer === 'undefined') {
-                alert('通信ライブラリが読み込めません。インターネット接続を確認してください。');
-                return false;
-            }
-        }
-        return true;
-    }
-
-    // --- 親機モード ---
-    function saveSignageSettings() {
-        appData.signageSettings = {
-            awayText1: document.getElementById('setting-away-text1').value,
-            awayText2: document.getElementById('setting-away-text2').value,
-            awayIconType: document.getElementById('setting-away-icon').value,
-            awayCustomImage: appData.signageSettings?.awayCustomImage || null
-        };
-        saveData(); syncStateToClient();
-    }
-    
-    function loadAwayCustomImage(input) {
-        if (!input.files || !input.files[0]) return;
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const img = new Image();
-            img.onload = () => {
-                const c = document.createElement('canvas'); const ctx = c.getContext('2d');
-                const max = 400; let scale = max / Math.max(img.width, img.height);
-                if (scale > 1) scale = 1; c.width = img.width * scale; c.height = img.height * scale;
-                ctx.drawImage(img, 0, 0, c.width, c.height);
-                if(!appData.signageSettings) appData.signageSettings = {};
-                appData.signageSettings.awayCustomImage = c.toDataURL('image/jpeg', 0.8);
-                document.getElementById('setting-away-icon').value = 'custom';
-                saveSignageSettings(); loadSignageSettingsUI();
-            };
-            img.src = e.target.result;
-        };
-        reader.readAsDataURL(input.files[0]);
-    }
-
-    function loadSignageSettingsUI() {
-        const s = appData.signageSettings || {};
-        if(s.awayText1) document.getElementById('setting-away-text1').value = s.awayText1;
-        if(s.awayText2) document.getElementById('setting-away-text2').value = s.awayText2;
-        if(s.awayIconType) document.getElementById('setting-away-icon').value = s.awayIconType;
-        
-        const preview = document.getElementById('away-image-preview');
-        if(s.awayIconType === 'custom' && s.awayCustomImage) {
-            preview.innerHTML = `<img src="${s.awayCustomImage}" style="height:100%; border-radius:8px;">`;
-        } else { preview.innerHTML = ''; }
-    }
-
-    function startHostMode() {
-        if(isHost) {
-            location.reload();
-            return;
-        }
-        
-        if(!initPeer()) return;
-        isHost = true;
-        
-        // ★ ID衝突を防ぐため毎回ランダムなPINを発行する
-        const pin = Math.floor(1000 + Math.random() * 9000).toString();
-        const peerId = PEER_PREFIX + pin;
-        
-        const btn = document.getElementById('btn-host');
-        btn.innerHTML = `📱 親機を終了 (リロード)`;
-        btn.style.background = '#f44336';
-        btn.style.boxShadow = '0 4px 12px rgba(244,67,54,0.3)';
-        
-        document.getElementById('sync-status').innerText = '接続待機中...';
-        if(peer) peer.destroy();
-        
-        setTimeout(() => {
-            peer = new Peer(peerId, peerOptions); // ★強化オプション適用
-            
-            peer.on('open', (id) => {
-                document.getElementById('sync-status').innerHTML = `📡 子機からの接続を待っています<br>（iPadに <span style="color:var(--accent-color); font-size:1.5em;">${pin}</span> を入力）`;
-            });
-            
-            peer.on('connection', (connection) => {
-                conn = connection;
-                setupHostConnection();
-            });
-            
-            peer.on('disconnected', () => {
-                if (isHost && !peer.destroyed) peer.reconnect();
-            });
-
-            peer.on('error', (err) => {
-                console.error(err);
-                if (err.type === 'unavailable-id') {
-                    isHost = false;
-                    startHostMode();
-                } else {
-                    document.getElementById('sync-status').innerHTML = `❌ 通信エラー<br><button onclick="location.reload()" style="padding:5px 10px; margin-top:5px; border-radius:4px;">リロード</button>`;
-                }
-            });
-        }, 100);
-    }
-
-    function setupHostConnection() {
-        conn.on('open', () => {
-            document.getElementById('sync-status').innerText = '✅ 子機(iPad)と接続中！';
-            syncStateToClient(); 
-        });
-        conn.on('close', () => { document.getElementById('sync-status').innerText = '❌ 子機が切断されました'; });
-    }
-
-    setInterval(() => {
-        if (isHost && peer) {
-            if (peer.disconnected && !peer.destroyed) { peer.reconnect(); }
-            if (conn && conn.open) { conn.send({type: 'ping'}); }
-        }
-    }, 3000);
-
-    function sendSyncData(type, payload) {
-        if(conn && conn.open) { conn.send({ type, payload }); }
-    }
-
-    function syncStateToClient() {
-        if(!conn || !conn.open) return;
-        const ev = appData.events.find(e => e.id == appData.currentEventId);
-        if(!ev) return;
-        
-        const actualTotal = cart.reduce((s,i)=>s+i.price, 0);
-
-        sendSyncData('full_state', {
-            items: ev.items, 
-            cart: cart, 
-            cartTotal: actualTotal,
-            signageSettings: appData.signageSettings || {}, 
-            slideshowImages: appData.slideshowImages || []
-        });
-    }
-
-    function loadSlideshowImages(input) {
-        if(!input.files || input.files.length === 0) return;
-        if(!appData.slideshowImages) appData.slideshowImages = [];
-        Array.from(input.files).forEach(file => {
+    function loadMapImage(input) {
+        if (input.files && input.files[0]) {
             const reader = new FileReader();
             reader.onload = (e) => {
                 const img = new Image();
                 img.onload = () => {
                     const c = document.createElement('canvas'); const ctx = c.getContext('2d');
-                    const max = 1500; let scale = max / Math.max(img.width, img.height);
-                    if (scale > 1) scale = 1; c.width = img.width * scale; c.height = img.height * scale;
+                    const max = 2000; let scale = max / Math.max(img.width, img.height);
+                    if (scale > 1) scale = 1;
+                    c.width = img.width * scale; c.height = img.height * scale;
                     ctx.drawImage(img, 0, 0, c.width, c.height);
-                    appData.slideshowImages.push(c.toDataURL('image/jpeg', 0.8));
-                    saveData(); renderSlideshowPreview(); syncStateToClient();
+                    const ev = appData.events.find(e => e.id == appData.currentEventId);
+                    ev.mapImage = c.toDataURL('image/jpeg', 0.8);
+                    saveData(); renderMap(); resetMap();
                 };
                 img.src = e.target.result;
             };
-            reader.readAsDataURL(file);
-        });
-    }
-
-    function clearSlideshowImages() { appData.slideshowImages = []; saveData(); renderSlideshowPreview(); syncStateToClient(); }
-
-    function renderSlideshowPreview() {
-        const container = document.getElementById('slideshow-preview'); container.innerHTML = '';
-        if(appData.slideshowImages && appData.slideshowImages.length > 0) {
-            appData.slideshowImages.forEach(src => {
-                container.innerHTML += `<img src="${src}" style="height:60px; border-radius:8px; border:1px solid rgba(0,0,0,0.1);">`;
-            });
-        } else { container.innerHTML = '<span style="font-size:0.8rem; color:#888;">画像がありません</span>'; }
-    }
-
-    // --- 子機モード（iPad用） ---
-    let targetHostPin = '';
-    let lastPing = Date.now();
-    let reconnectInterval = null;
-
-    function startClientMode() {
-        if(!initPeer()) return;
-        targetHostPin = prompt('親機に表示されている4桁のPINを入力してください', targetHostPin);
-        if(!targetHostPin || targetHostPin.length !== 4) return;
-        
-        isClient = true;
-        document.getElementById('client-display').style.display = 'flex';
-        try { document.documentElement.requestFullscreen().catch(e=>console.log(e)); } catch(e) {}
-        
-        connectToHost();
-    }
-
-    function connectToHost() {
-        if(peer) peer.destroy();
-        
-        setTimeout(() => {
-            peer = new Peer(peerOptions); // ★強化オプション適用
-            peer.on('open', () => {
-                const targetId = PEER_PREFIX + targetHostPin;
-                conn = peer.connect(targetId, { reliable: true });
-                
-                conn.on('open', () => {
-                    hideDisconnectOverlay();
-                    lastPing = Date.now();
-                    if(reconnectInterval) { clearInterval(reconnectInterval); reconnectInterval = null; }
-                });
-                
-                conn.on('data', (data) => {
-                    if(data.type === 'ping') {
-                        lastPing = Date.now();
-                        if(document.getElementById('client-disconnect-overlay').style.display !== 'none') {
-                            hideDisconnectOverlay();
-                        }
-                        return;
-                    }
-                    handleClientData(data);
-                });
-                conn.on('close', () => { showDisconnectOverlay(); });
-                conn.on('error', (err) => { console.error(err); });
-            });
-            peer.on('error', (err) => { 
-                console.error(err); 
-                showDisconnectOverlay();
-            });
-        }, 100);
-    }
-
-    setInterval(() => {
-        if (isClient) {
-            if (Date.now() - lastPing > 12000) { 
-                showDisconnectOverlay();
-                if (!reconnectInterval) {
-                    reconnectInterval = setInterval(() => {
-                        if (Date.now() - lastPing > 12000) {
-                            connectToHost();
-                        } else {
-                            clearInterval(reconnectInterval); reconnectInterval = null;
-                        }
-                    }, 5000);
-                }
-            }
-        }
-    }, 3000);
-
-    function exitClientMode() {
-        isClient = false;
-        if(peer) peer.destroy();
-        if(reconnectInterval) clearInterval(reconnectInterval);
-        stopSignageLoop();
-        document.getElementById('client-display').style.display = 'none';
-        try { document.exitFullscreen().catch(e=>console.log(e)); } catch(e) {}
-    }
-
-    function showDisconnectOverlay() { 
-        document.getElementById('client-disconnect-overlay').style.display = 'flex'; 
-        stopSignageLoop();
-    }
-    function hideDisconnectOverlay() { 
-        document.getElementById('client-disconnect-overlay').style.display = 'none'; 
-        if(!clientData.cart || clientData.cart.length === 0) runSignageLoop();
-    }
-
-    // --- 子機の画面制御 ---
-    let clientData = {};
-    let signageMode = 'menu'; 
-    let signageTimeout = null;
-    let currentSlideIndex = 0;
-
-    function handleClientData(data) {
-        if(data.type === 'full_state') {
-            clientData = data.payload;
-            updateAwayUI();
-            updateClientCartUI();
-        }
-        else if(data.type === 'checkout_open') {
-            stopSignageLoop();
-            document.getElementById('client-cart-area').style.display = 'none';
-            document.getElementById('client-menu-area').style.display = 'none';
-            document.getElementById('client-slideshow').style.display = 'none';
-            document.getElementById('client-checkout-area').style.display = 'flex';
-            
-            animateValue(document.getElementById('client-total-amount'), 0, data.payload.total, 500);
-            document.getElementById('client-tender').innerText = '0';
-            document.getElementById('client-change').innerText = '0';
-            document.getElementById('client-change').parentElement.style.color = '#333';
-            document.getElementById('client-thanks').style.opacity = '0';
-            document.getElementById('client-thanks').style.transform = 'translateY(20px)';
-        }
-        else if(data.type === 'checkout_change') {
-            document.getElementById('client-tender').innerText = data.payload.tender.toLocaleString();
-            const c = data.payload.change;
-            const changeEl = document.getElementById('client-change');
-            
-            const currentChange = parseInt(changeEl.innerText.replace(/,/g, '')) || 0;
-            if(c >= 0) {
-                animateValue(changeEl, currentChange, c, 500);
-            } else {
-                changeEl.innerText = Math.abs(c).toLocaleString();
-            }
-            changeEl.parentElement.style.color = c < 0 ? '#f44336' : 'var(--accent-color)';
-        }
-        else if(data.type === 'checkout_done') {
-            document.getElementById('client-thanks').style.opacity = '1';
-            document.getElementById('client-thanks').style.transform = 'translateY(0)';
-        }
-    }
-
-    function updateAwayUI() {
-        const s = clientData.signageSettings || {};
-        document.getElementById('away-text-1-display').innerText = s.awayText1 || "ただいま離席中です";
-        document.getElementById('away-text-2-display').innerText = s.awayText2 || "すぐに戻ります。しばらくお待ちくださいませ。";
-        
-        const iconEl = document.getElementById('away-icon-display');
-        if(s.awayIconType === 'custom' && s.awayCustomImage) {
-            iconEl.innerHTML = `<img src="${s.awayCustomImage}" style="max-height:250px; border-radius:20px; box-shadow:0 10px 30px rgba(0,0,0,0.5);">`;
-            iconEl.classList.remove('away-icon-anim');
-        } else if(s.awayIconType === 'girl') {
-            iconEl.innerHTML = `👩‍💼`; iconEl.classList.add('away-icon-anim');
-        } else {
-            iconEl.innerHTML = `👨‍💼`; iconEl.classList.add('away-icon-anim');
-        }
-    }
-
-    function updateClientCartUI() {
-        const c = clientData.cart || [];
-        const t = clientData.cartTotal || 0;
-        
-        if(document.getElementById('client-checkout-area').style.display === 'flex') return;
-        
-        if(c.length === 0) {
-            document.getElementById('client-cart-area').style.display = 'none';
-            if(!signageTimeout) {
-                signageMode = 'menu';
-                runSignageLoop();
-            }
-        } else {
-            stopSignageLoop();
-            document.getElementById('client-menu-area').style.display = 'none';
-            document.getElementById('client-slideshow').style.display = 'none';
-            document.getElementById('client-cart-area').style.display = 'flex';
-            
-            const list = document.getElementById('client-cart-list');
-            list.innerHTML = '';
-            
-            const map = {}; 
-            c.forEach(i => { if(!map[i.id]) map[i.id] = {...i, count:0}; map[i.id].count++; });
-            Object.values(map).forEach(i => {
-                list.innerHTML += `
-                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:4px dashed rgba(0,0,0,0.1); padding:20px 0;">
-                    <div style="display:flex; align-items:center; gap:30px;">
-                        <img src="${i.image}" style="width:120px; height:120px; object-fit:contain; border-radius:20px; background:rgba(255,255,255,0.9); box-shadow:0 8px 20px rgba(0,0,0,0.15);">
-                        <div>
-                            <div style="font-weight:900; color:#333; font-size:3rem; line-height:1.2; margin-bottom:10px;">${i.name}</div>
-                            <div style="color:var(--accent-color); font-weight:900; font-size:2.5rem;">¥${i.price.toLocaleString()}</div>
-                        </div>
-                    </div>
-                    <div style="font-size:4rem; font-weight:900; color:#333;">x ${i.count}</div>
-                </div>`;
-            });
-            
-            animateValue(document.getElementById('client-subtotal'), parseInt(document.getElementById('client-subtotal').innerText.replace(/,/g, '')) || 0, t, 500);
-        }
-    }
-
-    function runSignageLoop() {
-        clearTimeout(signageTimeout);
-        if(clientData.cart && clientData.cart.length > 0) return; 
-        
-        document.getElementById('client-cart-area').style.display = 'none';
-        document.getElementById('client-checkout-area').style.display = 'none';
-
-        if(signageMode === 'menu') {
-            document.getElementById('client-slideshow').style.display = 'none';
-            document.getElementById('client-menu-area').style.display = 'flex';
-            
-            const list = document.getElementById('client-menu-list');
-            list.innerHTML = '';
-            (clientData.items || []).forEach(i => {
-                const outOfStock = i.stock <= 0;
-                list.innerHTML += `
-                <div class="glass-card" style="display:flex; align-items:center; padding:20px; gap:20px; position:relative; overflow:hidden; ${outOfStock ? 'opacity:0.6;' : ''}">
-                    <img src="${i.image}" style="width:120px; height:120px; object-fit:contain; border-radius:16px; background:rgba(255,255,255,0.8);">
-                    <div style="flex-grow:1;">
-                        <div style="font-size:2rem; font-weight:900; color:#333; line-height:1.2; margin-bottom:10px;">${i.name}</div>
-                        <div style="font-size:2.2rem; font-weight:900; color:var(--accent-color);">¥${i.price.toLocaleString()}</div>
-                    </div>
-                    ${outOfStock ? '<div style="position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.7); display:flex; justify-content:center; align-items:center; font-size:4rem; font-weight:900; color:#f44336; z-index:10; border:6px dashed #f44336;">完売</div>' : ''}
-                </div>`;
-            });
-
-            signageMode = 'slide';
-            signageTimeout = setTimeout(runSignageLoop, 15000); 
-        } 
-        else {
-            if(clientData.slideshowImages && clientData.slideshowImages.length > 0) {
-                document.getElementById('client-menu-area').style.display = 'none';
-                document.getElementById('client-slideshow').style.display = 'flex';
-                
-                const imgEl = document.getElementById('slideshow-img');
-                imgEl.style.opacity = 0;
-                setTimeout(() => {
-                    imgEl.src = clientData.slideshowImages[currentSlideIndex];
-                    imgEl.style.opacity = 1;
-                    currentSlideIndex = (currentSlideIndex + 1) % clientData.slideshowImages.length;
-                }, 500);
-
-                signageMode = 'menu';
-                signageTimeout = setTimeout(runSignageLoop, 5000); 
-            } else {
-                signageMode = 'menu';
-                runSignageLoop(); 
-            }
+            reader.readAsDataURL(input.files[0]);
         }
     }
     
-    function stopSignageLoop() {
-        clearTimeout(signageTimeout);
-        signageTimeout = null;
-        document.getElementById('client-menu-area').style.display = 'none';
-        document.getElementById('client-slideshow').style.display = 'none';
+    function deleteMapImage() {
+        if(confirm("マップ画像を削除しますか？\n※配置したピンもすべて消えます")){
+            const ev = appData.events.find(e => e.id == appData.currentEventId);
+            ev.mapImage = null; ev.pins = []; saveData(); renderMap();
+        }
+    }
+
+    function toggleLabels() {
+        showLabels = !showLabels;
+        const btn = document.getElementById('label-toggle-btn');
+        const container = document.getElementById('pins-container');
+        if(showLabels) {
+            btn.style.background = 'var(--accent-color)'; btn.innerText = '👁';
+            container.classList.remove('hide-labels');
+        } else {
+            btn.style.background = '#888'; btn.innerText = 'ー';
+            container.classList.add('hide-labels');
+        }
+    }
+
+    function renderMap() {
+        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        const imgEl = document.getElementById('map-image');
+        const pinsContainer = document.getElementById('pins-container');
+        pinsContainer.innerHTML = '';
+        
+        if (ev && ev.mapImage) {
+            imgEl.src = ev.mapImage; imgEl.style.display = 'block';
+            ev.pins.forEach(p => {
+                let labelHTML = '';
+                if(p.booth || p.author) {
+                    labelHTML = `<div class="pin-label color-${p.color || 'white'}">${p.booth ? p.booth + '<br>' : ''}${p.author}</div>`;
+                }
+                pinsContainer.innerHTML += `
+                    <div class="map-pin-wrap" style="left:${p.x}px; top:${p.y}px;" onclick="openPinModal(${p.id}, ${p.x}, ${p.y}, '${p.booth}', '${p.author}', '${p.memo}', '${p.icon}', '${p.color}')">
+                        ${labelHTML}
+                        <div class="pin-icon">${p.icon || '📍'}</div>
+                        <div class="pin-dot"></div>
+                    </div>`;
+            });
+        } else { imgEl.style.display = 'none'; }
+        updateMapTransform();
+    }
+
+    function updateMapTransform() { document.getElementById('map-wrapper').style.transform = `translate(${mapTx}px, ${mapTy}px) scale(${mapScale})`; }
+    function resetMap() { mapScale = 1; mapTx = 0; mapTy = 0; updateMapTransform(); }
+
+    function togglePinMode() {
+        isPinMode = !isPinMode;
+        const btn = document.getElementById('pin-mode-btn');
+        const container = document.getElementById('pins-container');
+        if (isPinMode) {
+            btn.style.background = '#ffeb3b'; btn.style.borderColor = '#fbc02d';
+            btn.innerText = '📍 ピン追加モード：【ON】（タップ＆ドラッグで追加）';
+            container.classList.add('pin-mode'); 
+        } else {
+            btn.style.background = 'rgba(255,255,255,0.9)'; btn.style.borderColor = 'rgba(0,0,0,0.15)';
+            btn.innerText = '📍 ピン追加モード：【OFF】（地図移動）';
+            container.classList.remove('pin-mode');
+            document.getElementById('magnifier').style.display = 'none';
+        }
+    }
+
+    function setupMapGestures() {
+        const container = document.getElementById('map-container');
+        let lastTouch = null;
+
+        container.addEventListener('touchstart', e => {
+            if (e.touches.length === 2) {
+                isPlacingPin = false; document.getElementById('magnifier').style.display = 'none';
+                initialDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+                lastScale = mapScale;
+            } else if (e.touches.length === 1) {
+                if (isPinMode) {
+                    isPlacingPin = true; updateMagnifier(e.touches[0]);
+                } else {
+                    isPanning = true; startTx = e.touches[0].clientX - mapTx; startTy = e.touches[0].clientY - mapTy;
+                }
+            }
+        }, {passive: false});
+
+        container.addEventListener('touchmove', e => {
+            e.preventDefault(); 
+            if (e.touches.length === 2 && initialDist) {
+                const cx = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+                const cy = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+                const rect = container.getBoundingClientRect();
+                const pinchX = cx - rect.left; const pinchY = cy - rect.top;
+                
+                const currentDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+                const newScale = Math.max(0.2, Math.min(lastScale * (currentDist / initialDist), 5));
+                const ratio = newScale / mapScale;
+                
+                mapTx -= (pinchX - mapTx) * (ratio - 1); mapTy -= (pinchY - mapTy) * (ratio - 1);
+                mapScale = newScale; updateMapTransform();
+            } else if (e.touches.length === 1 && isPanning) {
+                mapTx = e.touches[0].clientX - startTx; mapTy = e.touches[0].clientY - startTy; updateMapTransform();
+            } else if (e.touches.length === 1 && isPlacingPin) {
+                updateMagnifier(e.touches[0]);
+            }
+        }, {passive: false});
+
+        container.addEventListener('touchend', e => {
+            if (e.touches.length < 2) initialDist = null;
+            isPanning = false;
+            if (isPlacingPin && lastTouch) {
+                isPlacingPin = false; document.getElementById('magnifier').style.display = 'none';
+                const imgRect = document.getElementById('map-image').getBoundingClientRect();
+                const realX = (lastTouch.clientX - imgRect.left) / mapScale;
+                const realY = (lastTouch.clientY - imgRect.top) / mapScale;
+                openPinModal(Date.now(), realX, realY, '', '', '', '📍', 'white');
+                lastTouch = null;
+            }
+        });
+
+        function updateMagnifier(touch) {
+            lastTouch = touch;
+            const mag = document.getElementById('magnifier'); const img = document.getElementById('map-image');
+            if(!img.src) return;
+            mag.style.display = 'block';
+            mag.style.left = (touch.clientX - 60) + 'px'; mag.style.top = (touch.clientY - 140) + 'px'; 
+            const rect = img.getBoundingClientRect();
+            mag.style.backgroundImage = `url(${img.src})`;
+            const magZoom = 2; mag.style.backgroundSize = `${rect.width * magZoom}px ${rect.height * magZoom}px`;
+            const relX = touch.clientX - rect.left; const relY = touch.clientY - rect.top;
+            mag.style.backgroundPosition = `-${relX * magZoom - 60}px -${relY * magZoom - 60}px`;
+        }
+    }
+
+    function openPinModal(id, x, y, booth, author, memo, icon, color) {
+        document.getElementById('pin-id').value = id; document.getElementById('pin-x').value = x; document.getElementById('pin-y').value = y;
+        document.getElementById('pin-booth').value = booth !== 'undefined' ? booth : '';
+        document.getElementById('pin-author').value = author !== 'undefined' ? author : '';
+        document.getElementById('pin-memo').value = memo !== 'undefined' ? memo : '';
+        
+        let radios = document.getElementsByName('pin-icon');
+        for(let i=0; i<radios.length; i++) { if(radios[i].value === (icon || '📍')) radios[i].checked = true; }
+        document.getElementById('pin-color').value = color || 'white';
+
+        document.getElementById('pin-modal').style.display = 'flex';
+        if(isPinMode) togglePinMode(); 
+    }
+    
+    function closePinModal() { document.getElementById('pin-modal').style.display = 'none'; }
+    
+    function savePin() {
+        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        const id = parseInt(document.getElementById('pin-id').value);
+        const x = parseFloat(document.getElementById('pin-x').value); const y = parseFloat(document.getElementById('pin-y').value);
+        const booth = document.getElementById('pin-booth').value; const author = document.getElementById('pin-author').value; const memo = document.getElementById('pin-memo').value;
+        
+        let icon = '📍'; let radios = document.getElementsByName('pin-icon');
+        for(let i=0; i<radios.length; i++) { if(radios[i].checked) icon = radios[i].value; }
+        const color = document.getElementById('pin-color').value;
+
+        const existing = ev.pins.find(p => p.id === id);
+        if (existing) { existing.booth = booth; existing.author = author; existing.memo = memo; existing.icon = icon; existing.color = color; } 
+        else { ev.pins.push({ id, x, y, booth, author, memo, icon, color }); }
+        saveData(); renderMap(); closePinModal();
+    }
+
+    function deletePin() {
+        const id = parseInt(document.getElementById('pin-id').value);
+        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        ev.pins = ev.pins.filter(p => p.id !== id);
+        saveData(); renderMap(); closePinModal();
     }
 
 </script>
