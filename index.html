@@ -936,6 +936,18 @@
         });
     }
 
+function resetBadgePosition(id) {
+        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        const area = (ev.oshinagakiAreas || []).find(a => a.id === id);
+        if (area) {
+            delete area.badgeLeft;
+            delete area.badgeTop;
+            saveData();
+            if(appData.posMode === 'oshinagaki') renderPosOshinagaki();
+            alert('残数バッジの位置を初期位置に戻しました！');
+        }
+    }
+
     function deleteMappedArea(id) {
         const ev = appData.events.find(e => e.id == appData.currentEventId);
         ev.oshinagakiAreas = ev.oshinagakiAreas.filter(a => a.id !== id);
