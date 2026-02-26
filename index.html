@@ -24,7 +24,7 @@
         [data-theme="vivid"] { --bg-color: #111; --header-bg: rgba(30, 30, 30, 0.95); --tab-bg: rgba(50, 50, 50, 0.6); --accent-color: #ff00ff; --tab-active-bg: #ff00ff; --tab-active-color: #fff; --card-bg: rgba(40, 40, 40, 0.8); --text-color: #fff; --btn-checkout: #cc00cc; --app-font: 'Noto Sans JP', sans-serif; }
 
         /* --- 全体レイアウト --- */
-        body { font-family: var(--app-font); margin: 0; padding: 0; background-color: transparent; color: var(--text-color); padding-bottom: 160px; touch-action: manipulation; }
+        body { font-family: var(--app-font); margin: 0; padding: 0; background-color: transparent; color: var(--text-color); padding-bottom: 140px; touch-action: manipulation; }
         #bg-color-layer { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -2; background-color: var(--bg-color); transition: background-color 0.4s; }
         #app-background { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; background-size: cover; background-position: center; background-repeat: no-repeat; opacity: 0.4; pointer-events: none; }
         
@@ -35,26 +35,32 @@
         button:active { transform: scale(0.92); }
         input, select { font-family: inherit; }
 
-        /* ヘッダー・メインタブ */
-        .preset-header { background-color: var(--header-bg); padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; gap: 8px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); z-index: 101; position: relative; margin-bottom: 8px; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); }
+        /* ヘッダー・メインタブ (上に寄せる) */
+        .preset-header { background-color: var(--header-bg); padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; gap: 8px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); z-index: 101; position: relative; margin-bottom: 4px; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); }
         .preset-header select { flex-grow: 1; padding: 12px; border-radius: 14px; font-size: 1rem; border: none; font-weight: 900; background: rgba(255,255,255,0.9); color: #333; box-shadow: 0 2px 10px rgba(0,0,0,0.05); min-width: 0; }
         .preset-btns { display: flex; gap: 6px; flex-shrink: 0; }
         .preset-btn { background-color: rgba(255,255,255,0.2); color: var(--text-color); padding: 12px 14px; font-weight: 900; font-size: 0.9rem; border: 1px solid rgba(255,255,255,0.3);}
         .preset-btn.primary { background-color: #FFC107; color: #333; border: none;}
         .preset-btn.danger { background-color: #f44336; color: white; padding: 12px 16px; font-size: 1.1rem; border: none;}
         
-        .tabs { position: sticky; top: 10px; display: flex; background-color: var(--tab-bg); z-index: 1000; box-shadow: 0 8px 32px rgba(0,0,0,0.08); margin: 0 15px 10px 15px; border-radius: 24px; padding: 6px; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.2); }
-        .tab { flex: 1; text-align: center; padding: 12px 0; color: var(--text-color); opacity: 0.6; font-weight: 900; font-size: 0.9rem; white-space: nowrap; border-radius: 18px; cursor: pointer; position: relative; z-index: 2; transition: color 0.3s; }
-        .tab.active { opacity: 1; color: var(--tab-active-color); }
+        .tabs { position: sticky; top: 5px; display: flex; background-color: var(--tab-bg); z-index: 1000; box-shadow: 0 8px 32px rgba(0,0,0,0.08); margin: 0 15px 5px 15px; border-radius: 24px; padding: 6px; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.2); }
+        .tab { flex: 1; text-align: center; padding: 12px 0; color: var(--text-color); opacity: 0.6; font-weight: 900; font-size: 0.9rem; white-space: nowrap; border-radius: 18px; cursor: pointer; position: relative; z-index: 2; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .tab.active { opacity: 1; color: var(--tab-active-color); transform: scale(1.03); }
         .tab-highlight { position: absolute; top: 6px; bottom: 6px; left: 6px; width: 0; background: var(--tab-active-bg); border-radius: 18px; z-index: 1; transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
-        @keyframes tabFadeIn { 0% { opacity: 0; transform: translateY(20px) scale(0.98); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+        
+        /* 🔥 全体スライド＆フェードアニメーション */
+        @keyframes slideUpFade { 0% { opacity: 0; transform: translateY(40px) scale(0.96); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
         .tab-content { display: none; padding: 0 15px; }
-        .tab-content.active { display: block; animation: tabFadeIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+        .tab-content.active { display: block; animation: slideUpFade 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+        .set-pane { display: none; }
+        .set-pane.active { display: block; animation: slideUpFade 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+        .pos-view { display: none; }
+        .pos-view.active { display: block; animation: slideUpFade 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
 
         /* レジ画面 (POS) */
         .pos-toggle-bar { display:flex; background: rgba(128,128,128,0.15); padding: 4px; border-radius: 16px; margin-bottom: 15px; }
-        .pos-toggle-btn { flex: 1; padding: 10px; font-weight: 900; color: var(--text-color); border-radius: 12px; background: transparent; opacity: 0.6; transition: all 0.3s; font-size: 0.9rem;}
-        .pos-toggle-btn.active { background: var(--card-bg); opacity: 1; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.4); }
+        .pos-toggle-btn { flex: 1; padding: 10px; font-weight: 900; color: var(--text-color); border-radius: 12px; background: transparent; opacity: 0.6; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); font-size: 0.9rem;}
+        .pos-toggle-btn.active { background: var(--card-bg); opacity: 1; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.4); transform: scale(1.05); }
 
         .grid { display: grid; grid-template-columns: repeat(var(--grid-cols), 1fr); gap: 10px; }
         .item { padding: 8px; text-align: center; position: relative; overflow: hidden; transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s; border-radius: 16px;}
@@ -66,31 +72,19 @@
         .stock { font-size: 0.75rem; color: var(--text-color); opacity:0.6; margin-top: 2px; font-weight: 700; pointer-events: none; line-height: 1;}
         .sold-out { position: absolute; top:0; left:0; right:0; bottom:0; background: rgba(255,255,255,0.85); display:flex; align-items:center; justify-content:center; font-weight:900; color:#f44336; font-size:1.4rem; pointer-events:none; border: 3px dashed #f44336; z-index: 5; border-radius: 16px;}
 
-        /* お品書きマッピング用 (POS) */
-        #pos-oshinagaki-wrapper { position: relative; width: 100%; border-radius: 16px; overflow: hidden; display: none; background: rgba(255,255,255,0.5); box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.3);}
-        #pos-oshi-img { width: 100%; display: block; object-fit: contain; }
-        .pos-oshi-area { 
-            position: absolute; 
-            /* 【修正】より透明度を上げる */
-            background: color-mix(in srgb, var(--accent-color) 10%, transparent); 
-            border: 1px solid color-mix(in srgb, var(--accent-color) 30%, transparent); 
-            border-radius: 8px; cursor: pointer; transition: transform 0.1s, background 0.2s; 
-            display:flex; align-items:center; justify-content:center; 
-        }
-        .pos-oshi-area:active { transform: scale(0.95); background: color-mix(in srgb, var(--accent-color) 30%, transparent); }
-        .pos-oshi-area.sold-out-area { background: rgba(255,255,255,0.7); border: 3px dashed #f44336; pointer-events: none; }
+        /* お品書きマッピング用 (POS) - 透過率を強めに */
+        #pos-oshinagaki-wrapper { position: relative; width: 100%; border-radius: 16px; overflow: hidden; background: rgba(255,255,255,0.5); box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.3);}
+        #pos-oshi-img { width: 100%; display: block; object-fit: contain; pointer-events:none; }
+        .pos-oshi-area { position: absolute; background: color-mix(in srgb, var(--accent-color) 8%, transparent); border: 1px solid color-mix(in srgb, var(--accent-color) 25%, transparent); border-radius: 8px; cursor: pointer; transition: transform 0.1s, background 0.2s; display:flex; align-items:center; justify-content:center; }
+        .pos-oshi-area:active { transform: scale(0.95); background: color-mix(in srgb, var(--accent-color) 40%, transparent); }
+        .pos-oshi-area.sold-out-area { background: rgba(255,255,255,0.6); border: 3px dashed rgba(244,67,54,0.7); pointer-events: none; }
         .pos-oshi-area.sold-out-area::after { content:"完売"; color:#f44336; font-weight:900; font-size:1.5rem; text-shadow:0 0 5px white;}
-        .pos-oshi-badge { 
-            position: absolute; 
-            /* 【修正】文字を少し透過＆ドラッグ可能に */
-            background: color-mix(in srgb, var(--accent-color) 70%, transparent); 
-            color: white; padding: 2px 6px; border-radius: 10px; font-size: 0.8rem; font-weight: 900; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            cursor: move; touch-action: none; user-select: none; pointer-events: auto;
-        }
+        /* 残数バッジ（透過＆移動可能） */
+        .pos-oshi-badge { position: absolute; bottom: 5px; right: 5px; background: var(--accent-color); color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.85rem; font-weight: 900; box-shadow: 0 2px 8px rgba(0,0,0,0.3); opacity: 0.85; cursor: grab; touch-action: none; border: 1px solid rgba(255,255,255,0.3); }
+        .pos-oshi-badge:active { cursor: grabbing; transform: scale(1.1); opacity: 1; }
 
-        /* カートバー */
-        .bottom-bar { position: fixed; bottom: 10px; left: 15px; right: 15px; background: var(--card-bg); backdrop-filter: blur(28px) saturate(160%); -webkit-backdrop-filter: blur(28px) saturate(160%); padding: 15px 20px; border-radius: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.2); display: flex; flex-direction: column; gap: 12px; z-index: 90; }
+        /* カートバー (下に寄せる) */
+        .bottom-bar { position: fixed; bottom: 5px; left: 15px; right: 15px; background: var(--card-bg); backdrop-filter: blur(28px) saturate(160%); -webkit-backdrop-filter: blur(28px) saturate(160%); padding: 10px 20px; border-radius: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.2); display: flex; flex-direction: column; gap: 10px; z-index: 90; }
         .cart-status { display: flex; justify-content: space-between; align-items: center; width: 100%; }
         .action-btn { padding: 12px; background: rgba(128,128,128,0.15); border: none; font-size: 1.4rem; font-weight: 900; color: var(--text-color); border-radius: 16px; aspect-ratio: 1/1;}
         .checkout-btn { background-color: var(--btn-checkout); color: white; padding: 16px; font-size: 1.3rem; font-weight: 900; width: 100%; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);}
@@ -98,57 +92,40 @@
         .total-amount-display { font-weight: 900; font-size: 2.6rem; color: var(--text-color); line-height: 1; letter-spacing: -1px;}
         .grid-selector { padding: 0 10px; font-size: 1.1rem; font-weight: 900; border: none; border-radius: 16px; background: rgba(128,128,128,0.15); color: var(--text-color); cursor: pointer; text-align: center; width: 85px; }
 
-        /* --- 設定画面サブタブ (アニメーション付き) --- */
-        .set-nav { position: relative; display: flex; gap: 8px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px; z-index: 1;}
-        .set-nav-highlight {
-            position: absolute; top: 0; bottom: 5px; left: 0; width: 0;
-            background: var(--accent-color); border-radius: 16px; z-index: 0;
-            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-        .set-nav-btn { position: relative; z-index: 2; flex: 0 0 auto; padding: 12px 16px; font-weight: 900; border-radius: 16px; background: rgba(128,128,128,0.15); color: var(--text-color); opacity: 0.6; white-space: nowrap; font-size: 0.95rem; border: none; transition: color 0.3s; }
-        .set-nav-btn.active { opacity: 1; color: #fff; background: transparent; } /* 背景色はハイライト要素に任せる */
-        .set-pane { display: none; animation: fadeIn 0.3s ease-out; }
-        .set-pane.active { display: block; }
+        /* --- 設定画面サブタブ (中央揃え) --- */
+        .set-nav { display: flex; gap: 8px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px; justify-content: center; }
+        .set-nav-btn { flex: 0 0 auto; padding: 12px 16px; font-weight: 900; border-radius: 16px; background: rgba(128,128,128,0.15); color: var(--text-color); opacity: 0.6; white-space: nowrap; font-size: 0.95rem; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .set-nav-btn.active { background: var(--accent-color); color: white; opacity: 1; box-shadow: 0 4px 12px rgba(0,0,0,0.2); transform: scale(1.08); }
 
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; font-size: 0.9rem; color: var(--text-color); opacity:0.8; margin-bottom: 6px; font-weight: 700;}
         .form-group input, .form-group select { width: 100%; padding: 15px; box-sizing: border-box; border: 1px solid rgba(128,128,128,0.2); border-radius: 16px; font-size: 1.1rem; color: #333; background: rgba(255,255,255,0.9); font-weight: 700;}
         .save-btn { background-color: var(--accent-color); color: white; padding: 18px; width: 100%; font-size: 1.2rem; font-weight: 900; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);}
         
-        /* キャンバスマッピングエディタ */
         #map-editor-wrapper { position: relative; width: 100%; background: #eee; border-radius: 16px; overflow: hidden; touch-action: none; border: 2px dashed rgba(128,128,128,0.4); margin-bottom: 10px;}
         #map-editor-img { width: 100%; display: block; pointer-events: none; }
         #map-editor-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; cursor: crosshair; touch-action: none; }
         .map-area-list-item { background: rgba(128,128,128,0.1); padding: 10px; border-radius: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
-
         .list-item { padding: 10px; border-bottom: 1px solid rgba(128,128,128,0.1); display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
         .list-item img { width: 45px; height: 45px; object-fit: contain; background: rgba(255,255,255,0.9); border-radius: 10px; }
         .list-btn { padding: 8px 12px; font-size: 0.85rem; font-weight: 900; border-radius: 10px;}
         .order-btn { background: rgba(128,128,128,0.15); border: none; color: var(--text-color); font-size: 1.1rem; padding: 6px 10px; border-radius: 8px; font-weight: 900; }
 
-        /* モーダル群 */
+        /* モーダル群 (読みやすく白背景化) */
         @keyframes popIn { from { opacity: 0; transform: scale(0.9) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 1000; align-items: center; justify-content: center; padding: 15px; animation: fadeIn 0.3s ease-out; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        
-        /* 【修正】モーダル内部の背景をテーマベースの不透明色にして読みやすく */
-        .modal-content { 
-            background: var(--bg-color); /* 透過をやめ、テーマの背景色に */
-            width: 100%; max-width: 450px; border-radius: 28px; padding: 25px; box-sizing: border-box; 
-            max-height: 95vh; overflow-y: auto; position: relative; color: var(--text-color); 
-            border: 2px solid rgba(128,128,128,0.2); box-shadow: 0 20px 50px rgba(0,0,0,0.3); 
-            animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); 
-        }
-
+        /* 背景を白っぽく固定、文字色も黒系に固定して視認性アップ */
+        .modal-content { background: rgba(255, 255, 255, 0.95) !important; color: #222 !important; backdrop-filter: blur(28px) saturate(160%); -webkit-backdrop-filter: blur(28px) saturate(160%); width: 100%; max-width: 450px; border-radius: 28px; padding: 25px; box-sizing: border-box; max-height: 95vh; overflow-y: auto; position: relative; border: 1px solid rgba(255,255,255,0.5); box-shadow: 0 20px 50px rgba(0,0,0,0.3); animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .modal-content h2, .modal-content label, .modal-content .cart-item-info strong, .modal-content .cart-item-info span { color: #222 !important; }
         .money-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .money-btn { background: rgba(128,128,128,0.15); color: var(--text-color); padding: 18px 5px; font-size: 1.1rem; font-weight: 900; border-radius: 14px; border: 1px solid rgba(128,128,128,0.2);}
-        .tender-input { width: 100%; padding: 16px; font-size: 2rem; font-weight: 900; text-align: right; border: 3px solid var(--btn-checkout); border-radius: 16px; box-sizing: border-box; background: rgba(255,255,255,0.9); color: #333;}
-        .change-box { background: rgba(128,128,128,0.05); padding: 15px; border-radius: 16px; text-align: center; margin-bottom: 20px; border: 3px dashed var(--accent-color); }
+        .money-btn { background: rgba(0,0,0,0.05); color: #333; padding: 18px 5px; font-size: 1.1rem; font-weight: 900; border-radius: 14px; border: 1px solid rgba(0,0,0,0.1);}
+        .tender-input { width: 100%; padding: 16px; font-size: 2rem; font-weight: 900; text-align: right; border: 3px solid var(--btn-checkout); border-radius: 16px; box-sizing: border-box; background: #fff; color: #333;}
+        .change-box { background: rgba(0,0,0,0.03); padding: 15px; border-radius: 16px; text-align: center; margin-bottom: 20px; border: 3px dashed var(--accent-color); }
         .change-val { font-size: 2.6rem; font-weight: 900; color: var(--accent-color); line-height: 1; margin-top: 5px;}
         .modal-large-btn { width: 100%; padding: 18px; font-size: 1.2rem; font-weight: 900; margin-bottom: 12px; border-radius: 16px;}
 
-        /* --- その他のUI要素 (子機、分析など) --- */
+        /* --- サイネージ UI --- */
         #client-display { display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:var(--bg-color); z-index:9999; flex-direction:column; overflow: hidden; font-family: var(--app-font); }
         #client-away-overlay { display:none; position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:10000; color:white; justify-content:center; align-items:center; flex-direction:column; text-align:center; padding:20px; box-sizing:border-box; backdrop-filter:blur(15px); }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-30px); } }
@@ -190,9 +167,9 @@
         <button class="pos-toggle-btn" id="btn-mode-oshi" onclick="setPosMode('oshinagaki')">お品書きマッピング</button>
     </div>
 
-    <div class="grid" id="pos-grid"></div>
+    <div class="pos-view active" id="pos-grid"></div>
     
-    <div id="pos-oshinagaki-wrapper">
+    <div class="pos-view" id="pos-oshinagaki-wrapper">
         <img id="pos-oshi-img">
         <div id="pos-oshi-areas-container" style="position:absolute; top:0; left:0; width:100%; height:100%;"></div>
     </div>
@@ -201,19 +178,17 @@
 <div id="settings" class="tab-content">
     
     <div class="set-nav">
-        <div class="set-nav-highlight" id="set-tab-highlight"></div>
-        <button class="set-nav-btn active" onclick="switchSetTab('set-items', this)">📦 商品・お品書き</button>
-        <button class="set-nav-btn" onclick="switchSetTab('set-client', this)">📺 子機・サイネージ</button>
-        <button class="set-nav-btn" onclick="switchSetTab('set-system', this)">⚙️ システム・外観</button>
+        <button class="set-nav-btn active" onclick="switchSetTab('set-items', this)">📦 商品</button>
+        <button class="set-nav-btn" onclick="switchSetTab('set-client', this)">📺 子機</button>
+        <button class="set-nav-btn" onclick="switchSetTab('set-system', this)">⚙️ 設定と外観</button>
     </div>
 
     <div id="set-items" class="set-pane active">
-        
         <div class="glass-card" style="padding:20px; margin-bottom:20px;">
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <h3 style="margin-top:0; margin-bottom:10px; color:var(--accent-color); font-size:1.2rem;">🖼️ お品書きマッピング（直感レジ）</h3>
             </div>
-            <p style="font-size:0.85rem; font-weight:700; opacity:0.8; margin-top:0;">イベント用の「お品書き画像（ポスター等）」を読み込み、画像上をなぞって「タップ判定エリア」を作ります。商品と紐づけることで、画像上の絵を直接タップしてカートに入れられるようになります！</p>
+            <p style="font-size:0.85rem; font-weight:700; opacity:0.8; margin-top:0;">イベント用のお品書き画像を読み込み、画像上をなぞって「タップ判定エリア」を作ります。イラストを直接タップしてカートに入れられます！<br>※子機側（お客様画面）にもこの画像が優先表示されます。</p>
             
             <input type="file" accept="image/*" onclick="this.value=null;" onchange="loadOshinagakiImage(this)" style="border:2px dashed rgba(128,128,128,0.3); padding:10px; background:transparent; width:100%; box-sizing:border-box; border-radius:12px; margin-bottom:15px;">
             
@@ -284,7 +259,6 @@
             <div id="away-image-preview" style="height:60px; margin-bottom:10px;"></div>
 
             <h4 style="margin:20px 0 10px 0; font-size:1rem; border-top:1px solid rgba(128,128,128,0.2); padding-top:15px;">🖼️ 待機中スライドショー画像</h4>
-            <p style="font-size:0.85rem; font-weight:700; opacity:0.8; margin-top:0;">※お品書きマッピングが設定されている場合は、自動的にスライドショーに追加されます</p>
             <input type="file" accept="image/*" multiple onclick="this.value=null;" onchange="loadSlideshowImages(this)" style="border:2px dashed rgba(128,128,128,0.3); padding:10px; background:transparent; width:100%; box-sizing:border-box; border-radius:12px;">
             <div id="slideshow-preview" style="display:flex; gap:8px; overflow-x:auto; margin-top:15px; padding-bottom:10px;"></div>
             <button onclick="clearSlideshowImages()" style="background:rgba(244,67,54,0.1); color:#f44336; border:2px solid #f44336; padding:10px; border-radius:12px; font-weight:900; font-size:0.95rem; margin-top:10px; width:100%;">🗑 スライドショー画像をクリア</button>
@@ -319,15 +293,18 @@
             <h3 style="margin-top:0; color:var(--accent-color); font-size:1.2rem;">💾 データの保存と読込</h3>
             
             <div id="storage-info-container" style="background:rgba(128,128,128,0.1); padding:15px; border-radius:14px; margin-bottom:20px; text-align:left;">
-                <div style="font-weight:900; font-size:0.95rem; margin-bottom:4px; display:flex; justify-content:space-between;">
+                <div style="font-weight:900; font-size:0.95rem; margin-bottom:4px; display:flex; justify-content:space-between; align-items:center;">
                     <span>📱 ブラウザのデータ保存容量</span>
-                    <span id="storage-percent" style="color:var(--accent-color);">--%</span>
+                    <button onclick="optimizeStorage()" style="background:var(--accent-color); color:white; padding:4px 10px; font-size:0.8rem; border-radius:8px; font-weight:bold;">🧹 掃除する</button>
                 </div>
                 <div style="font-size:0.8rem; opacity:0.8; margin-bottom:8px;">※画像やデータが増えると使用量が上がります</div>
                 <div class="storage-bar-bg">
                     <div id="storage-bar" class="storage-bar-fill" style="width: 0%;"></div>
                 </div>
-                <div id="storage-text" style="font-size:0.85rem; margin-top:8px; font-weight:bold; text-align:right;">計算中...</div>
+                <div style="display:flex; justify-content:space-between; margin-top:8px;">
+                    <span id="storage-percent" style="color:var(--accent-color); font-weight:bold;">--%</span>
+                    <span id="storage-text" style="font-size:0.85rem; font-weight:bold;">計算中...</span>
+                </div>
             </div>
 
             <p style="font-size:0.85rem; color:var(--text-color); opacity:0.8; font-weight:700;">現在の状態をファイルに保存したり、別の端末に引き継ぐために読み込んだりできます。</p>
@@ -375,7 +352,7 @@
 
     <div style="display:flex; justify-content:space-between; align-items:flex-end; border-bottom:2px solid rgba(128,128,128,0.2); padding-bottom:8px; margin-bottom:15px;">
         <h3 style="margin:0;">📝 取引履歴</h3>
-        <button onclick="clearEventHistory()" style="background:rgba(244,67,54,0.1); color:#f44336; border:2px solid #f44336; padding:8px 12px; font-size:0.9rem; border-radius:10px; font-weight:900;">🔄 全てリセット</button>
+        <button onclick="clearEventHistory()" style="background:rgba(244,67,54,0.1); color:#f44336; border:2px solid #f44336; padding:8px 12px; font-size:0.9rem; border-radius:10px; font-weight:900;">一括リセット</button>
     </div>
     <div id="history-list"></div>
 </div>
@@ -401,7 +378,7 @@
         <h2 style="margin-top:0; font-size:1.3rem;">📌 このエリアに紐づける商品を選択</h2>
         <select id="map-item-select" style="width:100%; padding:15px; margin-bottom:20px; font-size:1.1rem; border-radius:12px;"></select>
         <div style="display:flex; gap:10px;">
-            <button onclick="document.getElementById('map-select-modal').style.display='none'; redrawMappingCanvas();" style="flex:1; padding:15px; background:rgba(128,128,128,0.2); color:var(--text-color); font-weight:900; border-radius:12px;">キャンセル</button>
+            <button onclick="document.getElementById('map-select-modal').style.display='none'; redrawMappingCanvas();" style="flex:1; padding:15px; background:rgba(0,0,0,0.1); color:#333; font-weight:900; border-radius:12px;">キャンセル</button>
             <button onclick="commitMappingArea()" style="flex:1; padding:15px; background:var(--accent-color); color:white; font-weight:900; border-radius:12px;">決定</button>
         </div>
     </div>
@@ -409,14 +386,14 @@
 
 <div class="modal-overlay" id="help-modal">
     <div class="modal-content">
-        <h2 style="margin-top:0; border-bottom:2px solid rgba(128,128,128,0.2); padding-bottom:10px;">📡 子機との連携について</h2>
+        <h2 style="margin-top:0; border-bottom:2px solid rgba(0,0,0,0.1); padding-bottom:10px;">📡 子機との連携について</h2>
         <p><strong>① 親機を起動</strong><br>この端末で「親機を起動」を押し、PINコードを表示させます。</p>
         <p><strong>② 子機（お客様用端末）を設定</strong><br>お客様に見せる用の別のiPad等でこの画面を開き、「子機になる」を押してPINコードを入力します。</p>
-        <div style="background:rgba(128,128,128,0.1); padding:15px; border-radius:12px; margin-top:20px;">
+        <div style="background:rgba(0,0,0,0.05); padding:15px; border-radius:12px; margin-top:20px;">
             <p style="color:var(--accent-color); font-weight:bold; margin-top:0;">💡 一度設定すれば放置でOK！</p>
             <p style="margin-bottom:0; font-size:0.9rem;">子機は一度PINを入力すれば、通信が切れても自動で再接続を試みます。親機の画面をリロードした際なども、子機側は触らずにそのまま待っていれば勝手に繋がります。</p>
         </div>
-        <button onclick="document.getElementById('help-modal').style.display='none'" class="modal-large-btn" style="background:rgba(128,128,128,0.15); color:var(--text-color); margin-top:20px;">閉じる</button>
+        <button onclick="document.getElementById('help-modal').style.display='none'" class="modal-large-btn" style="background:rgba(0,0,0,0.1); color:#333; margin-top:20px;">閉じる</button>
     </div>
 </div>
 
@@ -429,10 +406,10 @@
             <button class="money-btn" onclick="addPriceAmount(1000)">＋1000</button>
             <button class="money-btn" onclick="addPriceAmount(5000)">＋5000</button>
             <button class="money-btn" onclick="addPriceAmount(10000)">＋1万</button>
-            <button class="money-btn" onclick="clearPriceAmount()" style="background:rgba(128,128,128,0.2); color:var(--text-color);">クリア</button>
+            <button class="money-btn" onclick="clearPriceAmount()" style="background:rgba(0,0,0,0.1); color:#333;">クリア</button>
         </div>
         <div style="margin-bottom:20px;">
-            <label style="font-size:0.9rem; color:var(--text-color); opacity:0.8; font-weight:700;">手入力も可能です</label>
+            <label style="font-size:0.9rem; opacity:0.8; font-weight:700;">手入力も可能です</label>
             <div style="display:flex; align-items:center; gap:8px;">
                 <div id="anim-price-wrap" style="flex-grow:1; display:flex;">
                     <input type="number" id="modal-price-input" class="tender-input" inputmode="numeric" placeholder="0" style="flex-grow:1;">
@@ -441,17 +418,17 @@
             </div>
         </div>
         <button onclick="commitPriceModal()" style="width:100%; padding:18px; background:var(--accent-color); color:white; font-size:1.3rem; font-weight:900; border-radius:14px; margin-bottom:12px;">決定</button>
-        <button onclick="closePriceModal()" style="width:100%; padding:18px; background:rgba(128,128,128,0.15); color:var(--text-color); font-size:1.1rem; font-weight:900; border-radius:14px;">キャンセル</button>
+        <button onclick="closePriceModal()" style="width:100%; padding:18px; background:rgba(0,0,0,0.1); color:#333; font-size:1.1rem; font-weight:900; border-radius:14px;">キャンセル</button>
     </div>
 </div>
 
 <div class="modal-overlay" id="cart-modal">
     <div class="modal-content">
         <h2 style="text-align:center; margin-top:0; font-size:1.5rem;">🛒 カートの中身</h2>
-        <div id="cart-items-list" style="max-height:45vh; overflow-y:auto; margin-bottom:20px; border-top:2px solid rgba(128,128,128,0.1);"></div>
+        <div id="cart-items-list" style="max-height:45vh; overflow-y:auto; margin-bottom:20px; border-top:2px solid rgba(0,0,0,0.1);"></div>
         <button onclick="openCheckoutModal(); closeCartModal();" class="modal-large-btn" style="background:var(--btn-checkout); color:white;">💰 このままお会計へ進む</button>
         <button onclick="clearCart()" class="modal-large-btn" style="background:rgba(244,67,54,0.1); color:#f44336; border:2px solid #f44336;">🗑 カートを空にする</button>
-        <button onclick="closeCartModal()" class="modal-large-btn" style="background:rgba(128,128,128,0.15); color:var(--text-color);">× 閉じる</button>
+        <button onclick="closeCartModal()" class="modal-large-btn" style="background:rgba(0,0,0,0.1); color:#333;">× 閉じる</button>
     </div>
 </div>
 
@@ -465,12 +442,12 @@
             <button class="money-btn" onclick="addTenderAmount(1000)">＋1000</button>
             <button class="money-btn" onclick="addTenderAmount(5000)">＋5000</button>
             <button class="money-btn" onclick="addTenderAmount(10000)">＋1万</button>
-            <button class="money-btn" onclick="clearTenderAmount()" style="background:rgba(128,128,128,0.2); color:var(--text-color);">クリア</button>
+            <button class="money-btn" onclick="clearTenderAmount()" style="background:rgba(0,0,0,0.1); color:#333;">クリア</button>
             <button class="money-btn" onclick="setTenderExact()" style="grid-column:span 3; background:#fff3e0; color:#e65100; border-color:#ffcc80; padding:18px;">ピッタリお預かり</button>
         </div>
 
         <div class="tender-wrap" style="margin-bottom:15px;">
-            <div style="font-size:0.85rem; margin-bottom:6px; font-weight:900; color:var(--text-color); opacity:0.8;">お預かり（空欄でピッタリ）</div>
+            <div style="font-size:0.85rem; margin-bottom:6px; font-weight:900; opacity:0.8;">お預かり（空欄でピッタリ）</div>
             <div style="display:flex; align-items:center; gap:8px;">
                 <input type="number" id="tender-input" class="tender-input" oninput="calculateChange()" inputmode="numeric" placeholder="空欄でピッタリ">
                 <span style="font-weight:900; font-size:1.4rem;">円</span>
@@ -483,7 +460,7 @@
         </div>
 
         <div style="display:flex; gap:12px;">
-            <button onclick="closeCheckoutModal()" style="flex:1; padding:18px; background:rgba(128,128,128,0.15); color:var(--text-color); font-weight:900; font-size:1.2rem;">やめる</button>
+            <button onclick="closeCheckoutModal()" style="flex:1; padding:18px; background:rgba(0,0,0,0.1); color:#333; font-weight:900; font-size:1.2rem;">やめる</button>
             <button id="complete-checkout-btn" onclick="executeCheckout()" style="flex:2; padding:18px; background:#4CAF50; color:white; font-weight:900; font-size:1.4rem; box-shadow: 0 4px 15px rgba(76,175,80,0.3);">会計完了</button>
         </div>
     </div>
@@ -576,8 +553,22 @@
     }
 
     function recoverFromLocalStorage() {
-        const backup = localStorage.getItem('pos_app_data_backup') || localStorage.getItem('pos_app_data');
-        if (backup) { try { appData = JSON.parse(backup); } catch(e) { /* ignore */ } }
+        const backup = localStorage.getItem('pos_app_data_backup');
+        if (backup) { try { appData = JSON.parse(backup); } catch(e) { } }
+    }
+
+    // 🧹 ストレージ最適化（ゴミ掃除機能）
+    function optimizeStorage() {
+        try {
+            // localStorageのバックアップを一度消去して再保存
+            localStorage.removeItem('pos_app_data_backup');
+            // JSON再変換で不要なメモリ参照をクリアして保存
+            saveData();
+            updateStorageCapacity();
+            alert('🧹 内部データの不要なゴミを削除し、ストレージを最適化しました！\n（※売上履歴や商品はそのまま残っています）');
+        } catch(e) {
+            alert('最適化中にエラーが発生しました。');
+        }
     }
 
     async function updateStorageCapacity() {
@@ -590,12 +581,12 @@
                 const quotaMB = estimate.quota / (1024 * 1024);
                 let quotaDisplay = quotaMB > 1024 ? (quotaMB / 1024).toFixed(1) + " GB" : quotaMB.toFixed(1) + " MB";
                 let percent = Math.min((estimate.usage / estimate.quota) * 100, 100);
-                percentEl.innerText = percent.toFixed(2) + "%"; textEl.innerText = `使用中: ${usageMB} MB / 最大: ${quotaDisplay}`; barEl.style.width = percent + "%";
+                percentEl.innerText = percent.toFixed(2) + "%"; textEl.innerText = `${usageMB} MB / ${quotaDisplay}`; barEl.style.width = percent + "%";
                 barEl.classList.remove('storage-warning', 'storage-danger');
                 if (percent > 90) { barEl.classList.add('storage-danger'); percentEl.style.color = "#f44336"; } 
                 else if (percent > 75) { barEl.classList.add('storage-warning'); percentEl.style.color = "#ff9800"; } 
                 else { percentEl.style.color = "var(--accent-color)"; }
-            } catch (error) { textEl.innerText = "容量の計算に失敗しました"; percentEl.innerText = "--%"; }
+            } catch (error) { textEl.innerText = "計算失敗"; percentEl.innerText = "--%"; }
         } else { textEl.innerText = "未対応ブラウザです"; percentEl.innerText = "--%"; }
     }
 
@@ -628,12 +619,7 @@
         setPosMode(appData.posMode, true);
         
         renderAll(); 
-        setTimeout(() => { 
-            const activeTab = document.querySelector('.tab.active'); if (activeTab) switchTab('pos', activeTab); 
-            // サブタブのハイライト初期化
-            const activeSetBtn = document.querySelector('.set-nav-btn.active');
-            if (activeSetBtn) switchSetTab(activeSetBtn.getAttribute('onclick').match(/'(.*?)'/)[1], activeSetBtn);
-        }, 100);
+        setTimeout(() => { const activeTab = document.querySelector('.tab.active'); if (activeTab) switchTab('pos', activeTab); }, 100);
         saveData(); 
     }
 
@@ -659,7 +645,13 @@
     // ==========================================
     function switchTab(id, tabElement) {
         try {
-            document.querySelectorAll('.tab, .tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.remove('active');
+                // アニメーションの再トリガーのため一瞬displayをnoneにする
+                void el.offsetWidth;
+            });
+
             if (!tabElement) tabElement = document.querySelector(`.tab[onclick*="${id}"]`);
             if (tabElement) {
                 tabElement.classList.add('active');
@@ -674,29 +666,18 @@
             if(cartBar) cartBar.style.display = (id === 'pos') ? 'flex' : 'none';
             
             if (id === 'analytics') renderAnalytics();
-            if (id === 'settings') { 
-                setTimeout(initMappingCanvas, 100); 
-                const activeSetBtn = document.querySelector('.set-nav-btn.active');
-                if (activeSetBtn) {
-                    const h = document.getElementById('set-tab-highlight');
-                    if(h) { h.style.width = activeSetBtn.offsetWidth + 'px'; h.style.transform = `translateX(${activeSetBtn.offsetLeft}px)`; }
-                }
-            }
+            if (id === 'settings') { setTimeout(initMappingCanvas, 100); }
             window.scrollTo({top: 0, behavior: 'smooth'});
         } catch(e) { console.error(e); }
     }
 
     function switchSetTab(id, btnElement) {
-        document.querySelectorAll('.set-nav-btn, .set-pane').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.set-nav-btn').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.set-pane').forEach(el => {
+            el.classList.remove('active');
+            void el.offsetWidth; // trigger reflow
+        });
         btnElement.classList.add('active');
-        
-        // サブタブのハイライトアニメーション
-        const highlight = document.getElementById('set-tab-highlight');
-        if(highlight) {
-            highlight.style.width = btnElement.offsetWidth + 'px';
-            highlight.style.transform = `translateX(${btnElement.offsetLeft}px)`;
-        }
-
         document.getElementById(id).classList.add('active');
         if (id === 'set-items') { setTimeout(initMappingCanvas, 100); }
     }
@@ -730,7 +711,6 @@
             if(confirm("本当に消去してよろしいですか？（取り消せません）")) {
                 if(db) indexedDB.deleteDatabase(DB_NAME);
                 localStorage.removeItem('pos_app_data_backup');
-                localStorage.removeItem('pos_app_data');
                 location.reload();
             }
         }
@@ -800,7 +780,8 @@
                     
                     const ev = appData.events.find(e => e.id == appData.currentEventId);
                     ev.oshinagakiImage = c.toDataURL('image/jpeg', 0.8);
-                    saveData(); initMappingCanvas(); setPosMode(appData.posMode, true); syncStateToClient();
+                    saveData(); initMappingCanvas(); setPosMode(appData.posMode, true);
+                    syncStateToClient(); // 子機にも画像更新を通知
                 };
                 img.src = e.target.result;
             };
@@ -811,7 +792,8 @@
     function clearOshinagaki() {
         if(confirm("お品書き画像とマッピングデータを削除しますか？")) {
             const ev = appData.events.find(e => e.id == appData.currentEventId);
-            ev.oshinagakiImage = null; ev.oshinagakiAreas = []; saveData(); initMappingCanvas(); setPosMode('grid'); syncStateToClient();
+            ev.oshinagakiImage = null; ev.oshinagakiAreas = []; saveData(); initMappingCanvas(); setPosMode('grid');
+            syncStateToClient();
         }
     }
 
@@ -1088,7 +1070,7 @@
         const ev = appData.events.find(e => e.id == appData.currentEventId);
         
         if (mode === 'oshinagaki' && !ev.oshinagakiImage) {
-            if(!force) alert('設定タブの「商品・お品書き」から、お品書き画像をアップロードしてください。');
+            if(!force) alert('設定タブの「📦 商品」から、お品書き画像をアップロードしてください。');
             mode = 'grid';
         }
 
@@ -1097,11 +1079,19 @@
         document.getElementById('btn-mode-grid').classList.toggle('active', mode === 'grid');
         document.getElementById('btn-mode-oshi').classList.toggle('active', mode === 'oshinagaki');
         
-        document.getElementById('pos-grid').style.display = (mode === 'grid') ? 'grid' : 'none';
-        document.getElementById('pos-oshinagaki-wrapper').style.display = (mode === 'oshinagaki') ? 'block' : 'none';
+        // アニメーショントリガーのため、一度クラスを外す
+        document.querySelectorAll('.pos-view').forEach(el => {
+            el.classList.remove('active');
+            void el.offsetWidth; // Reflow
+        });
 
-        if (mode === 'grid') { renderPosGrid(); } 
-        else { renderPosOshinagaki(); }
+        if (mode === 'grid') { 
+            document.getElementById('pos-grid').classList.add('active');
+            renderPosGrid(); 
+        } else { 
+            document.getElementById('pos-oshinagaki-wrapper').classList.add('active');
+            renderPosOshinagaki(); 
+        }
     }
 
     function renderPosGrid() {
@@ -1142,77 +1132,54 @@
             if (!isSoldOut) {
                 div.onclick = (e) => addToCart(e, item.id);
                 
-                // バッジの作成とドラッグ処理の追加
+                // 残数バッジ
                 const badge = document.createElement('div');
                 badge.className = 'pos-oshi-badge';
                 badge.innerText = `残${avail}`;
                 
-                // 保存済みの位置があれば復元
-                if (area.badgeX !== undefined && area.badgeY !== undefined) {
-                    badge.style.left = area.badgeX;
-                    badge.style.top = area.badgeY;
-                    badge.style.bottom = 'auto';
+                // バッジの保存位置を復元
+                if (area.badgeLeft && area.badgeTop) {
+                    badge.style.left = area.badgeLeft;
+                    badge.style.top = area.badgeTop;
                     badge.style.right = 'auto';
+                    badge.style.bottom = 'auto';
                 }
-                
+
+                // 👆 バッジのドラッグ移動機能
+                badge.onpointerdown = (e) => {
+                    e.preventDefault();
+                    e.stopPropagation(); // クリック判定（カート追加）を防止
+                    
+                    let startX = e.clientX, startY = e.clientY;
+                    let startLeft = badge.offsetLeft, startTop = badge.offsetTop;
+                    
+                    badge.setPointerCapture(e.pointerId);
+
+                    badge.onpointermove = (evMove) => {
+                        let dx = evMove.clientX - startX;
+                        let dy = evMove.clientY - startY;
+                        badge.style.left = (startLeft + dx) + 'px';
+                        badge.style.top = (startTop + dy) + 'px';
+                        badge.style.right = 'auto'; 
+                        badge.style.bottom = 'auto';
+                    };
+
+                    badge.onpointerup = (evUp) => {
+                        badge.onpointermove = null;
+                        badge.onpointerup = null;
+                        badge.releasePointerCapture(e.pointerId);
+                        
+                        // 位置を保存
+                        area.badgeLeft = badge.style.left;
+                        area.badgeTop = badge.style.top;
+                        saveData();
+                    };
+                };
+
                 div.appendChild(badge);
-                makeBadgeDraggable(badge, area.id);
             }
             container.appendChild(div);
         });
-    }
-
-    // --- 追加：バッジをドラッグで動かす処理 ---
-    function makeBadgeDraggable(badge, areaId) {
-        let isDragging = false;
-        
-        badge.onpointerdown = (e) => {
-            e.stopPropagation(); // カート追加の発火を防ぐ
-            isDragging = true;
-            badge.setPointerCapture(e.pointerId);
-            badge.style.transition = 'none';
-        };
-        
-        badge.onpointermove = (e) => {
-            if (!isDragging) return;
-            e.stopPropagation();
-            
-            const areaRect = badge.parentElement.getBoundingClientRect();
-            // マウス座標から親要素内の相対座標を計算
-            let newX = e.clientX - areaRect.left - (badge.offsetWidth / 2);
-            let newY = e.clientY - areaRect.top - (badge.offsetHeight / 2);
-            
-            // はみ出さないように制限
-            newX = Math.max(0, Math.min(newX, areaRect.width - badge.offsetWidth));
-            newY = Math.max(0, Math.min(newY, areaRect.height - badge.offsetHeight));
-            
-            // パーセントで位置を指定
-            let pctX = (newX / areaRect.width) * 100;
-            let pctY = (newY / areaRect.height) * 100;
-            
-            badge.style.left = `${pctX}%`;
-            badge.style.top = `${pctY}%`;
-            badge.style.bottom = 'auto';
-            badge.style.right = 'auto';
-        };
-        
-        badge.onpointerup = (e) => {
-            if (!isDragging) return;
-            isDragging = false;
-            e.stopPropagation();
-            badge.releasePointerCapture(e.pointerId);
-            badge.style.transition = '';
-            
-            // 位置を保存
-            const ev = appData.events.find(ev => ev.id == appData.currentEventId);
-            const area = ev.oshinagakiAreas.find(a => a.id == areaId);
-            if (area) {
-                area.badgeX = badge.style.left;
-                area.badgeY = badge.style.top;
-                saveData();
-            }
-        };
-        badge.onpointercancel = badge.onpointerup;
     }
 
     function renderAll() { 
@@ -1243,7 +1210,8 @@
 
     function flyToCart(event, imageSrc, callback) {
         const target = document.getElementById('checkout-btn').getBoundingClientRect();
-        const rectX = event.clientX; const rectY = event.clientY;
+        const rectX = event.clientX;
+        const rectY = event.clientY;
 
         const flier = document.createElement('div');
         flier.style.cssText = `position:fixed; left:${rectX}px; top:${rectY}px; width:60px; height:60px; background-image:url(${imageSrc}); background-size:cover; background-position:center; z-index:9999; pointer-events:none; transition:all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); transform:translate(-50%, -50%); border-radius:10px; box-shadow:0 10px 20px rgba(0,0,0,0.3);`;
@@ -1297,16 +1265,18 @@
         Object.values(map).forEach(i => {
             const avail = getAvailableStock(i.id);
             list.innerHTML += `
-            <div class="cart-item-row">
-                <div class="cart-item-info" style="align-items: flex-start;">
-                    <img src="${i.image}" style="width:45px; height:45px; object-fit:contain; border-radius:10px; background:rgba(255,255,255,0.9); flex-shrink:0;">
+            <div class="cart-item-row" style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px dashed rgba(0,0,0,0.1); padding:15px 0; gap:10px;">
+                <div class="cart-item-info" style="display:flex; align-items:flex-start; gap:12px; flex-grow:1; overflow:hidden;">
+                    <img src="${i.image}" style="width:45px; height:45px; object-fit:contain; border-radius:10px; background:rgba(0,0,0,0.05); flex-shrink:0;">
                     <div style="display:flex; flex-direction:column; overflow:hidden;">
                         <strong style="font-size:1.05rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${i.name}</strong>
-                        <span style="color:var(--text-color); opacity:0.8; font-size:0.95rem; font-weight:900;">¥${i.price.toLocaleString()}</span>
+                        <span style="opacity:0.8; font-size:0.95rem; font-weight:900;">¥${i.price.toLocaleString()}</span>
                     </div>
                 </div>
                 <div style="display:flex; align-items:center; gap:8px; margin-left:10px; flex-shrink:0;">
-                    <button class="qty-btn" onclick="modifyQty(${i.id},-1)">-</button><b style="font-size:1.3rem; width:25px; text-align:center;">${i.count}</b><button class="qty-btn" onclick="modifyQty(${i.id},1)" ${avail<=0?'disabled style="opacity:0.3"':''}>+</button>
+                    <button style="width:38px;height:38px;border-radius:12px;border:none;background:rgba(0,0,0,0.05);font-size:1.4rem;font-weight:900;color:#333;" onclick="modifyQty(${i.id},-1)">-</button>
+                    <b style="font-size:1.3rem; width:25px; text-align:center; color:#333;">${i.count}</b>
+                    <button style="width:38px;height:38px;border-radius:12px;border:none;background:rgba(0,0,0,0.05);font-size:1.4rem;font-weight:900;color:#333;" onclick="modifyQty(${i.id},1)" ${avail<=0?'disabled style="opacity:0.3"':''}>+</button>
                 </div>
             </div>`;
         });
@@ -1363,27 +1333,28 @@
         });
     }
 
-    // --- 【修正】履歴表示をコンパクト横一列にし、個別削除ボタンを実装 ---
     function renderHistory() {
         const list = document.getElementById('history-list'); list.innerHTML = '';
         const ev = appData.events.find(e => e.id == appData.currentEventId);
         ev.history.forEach(h => { 
-            list.innerHTML += `
-            <div class="history-card glass-card" style="display:flex; align-items:center; padding: 12px 15px; margin-bottom: 8px;">
-                <div style="flex-shrink:0; font-size:0.85rem; opacity:0.8; margin-right:12px; font-weight:900;">${h.time}</div>
-                <div style="flex-grow:1; font-size:0.95rem; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-right:10px;">${h.detail}</div>
-                <div style="flex-shrink:0; font-weight:900; color:var(--accent-color); font-size:1.1rem; margin-right:12px;">¥${h.total.toLocaleString()}</div>
-                <button onclick="deleteHistory(${h.id})" style="flex-shrink:0; background:rgba(244,67,54,0.1); color:#f44336; border:none; border-radius:8px; padding:6px 12px; font-size:0.85rem; font-weight:900;">削除</button>
+            list.innerHTML += `<div class="history-card glass-card" style="display:flex; justify-content:space-between; align-items:center;">
+                <div class="history-info" style="display:flex; gap:10px; align-items:center; flex-grow:1; overflow:hidden;">
+                    <span style="font-size: 0.85rem; background: rgba(128,128,128,0.15); padding: 4px 8px; border-radius: 8px; white-space: nowrap; font-weight: 900;">${h.time}</span>
+                    <span style="font-size: 1rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${h.detail}</span>
+                </div>
+                <div style="display:flex; gap:12px; align-items:center; flex-shrink:0;">
+                    <div style="font-weight:900; color:var(--accent-color); font-size: 1.3rem;">¥${h.total.toLocaleString()}</div>
+                    <button onclick="deleteHistoryItem(${h.id})" style="background:rgba(244,67,54,0.1); color:#f44336; border:none; border-radius:8px; padding:6px 10px; font-size:1.1rem; font-weight:bold;">🗑️</button>
+                </div>
             </div>`; 
         });
     }
 
-    function deleteHistory(id) {
-        if(confirm('この履歴を削除しますか？\n（※分析の売上集計からも除外されます）')) {
+    function deleteHistoryItem(id) {
+        if(confirm('この取引記録を削除しますか？\n※売上金額や回数からもマイナスされます。')) {
             const ev = appData.events.find(e => e.id == appData.currentEventId);
             ev.history = ev.history.filter(h => h.id !== id);
-            saveData();
-            renderAll(); 
+            saveData(); renderAll();
         }
     }
 
@@ -1419,7 +1390,7 @@
     function exportCSV() { const ev = appData.events.find(e=>e.id==appData.currentEventId); let csv = "\uFEFF時間,内容,売上\n" + ev.history.map(h=>`"${h.time}","${h.detail}","${h.total}"`).join("\n"); const link = document.createElement('a'); link.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'})); link.download = `${ev.name}_売上.csv`; link.click(); }
 
     // ==========================================
-    // 📡 子機連携 (PeerJS) 関連
+    // 📡 子機連携 (PeerJS)
     // ==========================================
     let peer = null, conn = null, isHost = false, isClient = false; const PEER_PREFIX = 'hazuki-regi-momo-';
     function initPeer() { if(!peer && typeof Peer === 'undefined') { alert('通信ライブラリが読めません'); return false; } return true; }
@@ -1432,18 +1403,19 @@
     setInterval(() => { if (isHost && peer) { if (peer.disconnected && !peer.destroyed) { peer.reconnect(); } if (conn && conn.open) { conn.send({type: 'ping'}); } } }, 3000);
     function sendSyncData(type, payload) { if(conn && conn.open) { conn.send({ type, payload }); } }
     
-    // --- 【修正】子機にお品書き画像データも送信 ---
     function syncStateToClient() { 
         if(!conn || !conn.open) return; 
-        const ev = appData.events.find(e => e.id == appData.currentEventId); if(!ev) return; 
+        const ev = appData.events.find(e => e.id == appData.currentEventId); 
+        if(!ev) return; 
         sendSyncData('full_state', { 
             items: ev.items, cart: cart, cartTotal: cart.reduce((s,i)=>s+i.price, 0), 
-            signageSettings: appData.signageSettings || {}, slideshowImages: appData.slideshowImages || [], 
-            oshinagakiImage: ev.oshinagakiImage, // ← ここでお品書き画像も送る
+            signageSettings: appData.signageSettings || {}, 
+            slideshowImages: appData.slideshowImages || [], 
+            oshinagakiImage: ev.oshinagakiImage || null, // 子機へ送信
             isAwayMode: !!appData.isAwayMode, theme: appData.theme || 'default' 
         }); 
     }
-
+    
     function loadSlideshowImages(input) { if(!input.files || input.files.length === 0) return; if(!appData.slideshowImages) appData.slideshowImages = []; Array.from(input.files).forEach(file => { const reader = new FileReader(); reader.onload = (e) => { const img = new Image(); img.onload = () => { const c = document.createElement('canvas'); const ctx = c.getContext('2d'); const max = 1500; let scale = max / Math.max(img.width, img.height); if (scale > 1) scale = 1; c.width = img.width * scale; c.height = img.height * scale; ctx.drawImage(img, 0, 0, c.width, c.height); appData.slideshowImages.push(c.toDataURL('image/jpeg', 0.8)); saveData(); renderSlideshowPreview(); syncStateToClient(); }; img.src = e.target.result; }; reader.readAsDataURL(file); }); }
     function clearSlideshowImages() { appData.slideshowImages = []; saveData(); renderSlideshowPreview(); syncStateToClient(); }
     function renderSlideshowPreview() { const container = document.getElementById('slideshow-preview'); container.innerHTML = ''; if(appData.slideshowImages && appData.slideshowImages.length > 0) { appData.slideshowImages.forEach(src => { container.innerHTML += `<img src="${src}" style="height:60px; border-radius:8px; border:1px solid rgba(128,128,128,0.2);">`; }); } else { container.innerHTML = '<span style="font-size:0.8rem; opacity:0.6;">画像なし</span>'; } }
@@ -1455,54 +1427,60 @@
     function evaluateClientDisplay() { if (clientIsAway) { document.getElementById('client-away-overlay').style.display = 'flex'; stopSignageLoop(); } else { document.getElementById('client-away-overlay').style.display = 'none'; } }
     let clientData = {}, signageMode = 'menu', signageTimeout = null, currentSlideIndex = 0;
     
-    function handleClientData(data) { if(data.type === 'full_state') { clientData = data.payload; clientIsAway = !!clientData.isAwayMode; if(clientData.theme) document.body.setAttribute('data-theme', clientData.theme); updateAwayUI(); evaluateClientDisplay(); if(!clientIsAway) { updateClientCartUI(); if(!clientData.cart || clientData.cart.length === 0) runSignageLoop(); } } else if(data.type === 'checkout_open') { stopSignageLoop(); document.getElementById('client-cart-area').style.display = 'none'; document.getElementById('client-menu-area').style.display = 'none'; document.getElementById('client-slideshow').style.display = 'none'; document.getElementById('client-checkout-area').style.display = 'flex'; animateValue(document.getElementById('client-total-amount'), 0, data.payload.total, 500); document.getElementById('client-tender').innerText = '0'; document.getElementById('client-change').innerText = '0'; document.getElementById('client-change').parentElement.style.color = 'var(--text-color)'; document.getElementById('client-thanks').style.opacity = '0'; document.getElementById('client-thanks').style.transform = 'translateY(20px)'; } else if(data.type === 'checkout_change') { document.getElementById('client-tender').innerText = data.payload.tender.toLocaleString(); const c = data.payload.change; const changeEl = document.getElementById('client-change'); const currentChange = parseInt(changeEl.innerText.replace(/,/g, '')) || 0; if(c >= 0) { animateValue(changeEl, currentChange, c, 500); } else { changeEl.innerText = Math.abs(c).toLocaleString(); } changeEl.parentElement.style.color = c < 0 ? '#f44336' : 'var(--accent-color)'; } else if(data.type === 'checkout_done') { document.getElementById('client-thanks').style.opacity = '1'; document.getElementById('client-thanks').style.transform = 'translateY(0)'; setTimeout(() => { document.getElementById('client-checkout-area').style.display = 'none'; document.getElementById('client-thanks').style.opacity = '0'; document.getElementById('client-thanks').style.transform = 'translateY(20px)'; clientData.cart = []; if(!clientIsAway) { signageMode = 'menu'; runSignageLoop(); } }, 5000); } }
+    function handleClientData(data) { 
+        if(data.type === 'full_state') { 
+            clientData = data.payload; clientIsAway = !!clientData.isAwayMode; 
+            if(clientData.theme) document.body.setAttribute('data-theme', clientData.theme); 
+            updateAwayUI(); evaluateClientDisplay(); 
+            if(!clientIsAway) { updateClientCartUI(); if(!clientData.cart || clientData.cart.length === 0) runSignageLoop(); } 
+        } else if(data.type === 'checkout_open') { 
+            stopSignageLoop(); document.getElementById('client-cart-area').style.display = 'none'; document.getElementById('client-menu-area').style.display = 'none'; document.getElementById('client-slideshow').style.display = 'none'; document.getElementById('client-checkout-area').style.display = 'flex'; animateValue(document.getElementById('client-total-amount'), 0, data.payload.total, 500); document.getElementById('client-tender').innerText = '0'; document.getElementById('client-change').innerText = '0'; document.getElementById('client-change').parentElement.style.color = 'var(--text-color)'; document.getElementById('client-thanks').style.opacity = '0'; document.getElementById('client-thanks').style.transform = 'translateY(20px)'; 
+        } else if(data.type === 'checkout_change') { 
+            document.getElementById('client-tender').innerText = data.payload.tender.toLocaleString(); const c = data.payload.change; const changeEl = document.getElementById('client-change'); const currentChange = parseInt(changeEl.innerText.replace(/,/g, '')) || 0; if(c >= 0) { animateValue(changeEl, currentChange, c, 500); } else { changeEl.innerText = Math.abs(c).toLocaleString(); } changeEl.parentElement.style.color = c < 0 ? '#f44336' : 'var(--accent-color)'; 
+        } else if(data.type === 'checkout_done') { 
+            document.getElementById('client-thanks').style.opacity = '1'; document.getElementById('client-thanks').style.transform = 'translateY(0)'; setTimeout(() => { document.getElementById('client-checkout-area').style.display = 'none'; document.getElementById('client-thanks').style.opacity = '0'; document.getElementById('client-thanks').style.transform = 'translateY(20px)'; clientData.cart = []; if(!clientIsAway) { signageMode = 'menu'; runSignageLoop(); } }, 5000); 
+        } 
+    }
+    
     function updateAwayUI() { const s = clientData.signageSettings || {}; document.getElementById('away-text-1-display').innerText = s.awayText1 || "ただいま離席中です"; document.getElementById('away-text-2-display').innerText = s.awayText2 || "すぐに戻ります。しばらくお待ちくださいませ。"; const iconEl = document.getElementById('away-icon-display'); if(s.awayIconType === 'custom' && s.awayCustomImage) { iconEl.innerHTML = `<img src="${s.awayCustomImage}" style="max-height:250px; border-radius:20px;">`; iconEl.classList.remove('away-icon-anim'); } else if(s.awayIconType === 'girl') { iconEl.innerHTML = `👩‍💼`; iconEl.classList.add('away-icon-anim'); } else { iconEl.innerHTML = `👨‍💼`; iconEl.classList.add('away-icon-anim'); } }
     function updateClientCartUI() { const c = clientData.cart || []; const t = clientData.cartTotal || 0; if(document.getElementById('client-checkout-area').style.display === 'flex') return; if(c.length === 0) { document.getElementById('client-cart-area').style.display = 'none'; } else { stopSignageLoop(); document.getElementById('client-menu-area').style.display = 'none'; document.getElementById('client-slideshow').style.display = 'none'; document.getElementById('client-cart-area').style.display = 'flex'; const list = document.getElementById('client-cart-list'); list.innerHTML = ''; const map = {}; c.forEach(i => { if(!map[i.id]) map[i.id] = {...i, count:0}; map[i.id].count++; }); Object.values(map).forEach(i => { list.innerHTML += `<div style="display:flex; justify-content:space-between; align-items:center; border-bottom:4px dashed color-mix(in srgb, var(--text-color) 20%, transparent); padding:20px 0;"><div style="display:flex; align-items:center; gap:30px;"><img src="${i.image}" style="width:120px; height:120px; object-fit:contain; border-radius:20px; background:rgba(255,255,255,0.8);"><div><div style="font-weight:900; color:var(--text-color); font-size:3rem; line-height:1.2; margin-bottom:10px;">${i.name}</div><div style="color:var(--accent-color); font-weight:900; font-size:2.5rem;">¥${i.price.toLocaleString()}</div></div></div><div style="font-size:4rem; font-weight:900; color:var(--text-color);">x ${i.count}</div></div>`; }); animateValue(document.getElementById('client-subtotal'), parseInt(document.getElementById('client-subtotal').innerText.replace(/,/g, '')) || 0, t, 500); } }
     
-    // --- 【修正】お品書き画像をスライドショーのリストにマージする ---
+    // 📺 子機の待機画面ループ制御（お品書き画像 優先対応）
     function runSignageLoop() { 
         clearTimeout(signageTimeout); 
         if(clientIsAway) return; 
         if(clientData.cart && clientData.cart.length > 0) return; 
+        
         document.getElementById('client-cart-area').style.display = 'none'; 
         document.getElementById('client-checkout-area').style.display = 'none'; 
+        
+        let cycleImages = [];
+        if (clientData.oshinagakiImage) cycleImages.push(clientData.oshinagakiImage);
+        if (clientData.slideshowImages) cycleImages = cycleImages.concat(clientData.slideshowImages);
 
-        // 再生する画像のリストを作る
-        let slides = [];
-        if(clientData.oshinagakiImage) slides.push(clientData.oshinagakiImage);
-        if(clientData.slideshowImages && clientData.slideshowImages.length > 0) {
-            slides = slides.concat(clientData.slideshowImages);
-        }
-
-        if(signageMode === 'menu') { 
+        // カスタム画像（お品書きポスター or スライドショー）がある場合
+        if (cycleImages.length > 0) {
+            document.getElementById('client-menu-area').style.display = 'none'; 
+            document.getElementById('client-slideshow').style.display = 'flex'; 
+            const imgEl = document.getElementById('slideshow-img'); 
+            imgEl.style.opacity = 0; 
+            setTimeout(() => { 
+                imgEl.src = cycleImages[currentSlideIndex % cycleImages.length]; 
+                imgEl.style.opacity = 1; 
+                currentSlideIndex++; 
+            }, 500); 
+            // 複数枚ある場合は8秒、お品書き1枚だけならずっと表示
+            signageTimeout = setTimeout(runSignageLoop, cycleImages.length > 1 ? 8000 : 9999999); 
+        } 
+        // カスタム画像が何もない場合は、元の自動生成グリッドお品書きを表示
+        else {
             document.getElementById('client-slideshow').style.display = 'none'; 
             document.getElementById('client-menu-area').style.display = 'flex'; 
             const list = document.getElementById('client-menu-list'); list.innerHTML = ''; 
-            (clientData.items || []).forEach(i => { 
-                const outOfStock = i.stock <= 0; 
-                list.innerHTML += `<div class="glass-card" style="display:flex; align-items:center; padding:20px; gap:20px; position:relative; overflow:hidden; ${outOfStock ? 'opacity:0.6;' : ''}"><img src="${i.image}" style="width:120px; height:120px; object-fit:contain; border-radius:16px; background:rgba(255,255,255,0.8);"><div style="flex-grow:1;"><div style="font-size:2rem; font-weight:900; color:var(--text-color); line-height:1.2; margin-bottom:10px;">${i.name}</div><div style="font-size:2.2rem; font-weight:900; color:var(--accent-color);">¥${i.price.toLocaleString()}</div></div>${outOfStock ? '<div style="position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.7); display:flex; justify-content:center; align-items:center; font-size:4rem; font-weight:900; color:#f44336; z-index:10; border:6px dashed #f44336;">完売</div>' : ''}</div>`; 
-            }); 
-            signageMode = 'slide'; 
+            (clientData.items || []).forEach(i => { const outOfStock = i.stock <= 0; list.innerHTML += `<div class="glass-card" style="display:flex; align-items:center; padding:20px; gap:20px; position:relative; overflow:hidden; ${outOfStock ? 'opacity:0.6;' : ''}"><img src="${i.image}" style="width:120px; height:120px; object-fit:contain; border-radius:16px; background:rgba(255,255,255,0.8);"><div style="flex-grow:1;"><div style="font-size:2rem; font-weight:900; color:var(--text-color); line-height:1.2; margin-bottom:10px;">${i.name}</div><div style="font-size:2.2rem; font-weight:900; color:var(--accent-color);">¥${i.price.toLocaleString()}</div></div>${outOfStock ? '<div style="position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.7); display:flex; justify-content:center; align-items:center; font-size:4rem; font-weight:900; color:#f44336; z-index:10; border:6px dashed #f44336;">完売</div>' : ''}</div>`; }); 
             signageTimeout = setTimeout(runSignageLoop, 15000); 
-        } else { 
-            if(slides.length > 0) { 
-                document.getElementById('client-menu-area').style.display = 'none'; 
-                document.getElementById('client-slideshow').style.display = 'flex'; 
-                const imgEl = document.getElementById('slideshow-img'); 
-                imgEl.style.opacity = 0; 
-                setTimeout(() => { 
-                    imgEl.src = slides[currentSlideIndex % slides.length]; 
-                    imgEl.style.opacity = 1; 
-                    currentSlideIndex = (currentSlideIndex + 1) % slides.length; 
-                }, 500); 
-                signageMode = 'menu'; 
-                signageTimeout = setTimeout(runSignageLoop, 5000); 
-            } else { 
-                signageMode = 'menu'; 
-                runSignageLoop(); 
-            } 
-        } 
-    }
+        }
+    } 
     
     function stopSignageLoop() { clearTimeout(signageTimeout); signageTimeout = null; document.getElementById('client-menu-area').style.display = 'none'; document.getElementById('client-slideshow').style.display = 'none'; }
 </script>
