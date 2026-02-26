@@ -35,7 +35,7 @@
         button:active { transform: scale(0.92); }
         input, select { font-family: inherit; }
 
-        /* ヘッダー・メインタブ (上に寄せる) */
+        /* ヘッダー・メインタブ */
         .preset-header { background-color: var(--header-bg); padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; gap: 8px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); z-index: 101; position: relative; margin-bottom: 4px; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); }
         .preset-header select { flex-grow: 1; padding: 12px; border-radius: 14px; font-size: 1rem; border: none; font-weight: 900; background: rgba(255,255,255,0.9); color: #333; box-shadow: 0 2px 10px rgba(0,0,0,0.05); min-width: 0; }
         .preset-btns { display: flex; gap: 6px; flex-shrink: 0; }
@@ -48,7 +48,6 @@
         .tab.active { opacity: 1; color: var(--tab-active-color); transform: scale(1.03); }
         .tab-highlight { position: absolute; top: 6px; bottom: 6px; left: 6px; width: 0; background: var(--tab-active-bg); border-radius: 18px; z-index: 1; transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
         
-        /* 🔥 全体スライド＆フェードアニメーション */
         @keyframes slideUpFade { 0% { opacity: 0; transform: translateY(40px) scale(0.96); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
         .tab-content { display: none; padding: 0 15px; }
         .tab-content.active { display: block; animation: slideUpFade 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
@@ -56,7 +55,7 @@
         .set-pane.active { display: block; animation: slideUpFade 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
         .pos-view { display: none; }
         .pos-view.active { display: block; animation: slideUpFade 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-	.pos-view.grid.active { display: grid; }
+        .pos-view.grid.active { display: grid; } 
 
         /* レジ画面 (POS) */
         .pos-toggle-bar { display:flex; background: rgba(128,128,128,0.15); padding: 4px; border-radius: 16px; margin-bottom: 15px; }
@@ -73,18 +72,20 @@
         .stock { font-size: 0.75rem; color: var(--text-color); opacity:0.6; margin-top: 2px; font-weight: 700; pointer-events: none; line-height: 1;}
         .sold-out { position: absolute; top:0; left:0; right:0; bottom:0; background: rgba(255,255,255,0.85); display:flex; align-items:center; justify-content:center; font-weight:900; color:#f44336; font-size:1.4rem; pointer-events:none; border: 3px dashed #f44336; z-index: 5; border-radius: 16px;}
 
-        /* お品書きマッピング用 (POS) - 透過率を強めに */
+        /* お品書きマッピング用 (多角形対応) */
         #pos-oshinagaki-wrapper { position: relative; width: 100%; border-radius: 16px; overflow: hidden; background: rgba(255,255,255,0.5); box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.3);}
         #pos-oshi-img { width: 100%; display: block; object-fit: contain; pointer-events:none; }
-        .pos-oshi-area { position: absolute; background: color-mix(in srgb, var(--accent-color) 8%, transparent); border: 1px solid color-mix(in srgb, var(--accent-color) 25%, transparent); border-radius: 8px; cursor: pointer; transition: transform 0.1s, background 0.2s; display:flex; align-items:center; justify-content:center; }
+        
+        .pos-oshi-area { position: absolute; background: color-mix(in srgb, var(--accent-color) 15%, transparent); cursor: pointer; transition: transform 0.1s, background 0.2s; display:flex; align-items:center; justify-content:center; }
         .pos-oshi-area:active { transform: scale(0.95); background: color-mix(in srgb, var(--accent-color) 40%, transparent); }
-        .pos-oshi-area.sold-out-area { background: rgba(255,255,255,0.6); border: 3px dashed rgba(244,67,54,0.7); pointer-events: none; }
+        .pos-oshi-area.sold-out-area { background: rgba(255,255,255,0.7); pointer-events: none; }
         .pos-oshi-area.sold-out-area::after { content:"完売"; color:#f44336; font-weight:900; font-size:1.5rem; text-shadow:0 0 5px white;}
-        /* 残数バッジ（透過＆移動可能） */
-        .pos-oshi-badge { position: absolute; bottom: 5px; right: 5px; background: var(--accent-color); color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.85rem; font-weight: 900; box-shadow: 0 2px 8px rgba(0,0,0,0.3); opacity: 0.85; cursor: grab; touch-action: none; border: 1px solid rgba(255,255,255,0.3); }
+        
+        /* 共通：残数バッジ（透過＆移動可能） */
+        .pos-oshi-badge { position: absolute; bottom: 5px; right: 5px; background: var(--accent-color); color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.85rem; font-weight: 900; box-shadow: 0 2px 8px rgba(0,0,0,0.3); opacity: 0.85; cursor: grab; touch-action: none; border: 1px solid rgba(255,255,255,0.3); z-index: 100; pointer-events: auto; }
         .pos-oshi-badge:active { cursor: grabbing; transform: scale(1.1); opacity: 1; }
 
-        /* カートバー (下に寄せる) */
+        /* カートバー */
         .bottom-bar { position: fixed; bottom: 5px; left: 15px; right: 15px; background: var(--card-bg); backdrop-filter: blur(28px) saturate(160%); -webkit-backdrop-filter: blur(28px) saturate(160%); padding: 10px 20px; border-radius: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.2); display: flex; flex-direction: column; gap: 10px; z-index: 90; }
         .cart-status { display: flex; justify-content: space-between; align-items: center; width: 100%; }
         .action-btn { padding: 12px; background: rgba(128,128,128,0.15); border: none; font-size: 1.4rem; font-weight: 900; color: var(--text-color); border-radius: 16px; aspect-ratio: 1/1;}
@@ -93,7 +94,7 @@
         .total-amount-display { font-weight: 900; font-size: 2.6rem; color: var(--text-color); line-height: 1; letter-spacing: -1px;}
         .grid-selector { padding: 0 10px; font-size: 1.1rem; font-weight: 900; border: none; border-radius: 16px; background: rgba(128,128,128,0.15); color: var(--text-color); cursor: pointer; text-align: center; width: 85px; }
 
-        /* --- 設定画面サブタブ (中央揃え) --- */
+        /* --- 設定画面サブタブ --- */
         .set-nav { display: flex; gap: 8px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px; justify-content: center; }
         .set-nav-btn { flex: 0 0 auto; padding: 12px 16px; font-weight: 900; border-radius: 16px; background: rgba(128,128,128,0.15); color: var(--text-color); opacity: 0.6; white-space: nowrap; font-size: 0.95rem; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
         .set-nav-btn.active { background: var(--accent-color); color: white; opacity: 1; box-shadow: 0 4px 12px rgba(0,0,0,0.2); transform: scale(1.08); }
@@ -105,18 +106,19 @@
         
         #map-editor-wrapper { position: relative; width: 100%; background: #eee; border-radius: 16px; overflow: hidden; touch-action: none; border: 2px dashed rgba(128,128,128,0.4); margin-bottom: 10px;}
         #map-editor-img { width: 100%; display: block; pointer-events: none; }
-        #map-editor-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; cursor: crosshair; touch-action: none; }
+        #map-editor-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; cursor: crosshair; touch-action: none; z-index: 10; }
+        #map-editor-badges-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 20; }
+        
         .map-area-list-item { background: rgba(128,128,128,0.1); padding: 10px; border-radius: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
         .list-item { padding: 10px; border-bottom: 1px solid rgba(128,128,128,0.1); display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
         .list-item img { width: 45px; height: 45px; object-fit: contain; background: rgba(255,255,255,0.9); border-radius: 10px; }
         .list-btn { padding: 8px 12px; font-size: 0.85rem; font-weight: 900; border-radius: 10px;}
         .order-btn { background: rgba(128,128,128,0.15); border: none; color: var(--text-color); font-size: 1.1rem; padding: 6px 10px; border-radius: 8px; font-weight: 900; }
 
-        /* モーダル群 (読みやすく白背景化) */
+        /* モーダル群 */
         @keyframes popIn { from { opacity: 0; transform: scale(0.9) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 1000; align-items: center; justify-content: center; padding: 15px; animation: fadeIn 0.3s ease-out; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        /* 背景を白っぽく固定、文字色も黒系に固定して視認性アップ */
         .modal-content { background: rgba(255, 255, 255, 0.95) !important; color: #222 !important; backdrop-filter: blur(28px) saturate(160%); -webkit-backdrop-filter: blur(28px) saturate(160%); width: 100%; max-width: 450px; border-radius: 28px; padding: 25px; box-sizing: border-box; max-height: 95vh; overflow-y: auto; position: relative; border: 1px solid rgba(255,255,255,0.5); box-shadow: 0 20px 50px rgba(0,0,0,0.3); animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
         .modal-content h2, .modal-content label, .modal-content .cart-item-info strong, .modal-content .cart-item-info span { color: #222 !important; }
         .money-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; }
@@ -189,15 +191,16 @@
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <h3 style="margin-top:0; margin-bottom:10px; color:var(--accent-color); font-size:1.2rem;">🖼️ お品書きマッピング（直感レジ）</h3>
             </div>
-            <p style="font-size:0.85rem; font-weight:700; opacity:0.8; margin-top:0;">イベント用のお品書き画像を読み込み、画像上をなぞって「タップ判定エリア」を作ります。イラストを直接タップしてカートに入れられます！<br>※子機側（お客様画面）にもこの画像が優先表示されます。</p>
+            <p style="font-size:0.85rem; font-weight:700; opacity:0.8; margin-top:0;">イベント用のお品書き画像を読み込み、フリーハンドで自由に囲んで「タップ判定エリア」を作ります。イラストを直接タップしてカートに入れられます！<br>※子機側にもこの画像が優先表示されます。</p>
             
             <input type="file" accept="image/*" onclick="this.value=null;" onchange="loadOshinagakiImage(this)" style="border:2px dashed rgba(128,128,128,0.3); padding:10px; background:transparent; width:100%; box-sizing:border-box; border-radius:12px; margin-bottom:15px;">
             
             <div id="map-editor-section" style="display:none;">
-                <p style="font-size:0.9rem; font-weight:900; color:#e65100;">👇 画像の上をドラッグ（なぞる）して、タップ判定エリアを作成してください</p>
+                <p style="font-size:0.9rem; font-weight:900; color:#e65100;">👇 商品のイラストをフリーハンドで囲むようになぞってください。</p>
                 <div id="map-editor-wrapper">
                     <img id="map-editor-img">
                     <canvas id="map-editor-canvas"></canvas>
+                    <div id="map-editor-badges-container"></div>
                 </div>
                 <button onclick="clearOshinagaki()" style="background:rgba(244,67,54,0.1); color:#f44336; border:2px solid #f44336; padding:10px; border-radius:12px; font-weight:900; margin-top:10px; width:100%;">🗑 お品書き画像を削除</button>
                 
@@ -379,7 +382,7 @@
         <h2 style="margin-top:0; font-size:1.3rem;">📌 このエリアに紐づける商品を選択</h2>
         <select id="map-item-select" style="width:100%; padding:15px; margin-bottom:20px; font-size:1.1rem; border-radius:12px;"></select>
         <div style="display:flex; gap:10px;">
-            <button onclick="document.getElementById('map-select-modal').style.display='none'; redrawMappingCanvas();" style="flex:1; padding:15px; background:rgba(0,0,0,0.1); color:#333; font-weight:900; border-radius:12px;">キャンセル</button>
+            <button onclick="document.getElementById('map-select-modal').style.display='none'; currentMapPoints=[]; redrawMappingCanvas();" style="flex:1; padding:15px; background:rgba(0,0,0,0.1); color:#333; font-weight:900; border-radius:12px;">キャンセル</button>
             <button onclick="commitMappingArea()" style="flex:1; padding:15px; background:var(--accent-color); color:white; font-weight:900; border-radius:12px;">決定</button>
         </div>
     </div>
@@ -558,12 +561,10 @@
         if (backup) { try { appData = JSON.parse(backup); } catch(e) { } }
     }
 
-    // 🧹 ストレージ最適化（ゴミ掃除機能）
+    // 🧹 ストレージ最適化
     function optimizeStorage() {
         try {
-            // localStorageのバックアップを一度消去して再保存
             localStorage.removeItem('pos_app_data_backup');
-            // JSON再変換で不要なメモリ参照をクリアして保存
             saveData();
             updateStorageCapacity();
             alert('🧹 内部データの不要なゴミを削除し、ストレージを最適化しました！\n（※売上履歴や商品はそのまま残っています）');
@@ -649,7 +650,6 @@
             document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(el => {
                 el.classList.remove('active');
-                // アニメーションの再トリガーのため一瞬displayをnoneにする
                 void el.offsetWidth;
             });
 
@@ -676,7 +676,7 @@
         document.querySelectorAll('.set-nav-btn').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.set-pane').forEach(el => {
             el.classList.remove('active');
-            void el.offsetWidth; // trigger reflow
+            void el.offsetWidth; 
         });
         btnElement.classList.add('active');
         document.getElementById(id).classList.add('active');
@@ -761,12 +761,11 @@
     }
 
     // ==========================================
-    // 🖼️ お品書きキャンバスマッピング
+    // 🖼️ お品書きキャンバスマッピング (フリーハンド・多角形対応)
     // ==========================================
     let mapCtx = null;
     let isDrawingMap = false;
-    let mapStartX = 0, mapStartY = 0;
-    let currentMapRect = null; 
+    let currentMapPoints = []; // 描画中の座標配列 [{x: %, y: %}, ...]
 
     function loadOshinagakiImage(input) {
         if (input.files && input.files[0]) {
@@ -782,7 +781,7 @@
                     const ev = appData.events.find(e => e.id == appData.currentEventId);
                     ev.oshinagakiImage = c.toDataURL('image/jpeg', 0.8);
                     saveData(); initMappingCanvas(); setPosMode(appData.posMode, true);
-                    syncStateToClient(); // 子機にも画像更新を通知
+                    syncStateToClient(); 
                 };
                 img.src = e.target.result;
             };
@@ -815,6 +814,7 @@
             canvas.height = imgEl.clientHeight;
             mapCtx = canvas.getContext('2d');
             redrawMappingCanvas();
+            renderMapEditorBadges(); // 設定画面のバッジを描画
             renderMappedAreaList();
         }
 
@@ -826,39 +826,43 @@
 
     function handleMapPointerDown(e) {
         e.preventDefault();
-        const canvas = document.getElementById('map-editor-canvas');
-        const rect = canvas.getBoundingClientRect();
-        mapStartX = ((e.clientX - rect.left) / canvas.width) * 100;
-        mapStartY = ((e.clientY - rect.top) / canvas.height) * 100;
         isDrawingMap = true;
-        currentMapRect = null;
+        currentMapPoints = [];
+        addMapPoint(e);
     }
 
     function handleMapPointerMove(e) {
         if (!isDrawingMap) return;
         e.preventDefault();
-        const canvas = document.getElementById('map-editor-canvas');
-        const rect = canvas.getBoundingClientRect();
-        const curX = ((e.clientX - rect.left) / canvas.width) * 100;
-        const curY = ((e.clientY - rect.top) / canvas.height) * 100;
-
-        currentMapRect = {
-            x: Math.min(mapStartX, curX),
-            y: Math.min(mapStartY, curY),
-            w: Math.abs(curX - mapStartX),
-            h: Math.abs(curY - mapStartY)
-        };
+        addMapPoint(e);
         redrawMappingCanvas();
     }
 
     function handleMapPointerUp(e) {
         if (!isDrawingMap) return;
         isDrawingMap = false;
-        if (currentMapRect && currentMapRect.w > 3 && currentMapRect.h > 3) {
+        
+        // ある程度の長さ（点数）があれば決定モーダルへ
+        if (currentMapPoints.length > 3) {
             openMappingSelectModal();
         } else {
-            currentMapRect = null; redrawMappingCanvas();
+            currentMapPoints = []; redrawMappingCanvas();
         }
+    }
+
+    function addMapPoint(e) {
+        const canvas = document.getElementById('map-editor-canvas');
+        const rect = canvas.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / canvas.width) * 100;
+        const y = ((e.clientY - rect.top) / canvas.height) * 100;
+        
+        // 間引き（近すぎる点は追加しない）
+        if (currentMapPoints.length > 0) {
+            const last = currentMapPoints[currentMapPoints.length - 1];
+            const dist = Math.sqrt(Math.pow(x - last.x, 2) + Math.pow(y - last.y, 2));
+            if (dist < 1.5) return; // 1.5%以内の移動は無視
+        }
+        currentMapPoints.push({x, y});
     }
 
     function redrawMappingCanvas() {
@@ -869,32 +873,53 @@
 
         const ev = appData.events.find(e => e.id == appData.currentEventId);
         
+        // 登録済みエリア（多角形）の描画
         (ev.oshinagakiAreas || []).forEach(area => {
-            const pxReal = (area.x / 100) * cw; const pyReal = (area.y / 100) * ch;
-            const pwReal = (area.w / 100) * cw; const phReal = (area.h / 100) * ch;
+            if(!area.polygonPoints || area.polygonPoints.length === 0) return;
             
-            mapCtx.fillStyle = 'rgba(0, 122, 255, 0.4)';
-            mapCtx.fillRect(pxReal, pyReal, pwReal, phReal);
+            mapCtx.beginPath();
+            area.polygonPoints.forEach((p, index) => {
+                const pxReal = (p.x / 100) * cw; const pyReal = (p.y / 100) * ch;
+                if(index === 0) mapCtx.moveTo(pxReal, pyReal);
+                else mapCtx.lineTo(pxReal, pyReal);
+            });
+            mapCtx.closePath();
+            mapCtx.fillStyle = 'rgba(0, 122, 255, 0.3)';
+            mapCtx.fill();
             mapCtx.strokeStyle = 'rgba(0, 122, 255, 1)';
             mapCtx.lineWidth = 2;
-            mapCtx.strokeRect(pxReal, pyReal, pwReal, phReal);
+            mapCtx.stroke();
             
             const item = ev.items.find(i => i.id == area.itemId);
-            if(item) {
+            if(item && area.box) {
                 mapCtx.fillStyle = 'white';
                 mapCtx.font = 'bold 14px sans-serif';
-                mapCtx.fillText(item.name, pxReal + 5, pyReal + 18);
+                mapCtx.fillText(item.name, (area.box.x / 100) * cw + 5, (area.box.y / 100) * ch + 18);
             }
         });
 
-        if (currentMapRect) {
-            const rx = (currentMapRect.x / 100) * cw; const ry = (currentMapRect.y / 100) * ch;
-            const rw = (currentMapRect.w / 100) * cw; const rh = (currentMapRect.h / 100) * ch;
-            mapCtx.fillStyle = 'rgba(255, 152, 0, 0.4)';
-            mapCtx.fillRect(rx, ry, rw, rh);
+        // ドラッグ中の軌跡を描画
+        if (currentMapPoints.length > 0) {
+            mapCtx.beginPath();
+            currentMapPoints.forEach((p, index) => {
+                const rx = (p.x / 100) * cw; const ry = (p.y / 100) * ch;
+                if(index === 0) mapCtx.moveTo(rx, ry);
+                else mapCtx.lineTo(rx, ry);
+            });
             mapCtx.strokeStyle = 'rgba(255, 152, 0, 1)';
-            mapCtx.lineWidth = 2;
-            mapCtx.strokeRect(rx, ry, rw, rh);
+            mapCtx.lineWidth = 3;
+            mapCtx.stroke();
+            
+            // 閉じる線を薄く描画
+            if(currentMapPoints.length > 2) {
+                const first = currentMapPoints[0];
+                const last = currentMapPoints[currentMapPoints.length - 1];
+                mapCtx.beginPath();
+                mapCtx.moveTo((last.x / 100) * cw, (last.y / 100) * ch);
+                mapCtx.lineTo((first.x / 100) * cw, (first.y / 100) * ch);
+                mapCtx.strokeStyle = 'rgba(255, 152, 0, 0.4)';
+                mapCtx.stroke();
+            }
         }
     }
 
@@ -910,18 +935,45 @@
         const itemId = document.getElementById('map-item-select').value;
         if (!itemId) return alert("商品を紐づけてください");
         
+        if (currentMapPoints.length < 3) {
+            alert("描画範囲が狭すぎます");
+            currentMapPoints = []; redrawMappingCanvas();
+            document.getElementById('map-select-modal').style.display = 'none';
+            return;
+        }
+
+        // バウンディングボックスの計算 (パーセンテージ)
+        let minX = 100, minY = 100, maxX = 0, maxY = 0;
+        currentMapPoints.forEach(p => {
+            if (p.x < minX) minX = p.x;
+            if (p.x > maxX) maxX = p.x;
+            if (p.y < minY) minY = p.y;
+            if (p.y > maxY) maxY = p.y;
+        });
+
+        // CSS clip-path 用の相対座標の生成
+        let polygonCSSArray = [];
+        currentMapPoints.forEach(p => {
+            let relX = ((p.x - minX) / (maxX - minX)) * 100;
+            let relY = ((p.y - minY) / (maxY - minY)) * 100;
+            polygonCSSArray.push(`${relX.toFixed(1)}% ${relY.toFixed(1)}%`);
+        });
+
         const ev = appData.events.find(e => e.id == appData.currentEventId);
         ev.oshinagakiAreas.push({
             id: Date.now(),
-            x: currentMapRect.x, y: currentMapRect.y, w: currentMapRect.w, h: currentMapRect.h,
+            polygonPoints: [...currentMapPoints],
+            box: { x: minX, y: minY, w: maxX - minX, h: maxY - minY },
+            clipPathCSS: `polygon(${polygonCSSArray.join(', ')})`,
             itemId: parseInt(itemId)
         });
-        currentMapRect = null; saveData(); 
+        
+        currentMapPoints = []; saveData(); 
         document.getElementById('map-select-modal').style.display = 'none';
-        redrawMappingCanvas(); renderMappedAreaList(); setPosMode(appData.posMode, true);
+        redrawMappingCanvas(); renderMapEditorBadges(); renderMappedAreaList(); setPosMode(appData.posMode, true);
     }
 
-function renderMappedAreaList() {
+    function renderMappedAreaList() {
         const list = document.getElementById('map-area-list'); list.innerHTML = '';
         const ev = appData.events.find(e => e.id == appData.currentEventId);
         if(!ev.oshinagakiAreas || ev.oshinagakiAreas.length === 0) { list.innerHTML = '<p style="color:#888; font-size:0.9rem;">まだ設定されていません</p>'; return; }
@@ -929,7 +981,6 @@ function renderMappedAreaList() {
         ev.oshinagakiAreas.forEach(area => {
             const item = ev.items.find(i => i.id == area.itemId);
             const name = item ? item.name : '不明な商品';
-            // ボタンを大きく、分かりやすくレイアウト変更
             list.innerHTML += `<div class="map-area-list-item" style="flex-direction:column; align-items:flex-start; gap:10px;">
                 <span style="font-weight:bold; font-size:1rem;">🎯 ${name}</span>
                 <div style="display:flex; gap:8px; width:100%;">
@@ -948,6 +999,7 @@ function renderMappedAreaList() {
             delete area.badgeTop;
             saveData();
             if(appData.posMode === 'oshinagaki') renderPosOshinagaki();
+            renderMapEditorBadges(); // 設定画面のバッジも更新
             alert('残数バッジを元の右下に戻しました！');
         }
     }
@@ -955,7 +1007,90 @@ function renderMappedAreaList() {
     function deleteMappedArea(id) {
         const ev = appData.events.find(e => e.id == appData.currentEventId);
         ev.oshinagakiAreas = ev.oshinagakiAreas.filter(a => a.id !== id);
-        saveData(); redrawMappingCanvas(); renderMappedAreaList(); setPosMode(appData.posMode, true);
+        saveData(); redrawMappingCanvas(); renderMapEditorBadges(); renderMappedAreaList(); setPosMode(appData.posMode, true);
+    }
+
+    // ★ 設定画面のキャンバス上にも「残数バッジ」を配置し、ドラッグ可能にする
+    function renderMapEditorBadges() {
+        const container = document.getElementById('map-editor-badges-container');
+        if(!container) return;
+        container.innerHTML = '';
+        
+        const ev = appData.events.find(e => e.id == appData.currentEventId);
+        if(!ev || !ev.oshinagakiAreas) return;
+
+        ev.oshinagakiAreas.forEach(area => {
+            const item = ev.items.find(i => i.id == area.itemId);
+            if (!item) return;
+
+            const avail = getAvailableStock(item.id);
+            const box = area.box;
+            if(!box) return; // 古い形式のデータの回避
+
+            // バッジ配置の基準枠（見えない枠）
+            const boxDiv = document.createElement('div');
+            boxDiv.style.position = 'absolute';
+            boxDiv.style.left = `${box.x}%`;
+            boxDiv.style.top = `${box.y}%`;
+            boxDiv.style.width = `${box.w}%`;
+            boxDiv.style.height = `${box.h}%`;
+            
+            const badge = document.createElement('div');
+            badge.className = 'pos-oshi-badge';
+            badge.innerText = `残${avail}`;
+            
+            if (area.badgeLeft && area.badgeTop) {
+                badge.style.left = area.badgeLeft;
+                badge.style.top = area.badgeTop;
+                badge.style.right = 'auto';
+                badge.style.bottom = 'auto';
+            }
+
+            // 設定画面でのバッジドラッグ移動
+            makeBadgeDraggable(badge, area.id);
+
+            boxDiv.appendChild(badge);
+            container.appendChild(boxDiv);
+        });
+    }
+
+    // バッジのドラッグ共通ロジック
+    function makeBadgeDraggable(badge, areaId) {
+        badge.onpointerdown = (e) => {
+            e.preventDefault();
+            e.stopPropagation(); 
+            let startX = e.clientX, startY = e.clientY;
+            let startLeft = badge.offsetLeft, startTop = badge.offsetTop;
+            
+            badge.setPointerCapture(e.pointerId);
+
+            badge.onpointermove = (evMove) => {
+                let dx = evMove.clientX - startX;
+                let dy = evMove.clientY - startY;
+                badge.style.left = (startLeft + dx) + 'px';
+                badge.style.top = (startTop + dy) + 'px';
+                badge.style.right = 'auto'; 
+                badge.style.bottom = 'auto';
+            };
+
+            badge.onpointerup = (evUp) => {
+                badge.onpointermove = null;
+                badge.onpointerup = null;
+                badge.releasePointerCapture(e.pointerId);
+                
+                // 位置を保存
+                const ev = appData.events.find(evnt => evnt.id == appData.currentEventId);
+                const area = (ev.oshinagakiAreas || []).find(a => a.id === areaId);
+                if(area) {
+                    area.badgeLeft = badge.style.left;
+                    area.badgeTop = badge.style.top;
+                    saveData();
+                    // レジ画面が開いていれば更新
+                    if(appData.posMode === 'oshinagaki') renderPosOshinagaki();
+                    renderMapEditorBadges(); 
+                }
+            };
+        };
     }
 
 
@@ -1083,7 +1218,7 @@ function renderMappedAreaList() {
     // ==========================================
     // 🛍️ レジUI制御
     // ==========================================
-function setPosMode(mode, force = false) {
+    function setPosMode(mode, force = false) {
         const ev = appData.events.find(e => e.id == appData.currentEventId);
         
         if (mode === 'oshinagaki' && !ev.oshinagakiImage) {
@@ -1096,14 +1231,12 @@ function setPosMode(mode, force = false) {
         document.getElementById('btn-mode-grid').classList.toggle('active', mode === 'grid');
         document.getElementById('btn-mode-oshi').classList.toggle('active', mode === 'oshinagaki');
         
-        // 確実に非表示にする（裏に残像が残るバグの修正）
         document.getElementById('pos-grid').style.display = 'none';
         document.getElementById('pos-oshinagaki-wrapper').style.display = 'none';
 
-        // アニメーショントリガーのため、一度クラスを外す
         document.querySelectorAll('.pos-view').forEach(el => {
             el.classList.remove('active');
-            void el.offsetWidth; // Reflow
+            void el.offsetWidth; 
         });
 
         if (mode === 'grid') { 
@@ -1143,24 +1276,42 @@ function setPosMode(mode, force = false) {
 
             const avail = getAvailableStock(item.id);
             const isSoldOut = avail <= 0;
+            const box = area.box;
+            if(!box) return; // 下位互換
 
             const div = document.createElement('div');
             div.className = `pos-oshi-area ${isSoldOut ? 'sold-out-area' : ''}`;
-            div.style.left = `${area.x}%`;
-            div.style.top = `${area.y}%`;
-            div.style.width = `${area.w}%`;
-            div.style.height = `${area.h}%`;
+            
+            // ★ バウンディングボックスに合わせて配置し、clip-pathで多角形に切り抜く
+            div.style.left = `${box.x}%`;
+            div.style.top = `${box.y}%`;
+            div.style.width = `${box.w}%`;
+            div.style.height = `${box.h}%`;
+            if(area.clipPathCSS) {
+                div.style.clipPath = area.clipPathCSS;
+                div.style.webkitClipPath = area.clipPathCSS;
+            }
             div.id = `pos-oshi-area-${item.id}`;
 
             if (!isSoldOut) {
                 div.onclick = (e) => addToCart(e, item.id);
-                
-                // 残数バッジ
+            }
+            container.appendChild(div);
+
+            // バッジはclip-pathで切られないように、同じboxサイズの見えないコンテナを作ってそこに置く
+            if(!isSoldOut) {
+                const badgeContainer = document.createElement('div');
+                badgeContainer.style.position = 'absolute';
+                badgeContainer.style.left = `${box.x}%`;
+                badgeContainer.style.top = `${box.y}%`;
+                badgeContainer.style.width = `${box.w}%`;
+                badgeContainer.style.height = `${box.h}%`;
+                badgeContainer.style.pointerEvents = 'none'; // コンテナ自体はクリックさせない
+
                 const badge = document.createElement('div');
                 badge.className = 'pos-oshi-badge';
                 badge.innerText = `残${avail}`;
                 
-                // バッジの保存位置を復元
                 if (area.badgeLeft && area.badgeTop) {
                     badge.style.left = area.badgeLeft;
                     badge.style.top = area.badgeTop;
@@ -1168,40 +1319,12 @@ function setPosMode(mode, force = false) {
                     badge.style.bottom = 'auto';
                 }
 
-                // 👆 バッジのドラッグ移動機能
-                badge.onpointerdown = (e) => {
-                    e.preventDefault();
-                    e.stopPropagation(); // クリック判定（カート追加）を防止
-                    
-                    let startX = e.clientX, startY = e.clientY;
-                    let startLeft = badge.offsetLeft, startTop = badge.offsetTop;
-                    
-                    badge.setPointerCapture(e.pointerId);
+                // バッジのドラッグ移動（共通関数）
+                makeBadgeDraggable(badge, area.id);
 
-                    badge.onpointermove = (evMove) => {
-                        let dx = evMove.clientX - startX;
-                        let dy = evMove.clientY - startY;
-                        badge.style.left = (startLeft + dx) + 'px';
-                        badge.style.top = (startTop + dy) + 'px';
-                        badge.style.right = 'auto'; 
-                        badge.style.bottom = 'auto';
-                    };
-
-                    badge.onpointerup = (evUp) => {
-                        badge.onpointermove = null;
-                        badge.onpointerup = null;
-                        badge.releasePointerCapture(e.pointerId);
-                        
-                        // 位置を保存
-                        area.badgeLeft = badge.style.left;
-                        area.badgeTop = badge.style.top;
-                        saveData();
-                    };
-                };
-
-                div.appendChild(badge);
+                badgeContainer.appendChild(badge);
+                container.appendChild(badgeContainer);
             }
-            container.appendChild(div);
         });
     }
 
@@ -1434,7 +1557,7 @@ function setPosMode(mode, force = false) {
             items: ev.items, cart: cart, cartTotal: cart.reduce((s,i)=>s+i.price, 0), 
             signageSettings: appData.signageSettings || {}, 
             slideshowImages: appData.slideshowImages || [], 
-            oshinagakiImage: ev.oshinagakiImage || null, // 子機へ送信
+            oshinagakiImage: ev.oshinagakiImage || null, 
             isAwayMode: !!appData.isAwayMode, theme: appData.theme || 'default' 
         }); 
     }
@@ -1468,7 +1591,6 @@ function setPosMode(mode, force = false) {
     function updateAwayUI() { const s = clientData.signageSettings || {}; document.getElementById('away-text-1-display').innerText = s.awayText1 || "ただいま離席中です"; document.getElementById('away-text-2-display').innerText = s.awayText2 || "すぐに戻ります。しばらくお待ちくださいませ。"; const iconEl = document.getElementById('away-icon-display'); if(s.awayIconType === 'custom' && s.awayCustomImage) { iconEl.innerHTML = `<img src="${s.awayCustomImage}" style="max-height:250px; border-radius:20px;">`; iconEl.classList.remove('away-icon-anim'); } else if(s.awayIconType === 'girl') { iconEl.innerHTML = `👩‍💼`; iconEl.classList.add('away-icon-anim'); } else { iconEl.innerHTML = `👨‍💼`; iconEl.classList.add('away-icon-anim'); } }
     function updateClientCartUI() { const c = clientData.cart || []; const t = clientData.cartTotal || 0; if(document.getElementById('client-checkout-area').style.display === 'flex') return; if(c.length === 0) { document.getElementById('client-cart-area').style.display = 'none'; } else { stopSignageLoop(); document.getElementById('client-menu-area').style.display = 'none'; document.getElementById('client-slideshow').style.display = 'none'; document.getElementById('client-cart-area').style.display = 'flex'; const list = document.getElementById('client-cart-list'); list.innerHTML = ''; const map = {}; c.forEach(i => { if(!map[i.id]) map[i.id] = {...i, count:0}; map[i.id].count++; }); Object.values(map).forEach(i => { list.innerHTML += `<div style="display:flex; justify-content:space-between; align-items:center; border-bottom:4px dashed color-mix(in srgb, var(--text-color) 20%, transparent); padding:20px 0;"><div style="display:flex; align-items:center; gap:30px;"><img src="${i.image}" style="width:120px; height:120px; object-fit:contain; border-radius:20px; background:rgba(255,255,255,0.8);"><div><div style="font-weight:900; color:var(--text-color); font-size:3rem; line-height:1.2; margin-bottom:10px;">${i.name}</div><div style="color:var(--accent-color); font-weight:900; font-size:2.5rem;">¥${i.price.toLocaleString()}</div></div></div><div style="font-size:4rem; font-weight:900; color:var(--text-color);">x ${i.count}</div></div>`; }); animateValue(document.getElementById('client-subtotal'), parseInt(document.getElementById('client-subtotal').innerText.replace(/,/g, '')) || 0, t, 500); } }
     
-    // 📺 子機の待機画面ループ制御（お品書き画像 優先対応）
     function runSignageLoop() { 
         clearTimeout(signageTimeout); 
         if(clientIsAway) return; 
@@ -1481,7 +1603,6 @@ function setPosMode(mode, force = false) {
         if (clientData.oshinagakiImage) cycleImages.push(clientData.oshinagakiImage);
         if (clientData.slideshowImages) cycleImages = cycleImages.concat(clientData.slideshowImages);
 
-        // カスタム画像（お品書きポスター or スライドショー）がある場合
         if (cycleImages.length > 0) {
             document.getElementById('client-menu-area').style.display = 'none'; 
             document.getElementById('client-slideshow').style.display = 'flex'; 
@@ -1492,10 +1613,8 @@ function setPosMode(mode, force = false) {
                 imgEl.style.opacity = 1; 
                 currentSlideIndex++; 
             }, 500); 
-            // 複数枚ある場合は8秒、お品書き1枚だけならずっと表示
             signageTimeout = setTimeout(runSignageLoop, cycleImages.length > 1 ? 8000 : 9999999); 
         } 
-        // カスタム画像が何もない場合は、元の自動生成グリッドお品書きを表示
         else {
             document.getElementById('client-slideshow').style.display = 'none'; 
             document.getElementById('client-menu-area').style.display = 'flex'; 
