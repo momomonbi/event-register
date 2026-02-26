@@ -1260,7 +1260,7 @@
         });
     }
 
-    function renderPosOshinagaki() {
+function renderPosOshinagaki() {
         const ev = appData.events.find(e => e.id == appData.currentEventId);
         if (!ev || !ev.oshinagakiImage) return;
 
@@ -1311,6 +1311,8 @@
                 const badge = document.createElement('div');
                 badge.className = 'pos-oshi-badge';
                 badge.innerText = `残${avail}`;
+                // ★ レジ画面ではバッジへのクリックを無効化（貫通）し、誤操作を防ぐ
+                badge.style.pointerEvents = 'none';
                 
                 if (area.badgeLeft && area.badgeTop) {
                     badge.style.left = area.badgeLeft;
@@ -1319,8 +1321,7 @@
                     badge.style.bottom = 'auto';
                 }
 
-                // バッジのドラッグ移動（共通関数）
-                makeBadgeDraggable(badge, area.id);
+                // ★ レジ画面側ではドラッグ移動機能を削除
 
                 badgeContainer.appendChild(badge);
                 container.appendChild(badgeContainer);
