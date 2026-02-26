@@ -929,18 +929,18 @@ function renderMappedAreaList() {
         ev.oshinagakiAreas.forEach(area => {
             const item = ev.items.find(i => i.id == area.itemId);
             const name = item ? item.name : '不明な商品';
-            // ↓ここから変更（ボタンを横並びにするための div と、リセットボタンを追加）
-            list.innerHTML += `<div class="map-area-list-item">
-                <span style="font-weight:bold; font-size:0.9rem;">🎯 ${name}</span>
-                <div style="display:flex; gap:6px;">
-                    <button onclick="resetBadgePosition(${area.id})" style="padding:6px 10px; font-size:0.8rem; background:rgba(0,122,255,0.1); color:var(--accent-color); border:1px solid var(--accent-color); border-radius:8px;">残数位置リセット</button>
-                    <button onclick="deleteMappedArea(${area.id})" style="padding:6px 10px; font-size:0.8rem; background:rgba(244,67,54,0.1); color:#f44336; border:1px solid #f44336; border-radius:8px;">削除</button>
+            // ボタンを大きく、分かりやすくレイアウト変更
+            list.innerHTML += `<div class="map-area-list-item" style="flex-direction:column; align-items:flex-start; gap:10px;">
+                <span style="font-weight:bold; font-size:1rem;">🎯 ${name}</span>
+                <div style="display:flex; gap:8px; width:100%;">
+                    <button onclick="resetBadgePosition(${area.id})" style="flex:1; padding:10px; font-size:0.85rem; font-weight:bold; background:rgba(0,122,255,0.1); color:var(--accent-color); border:1px solid var(--accent-color); border-radius:8px;">🔄 残数位置を戻す</button>
+                    <button onclick="deleteMappedArea(${area.id})" style="padding:10px 15px; font-size:0.85rem; font-weight:bold; background:rgba(244,67,54,0.1); color:#f44336; border:1px solid #f44336; border-radius:8px;">削除</button>
                 </div>
             </div>`;
         });
     }
 
-function resetBadgePosition(id) {
+    function resetBadgePosition(id) {
         const ev = appData.events.find(e => e.id == appData.currentEventId);
         const area = (ev.oshinagakiAreas || []).find(a => a.id === id);
         if (area) {
@@ -948,7 +948,7 @@ function resetBadgePosition(id) {
             delete area.badgeTop;
             saveData();
             if(appData.posMode === 'oshinagaki') renderPosOshinagaki();
-            alert('残数バッジの位置を初期位置に戻しました！');
+            alert('残数バッジを元の右下に戻しました！');
         }
     }
 
@@ -1083,7 +1083,7 @@ function resetBadgePosition(id) {
     // ==========================================
     // 🛍️ レジUI制御
     // ==========================================
-    function setPosMode(mode, force = false) {
+function setPosMode(mode, force = false) {
         const ev = appData.events.find(e => e.id == appData.currentEventId);
         
         if (mode === 'oshinagaki' && !ev.oshinagakiImage) {
@@ -1096,6 +1096,10 @@ function resetBadgePosition(id) {
         document.getElementById('btn-mode-grid').classList.toggle('active', mode === 'grid');
         document.getElementById('btn-mode-oshi').classList.toggle('active', mode === 'oshinagaki');
         
+        // 確実に非表示にする（裏に残像が残るバグの修正）
+        document.getElementById('pos-grid').style.display = 'none';
+        document.getElementById('pos-oshinagaki-wrapper').style.display = 'none';
+
         // アニメーショントリガーのため、一度クラスを外す
         document.querySelectorAll('.pos-view').forEach(el => {
             el.classList.remove('active');
@@ -1103,9 +1107,11 @@ function resetBadgePosition(id) {
         });
 
         if (mode === 'grid') { 
+            document.getElementById('pos-grid').style.display = 'grid';
             document.getElementById('pos-grid').classList.add('active');
             renderPosGrid(); 
         } else { 
+            document.getElementById('pos-oshinagaki-wrapper').style.display = 'block';
             document.getElementById('pos-oshinagaki-wrapper').classList.add('active');
             renderPosOshinagaki(); 
         }
