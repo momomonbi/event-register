@@ -561,13 +561,30 @@
         if (backup) { try { appData = JSON.parse(backup); } catch(e) { } }
     }
 
-    // 🧹 ストレージ最適化
+// 🧹 ストレージ最適化（デフラグ）
     function optimizeStorage() {
+        if(!confirm('データの最適化（デフラグ）を行いますか？\n※ブラウザの仕組み上、実行直後は一時的に容量が増えて表示されることがありますが、しばらくすると自動で整理され軽くなります。')) return;
         try {
-            localStorage.removeItem('pos_app_data_backup');
-            saveData();
-            updateStorageCapacity();
-            alert('🧹 内部データの不要なゴミを削除し、ストレージを最適化しました！\n（※売上履歴や商品はそのまま残っています）');
+            // データをクリーンに再構築
+            const cleanData = JSON.parse(JSON.stringify(appData));
+            appData = cleanData;
+            
+            if (db) {
+                const transaction = db.transaction(['appData'], 'readwrite');
+                const store = transaction.objectStore('appData');
+                store.clear(); // ★一度完全に空にする
+                store.put({ id: 'main', data: cleanData }); // ★綺麗なデータを入れ直す
+                
+                transaction.oncomplete = () => {
+                    localStorage.setItem('pos_app_data_backup', JSON.stringify(cleanData));
+                    updateStorageCapacity();
+                    alert('🧹 データの再構築と最適化が完了しました！');
+                };
+            } else {
+                localStorage.setItem('pos_app_data_backup', JSON.stringify(cleanData));
+                updateStorageCapacity();
+                alert('🧹 データの再構築と最適化が完了しました！');
+            }
         } catch(e) {
             alert('最適化中にエラーが発生しました。');
         }
@@ -1601,8 +1618,18 @@ function runSignageLoop() {
         document.getElementById('client-checkout-area').style.display = 'none'; 
         
         let cycleImages = [];
-        if (clientData.oshinagakiImage) cycleImages.push(clientData.oshinagakiImage);
-        if (clientData.slideshowImages) cycleImages = cycleImages.concat(clientData.slideshowImages);
+        
+        // ★ お品書きメインの交互表示ロジック
+        if (clientData.oshinagakiImage && clientData.slideshowImages && clientData.slideshowImages.length > 0) {
+            clientData.slideshowImages.forEach(img => {
+                cycleImages.push(clientData.oshinagakiImage); // お品書き
+                cycleImages.push(img); // スライド画像
+            });
+        } else if (clientData.oshinagakiImage) {
+            cycleImages.push(clientData.oshinagakiImage); // お品書きのみ
+        } else if (clientData.slideshowImages && clientData.slideshowImages.length > 0) {
+            cycleImages = [...clientData.slideshowImages]; // スライド画像のみ
+        }
 
         if (cycleImages.length > 0) {
             document.getElementById('client-menu-area').style.display = 'none'; 
