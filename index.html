@@ -274,6 +274,12 @@
         /* ★ 子機終了ボタン（位置調整） */
         .client-exit-btn { position:absolute; bottom:80px; right:20px; z-index:20000; background:rgba(128,128,128,0.25); color:var(--text-color); border-radius:50%; width:60px; height:60px; font-size:2rem; opacity:0.4; display:flex; align-items:center; justify-content:center; transition:opacity 0.2s; border: 2px solid rgba(128,128,128,0.5);}
         .client-exit-btn:active { opacity:1; }
+
+        /* 追加：ストレージ情報のスタイル */
+        .storage-bar-bg { width: 100%; height: 12px; background: rgba(128,128,128,0.2); border-radius: 6px; overflow: hidden; margin-top: 8px; }
+        .storage-bar-fill { height: 100%; background: var(--accent-color); transition: width 0.5s ease-out; }
+        .storage-warning { background: #ff9800 !important; }
+        .storage-danger { background: #f44336 !important; }
     </style>
 </head>
 <body data-theme="default">
@@ -385,6 +391,19 @@
 
     <div class="glass-card" style="margin-top: 30px; padding: 20px;">
         <h3 style="margin-top:0; color:var(--accent-color); font-size:1.2rem;">💾 データの保存と読込</h3>
+        
+        <div id="storage-info-container" style="background:rgba(128,128,128,0.1); padding:15px; border-radius:14px; margin-bottom:20px; text-align:left;">
+            <div style="font-weight:900; font-size:0.95rem; margin-bottom:4px; display:flex; justify-content:space-between;">
+                <span>📱 ブラウザのデータ保存容量</span>
+                <span id="storage-percent" style="color:var(--accent-color);">--%</span>
+            </div>
+            <div style="font-size:0.8rem; opacity:0.8; margin-bottom:8px;">※画像やデータが増えると使用量が上がります</div>
+            <div class="storage-bar-bg">
+                <div id="storage-bar" class="storage-bar-fill" style="width: 0%;"></div>
+            </div>
+            <div id="storage-text" style="font-size:0.85rem; margin-top:8px; font-weight:bold; text-align:right;">計算中...</div>
+        </div>
+
         <p style="font-size:0.85rem; color:var(--text-color); opacity:0.8; font-weight:700;">現在の状態をファイルに保存したり、別の端末に引き継ぐために読み込んだりできます。</p>
         <button onclick="exportAppData()" style="background:#2196F3; color:white; padding:16px; width:100%; font-weight:900; font-size:1.1rem; border-radius:14px; margin-bottom:12px; box-shadow: 0 4px 12px rgba(33,150,243,0.3);">⬇️ データを保存する</button>
         <label style="display:block; background:#4CAF50; color:white; padding:16px; width:100%; font-weight:900; font-size:1.1rem; border-radius:14px; text-align:center; box-sizing:border-box; box-shadow: 0 4px 12px rgba(76,175,80,0.3); cursor:pointer;">
@@ -651,6 +670,59 @@
         }
     }
 
+    // --- 追加：ストレージ容量の計算と表示更新 ---
+    async function updateStorageCapacity() {
+        const textEl = document.getElementById('storage-text');
+        const barEl = document.getElementById('storage-bar');
+        const percentEl = document.getElementById('storage-percent');
+        
+        if (!textEl || !barEl || !percentEl) return;
+
+        if (navigator.storage && navigator.storage.estimate) {
+            try {
+                const estimate = await navigator.storage.estimate();
+                const usageMB = (estimate.usage / (1024 * 1024)).toFixed(1);
+                
+                // クオータ(最大容量)の単位調整
+                let quotaDisplay = "";
+                const quotaMB = estimate.quota / (1024 * 1024);
+                if (quotaMB > 1024) {
+                    quotaDisplay = (quotaMB / 1024).toFixed(1) + " GB";
+                } else {
+                    quotaDisplay = quotaMB.toFixed(1) + " MB";
+                }
+
+                // パーセント計算
+                let percent = (estimate.usage / estimate.quota) * 100;
+                percent = Math.min(percent, 100); // 100%を超えないように
+                
+                // UI更新
+                percentEl.innerText = percent.toFixed(2) + "%";
+                textEl.innerText = `使用中: ${usageMB} MB / 最大: ${quotaDisplay}`;
+                barEl.style.width = percent + "%";
+
+                // 色の変更（警告と危険）
+                barEl.classList.remove('storage-warning', 'storage-danger');
+                if (percent > 90) {
+                    barEl.classList.add('storage-danger');
+                    percentEl.style.color = "#f44336";
+                } else if (percent > 75) {
+                    barEl.classList.add('storage-warning');
+                    percentEl.style.color = "#ff9800";
+                } else {
+                    percentEl.style.color = "var(--accent-color)";
+                }
+
+            } catch (error) {
+                textEl.innerText = "容量の計算に失敗しました";
+                percentEl.innerText = "--%";
+            }
+        } else {
+            textEl.innerText = "お使いのブラウザは容量確認に未対応です";
+            percentEl.innerText = "--%";
+        }
+    }
+
     function finalizeLoad() {
         if (!appData.events || appData.events.length === 0) {
             const initialId = Date.now();
@@ -703,6 +775,9 @@
             isSuccess = true;
         } catch(e) { console.error("LocalStorage Save Error (容量オーバーの可能性)"); }
         
+        // 保存されるたびにストレージ容量表示を更新
+        updateStorageCapacity();
+
         return isSuccess;
     }
 
