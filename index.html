@@ -180,9 +180,9 @@
 
 <div id="settings" class="tab-content">
     
-    <div class="set-nav">
+<div class="set-nav">
         <button class="set-nav-btn active" onclick="switchSetTab('set-items', this)">📦 商品</button>
-        <button class="set-nav-btn" onclick="switchSetTab('set-client', this)">📺 子機</button>
+        <button class="set-nav-btn" onclick="switchSetTab('set-client', this)">📺 連携</button>
         <button class="set-nav-btn" onclick="switchSetTab('set-system', this)">⚙️ 設定と外観</button>
     </div>
 
@@ -1592,7 +1592,7 @@ function renderPosOshinagaki() {
     function updateAwayUI() { const s = clientData.signageSettings || {}; document.getElementById('away-text-1-display').innerText = s.awayText1 || "ただいま離席中です"; document.getElementById('away-text-2-display').innerText = s.awayText2 || "すぐに戻ります。しばらくお待ちくださいませ。"; const iconEl = document.getElementById('away-icon-display'); if(s.awayIconType === 'custom' && s.awayCustomImage) { iconEl.innerHTML = `<img src="${s.awayCustomImage}" style="max-height:250px; border-radius:20px;">`; iconEl.classList.remove('away-icon-anim'); } else if(s.awayIconType === 'girl') { iconEl.innerHTML = `👩‍💼`; iconEl.classList.add('away-icon-anim'); } else { iconEl.innerHTML = `👨‍💼`; iconEl.classList.add('away-icon-anim'); } }
     function updateClientCartUI() { const c = clientData.cart || []; const t = clientData.cartTotal || 0; if(document.getElementById('client-checkout-area').style.display === 'flex') return; if(c.length === 0) { document.getElementById('client-cart-area').style.display = 'none'; } else { stopSignageLoop(); document.getElementById('client-menu-area').style.display = 'none'; document.getElementById('client-slideshow').style.display = 'none'; document.getElementById('client-cart-area').style.display = 'flex'; const list = document.getElementById('client-cart-list'); list.innerHTML = ''; const map = {}; c.forEach(i => { if(!map[i.id]) map[i.id] = {...i, count:0}; map[i.id].count++; }); Object.values(map).forEach(i => { list.innerHTML += `<div style="display:flex; justify-content:space-between; align-items:center; border-bottom:4px dashed color-mix(in srgb, var(--text-color) 20%, transparent); padding:20px 0;"><div style="display:flex; align-items:center; gap:30px;"><img src="${i.image}" style="width:120px; height:120px; object-fit:contain; border-radius:20px; background:rgba(255,255,255,0.8);"><div><div style="font-weight:900; color:var(--text-color); font-size:3rem; line-height:1.2; margin-bottom:10px;">${i.name}</div><div style="color:var(--accent-color); font-weight:900; font-size:2.5rem;">¥${i.price.toLocaleString()}</div></div></div><div style="font-size:4rem; font-weight:900; color:var(--text-color);">x ${i.count}</div></div>`; }); animateValue(document.getElementById('client-subtotal'), parseInt(document.getElementById('client-subtotal').innerText.replace(/,/g, '')) || 0, t, 500); } }
     
-    function runSignageLoop() { 
+function runSignageLoop() { 
         clearTimeout(signageTimeout); 
         if(clientIsAway) return; 
         if(clientData.cart && clientData.cart.length > 0) return; 
@@ -1607,14 +1607,39 @@ function renderPosOshinagaki() {
         if (cycleImages.length > 0) {
             document.getElementById('client-menu-area').style.display = 'none'; 
             document.getElementById('client-slideshow').style.display = 'flex'; 
+            
             const imgEl = document.getElementById('slideshow-img'); 
+            // 消えるときは素早くフェードアウト
+            imgEl.style.transition = 'opacity 0.4s ease';
             imgEl.style.opacity = 0; 
+            
             setTimeout(() => { 
                 imgEl.src = cycleImages[currentSlideIndex % cycleImages.length]; 
+                
+                // 次の画像が現れる際のランダムエフェクト（初期位置）
+                const effects = [
+                    'scale(0.9)', 'scale(1.05)', 
+                    'translateY(40px)', 'translateY(-40px)', 
+                    'translateX(40px)', 'translateX(-40px)', 
+                    'scale(1)' // ただのフェード
+                ];
+                const eff = effects[Math.floor(Math.random() * effects.length)];
+                
+                imgEl.style.transition = 'none';
+                imgEl.style.transform = eff;
+                
+                // 描画更新を強制
+                void imgEl.offsetWidth;
+                
+                // アニメーション実行（ふわっと現れる）
+                imgEl.style.transition = 'all 1.2s cubic-bezier(0.25, 0.1, 0.25, 1)';
                 imgEl.style.opacity = 1; 
+                imgEl.style.transform = 'scale(1) translate(0px, 0px)';
+                
                 currentSlideIndex++; 
             }, 500); 
-            signageTimeout = setTimeout(runSignageLoop, cycleImages.length > 1 ? 8000 : 9999999); 
+            // ★ 表示時間を15秒（15000）に延長
+            signageTimeout = setTimeout(runSignageLoop, cycleImages.length > 1 ? 15000 : 9999999); 
         } 
         else {
             document.getElementById('client-slideshow').style.display = 'none'; 
@@ -1623,7 +1648,7 @@ function renderPosOshinagaki() {
             (clientData.items || []).forEach(i => { const outOfStock = i.stock <= 0; list.innerHTML += `<div class="glass-card" style="display:flex; align-items:center; padding:20px; gap:20px; position:relative; overflow:hidden; ${outOfStock ? 'opacity:0.6;' : ''}"><img src="${i.image}" style="width:120px; height:120px; object-fit:contain; border-radius:16px; background:rgba(255,255,255,0.8);"><div style="flex-grow:1;"><div style="font-size:2rem; font-weight:900; color:var(--text-color); line-height:1.2; margin-bottom:10px;">${i.name}</div><div style="font-size:2.2rem; font-weight:900; color:var(--accent-color);">¥${i.price.toLocaleString()}</div></div>${outOfStock ? '<div style="position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.7); display:flex; justify-content:center; align-items:center; font-size:4rem; font-weight:900; color:#f44336; z-index:10; border:6px dashed #f44336;">完売</div>' : ''}</div>`; }); 
             signageTimeout = setTimeout(runSignageLoop, 15000); 
         }
-    } 
+    }
     
     function stopSignageLoop() { clearTimeout(signageTimeout); signageTimeout = null; document.getElementById('client-menu-area').style.display = 'none'; document.getElementById('client-slideshow').style.display = 'none'; }
 </script>
