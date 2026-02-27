@@ -348,10 +348,10 @@
         </div>
 <div class="glass-card" style="margin-top: 20px; padding: 20px;">
             <h3 style="margin-top:0; color:var(--accent-color); font-size:1.2rem;">📡 端末間ワイヤレス引継ぎ</h3>
-            <p style="font-size:0.85rem; color:var(--text-color); opacity:0.8; font-weight:700;">Androidタブレットで作ったデータをiPhoneに送るなど、PINコードを使って直接データを丸ごと転送できます。</p>
+            <p style="font-size:0.85rem; color:var(--text-color); opacity:0.8; font-weight:700;">PINコードを使って直接データを丸ごと転送できます。</p>
             <div style="display:flex; gap:10px;">
-                <button onclick="startTransferReceive()" style="flex:1; background:#4CAF50; color:white; padding:15px; font-weight:900; font-size:1.1rem; border-radius:14px; box-shadow: 0 4px 12px rgba(76,175,80,0.3);">📥 受け取る(iPhone等)</button>
-                <button onclick="startTransferSend()" style="flex:1; background:#2196F3; color:white; padding:15px; font-weight:900; font-size:1.1rem; border-radius:14px; box-shadow: 0 4px 12px rgba(33,150,243,0.3);">📤 送る(タブレット等)</button>
+                <button onclick="startTransferReceive()" style="flex:1; background:#4CAF50; color:white; padding:15px; font-weight:900; font-size:1.1rem; border-radius:14px; box-shadow: 0 4px 12px rgba(76,175,80,0.3);">📥 受け取る</button>
+                <button onclick="startTransferSend()" style="flex:1; background:#2196F3; color:white; padding:15px; font-weight:900; font-size:1.1rem; border-radius:14px; box-shadow: 0 4px 12px rgba(33,150,243,0.3);">📤 送る</button>
             </div>
             <div id="transfer-status" style="margin-top:15px; font-weight:bold; color:var(--accent-color); text-align:center; font-size:1.1rem;"></div>
         </div>
@@ -1882,18 +1882,56 @@ function runSignageLoop() {
         document.getElementById('transfer-status').innerHTML = `受信待機中... 送信側でこのPINを入力してください: <br><span style="font-size:2rem; color:#f44336; letter-spacing:4px;">${pin}</span>`;
         if(transferPeer) transferPeer.destroy();
         transferPeer = new Peer('hazuki-transfer-' + pin, peerOptions);
+        
         transferPeer.on('connection', (conn) => {
             conn.on('data', (data) => {
                 if(data.type === 'transfer_app_data') {
+                    // 【重要】送信側に「全部無事に届いたよ！」と合図を送る
+                    conn.send({ type: 'transfer_ack' });
+                    
                     if(confirm("データを受信しました！\n現在のこの端末のデータをすべて上書きして復元しますか？")) {
-                        appData = data.payload;
-                        saveData();
-                        alert("引継ぎが完了しました！アプリを再読み込みします。");
-                        location.reload();
+                        try {
+                            appData = JSON.parse(data.payload);
+                            saveData();
+                            alert("引継ぎが完了しました！アプリを再読み込みします。");
+                            location.reload();
+                        } catch(e) {
+                            alert("データの展開に失敗しました。");
+                        }
                     } else {
                         document.getElementById('transfer-status').innerText = "受信をキャンセルしました。";
                     }
                 }
+            });
+        });
+    }
+
+    function startTransferSend() {
+        if(!initPeer()) return;
+        const pin = prompt('受け取る側の画面に表示されている4桁のPINを入力してください');
+        if(!pin || pin.length !== 4) return;
+        document.getElementById('transfer-status').innerText = "接続中...";
+        if(transferPeer) transferPeer.destroy();
+        transferPeer = new Peer(peerOptions);
+        
+        transferPeer.on('open', () => {
+            const conn = transferPeer.connect('hazuki-transfer-' + pin, { reliable: true });
+            conn.on('open', () => {
+                document.getElementById('transfer-status').innerText = "データ送信中...（画像が多いと数秒かかります）";
+                // 巨大なデータも安全に送れるようにテキストデータ化して送信
+                conn.send({ type: 'transfer_app_data', payload: JSON.stringify(appData) });
+            });
+            
+            // 【重要】受信側から「届いたよ」の合図が来たら完了にして通信を閉じる
+            conn.on('data', (data) => {
+                if(data.type === 'transfer_ack') {
+                    document.getElementById('transfer-status').innerText = "送信完了！受信側の画面を確認してください。";
+                    setTimeout(() => { transferPeer.destroy(); }, 1000);
+                }
+            });
+
+            conn.on('error', () => {
+                document.getElementById('transfer-status').innerText = "送信失敗。通信エラーが発生しました。";
             });
         });
     }
