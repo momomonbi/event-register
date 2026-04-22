@@ -145,8 +145,43 @@
         #client-away-overlay { display:none; position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:10000; color:white; justify-content:center; align-items:center; flex-direction:column; text-align:center; padding:20px; box-sizing:border-box; backdrop-filter:blur(15px); }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-30px); } }
         .away-icon-anim { font-size:8rem; margin-bottom:30px; animation: bounce 2.5s infinite cubic-bezier(0.25, 0.1, 0.25, 1); }
-        #client-slideshow { position:absolute; top:0; left:0; width:100%; height:100%; z-index:1; background:#111; display:none; justify-content:center; align-items:center; }
-        #slideshow-img { max-width:100%; max-height:100%; object-fit:contain; transition: opacity 1s cubic-bezier(0.25, 0.1, 0.25, 1); opacity:0;}
+        #client-slideshow { position:absolute; top:0; left:0; width:100%; height:100%; z-index:1; background:#111; display:none; justify-content:center; align-items:center; overflow:hidden; }
+        #slideshow-img { max-width:100%; max-height:100%; object-fit:contain; transition: opacity 1s cubic-bezier(0.25, 0.1, 0.25, 1); opacity:0; will-change: transform, opacity, filter; }
+        #slideshow-lightleak { position:absolute; top:-20%; left:-20%; width:140%; height:140%; pointer-events:none; z-index:2;
+            background: radial-gradient(ellipse at 25% 20%, rgba(255,180,120,0.28) 0%, transparent 45%),
+                        radial-gradient(ellipse at 75% 80%, rgba(140,190,255,0.22) 0%, transparent 45%),
+                        radial-gradient(ellipse at 80% 20%, rgba(255,140,200,0.18) 0%, transparent 40%);
+            mix-blend-mode: screen; animation: slideshow-lightleak-drift 22s ease-in-out infinite; }
+        @keyframes slideshow-lightleak-drift {
+            0%   { transform: translate(0%, 0%) rotate(0deg) scale(1); }
+            33%  { transform: translate(-6%, 4%) rotate(80deg) scale(1.08); }
+            66%  { transform: translate(4%, -5%) rotate(180deg) scale(0.95); }
+            100% { transform: translate(0%, 0%) rotate(360deg) scale(1); }
+        }
+        #slideshow-vignette { position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:3;
+            background: radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,0.55) 100%);
+            animation: slideshow-vignette-pulse 9s ease-in-out infinite; }
+        @keyframes slideshow-vignette-pulse { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
+        #slideshow-wipe { position:absolute; top:-10%; left:-60%; width:60%; height:120%; pointer-events:none; z-index:4;
+            background: linear-gradient(100deg, transparent 30%, rgba(255,255,255,0.25) 48%, rgba(255,255,255,0.55) 50%, rgba(255,255,255,0.25) 52%, transparent 70%);
+            mix-blend-mode: screen; opacity: 0; transform: skewX(-12deg); }
+        .slideshow-wipe-go { animation: slideshow-wipe-sweep 0.9s cubic-bezier(0.25, 0.1, 0.25, 1); }
+        @keyframes slideshow-wipe-sweep {
+            0%   { left:-60%; opacity: 0; }
+            30%  { opacity: 1; }
+            70%  { opacity: 1; }
+            100% { left:160%; opacity: 0; }
+        }
+        #slideshow-particles { position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:5; overflow:hidden; }
+        .slideshow-sparkle { position:absolute; border-radius:50%; pointer-events:none;
+            background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,220,130,0.9) 35%, rgba(255,170,80,0.4) 60%, transparent 75%);
+            box-shadow: 0 0 12px rgba(255,220,130,0.8); }
+        @keyframes slideshow-sparkle-anim {
+            0%   { opacity:0; transform: translate(0,0) scale(0.2); }
+            20%  { opacity:1; transform: translate(var(--dx1), var(--dy1)) scale(1.2); }
+            70%  { opacity:0.9; transform: translate(var(--dx2), var(--dy2)) scale(1); }
+            100% { opacity:0; transform: translate(var(--dx3), var(--dy3)) scale(0.4); }
+        }
         #client-menu-area { position:absolute; top:0; left:0; width:100%; height:100%; z-index:1; background:var(--bg-color); display:flex; flex-direction:column; padding:40px; box-sizing:border-box; }
         #client-cart-area { position:absolute; top:0; left:0; width:100%; height:100%; z-index:2; background:var(--card-bg); backdrop-filter:blur(30px); -webkit-backdrop-filter:blur(30px); display:none; flex-direction:column; padding:40px 40px 100px 40px; box-sizing:border-box; }
         #client-checkout-area { position:absolute; top:0; left:0; width:100%; height:100%; z-index:3; background:var(--bg-color); display:none; flex-direction:column; justify-content:center; align-items:center; padding:20px; box-sizing:border-box; }
@@ -538,6 +573,10 @@
 
     <div id="client-slideshow">
         <img id="slideshow-img">
+        <div id="slideshow-lightleak"></div>
+        <div id="slideshow-vignette"></div>
+        <div id="slideshow-wipe"></div>
+        <div id="slideshow-particles"></div>
     </div>
 
     <div id="client-cart-area">
@@ -1822,9 +1861,50 @@ function renderPosOshinagaki() {
     function updateAwayUI() { const s = clientData.signageSettings || {}; document.getElementById('away-text-1-display').innerText = s.awayText1 || "ただいま離席中です"; document.getElementById('away-text-2-display').innerText = s.awayText2 || "すぐに戻ります。しばらくお待ちくださいませ。"; const iconEl = document.getElementById('away-icon-display'); if(s.awayIconType === 'custom' && s.awayCustomImage) { iconEl.innerHTML = `<img src="${s.awayCustomImage}" style="max-height:250px; border-radius:20px;">`; iconEl.classList.remove('away-icon-anim'); } else if(s.awayIconType === 'girl') { iconEl.innerHTML = `👩‍💼`; iconEl.classList.add('away-icon-anim'); } else { iconEl.innerHTML = `👨‍💼`; iconEl.classList.add('away-icon-anim'); } }
     function updateClientCartUI() { const c = clientData.cart || []; const t = clientData.cartTotal || 0; if(document.getElementById('client-checkout-area').style.display === 'flex') return; if(c.length === 0) { document.getElementById('client-cart-area').style.display = 'none'; } else { stopSignageLoop(); document.getElementById('client-menu-area').style.display = 'none'; document.getElementById('client-slideshow').style.display = 'none'; document.getElementById('client-cart-area').style.display = 'flex'; const list = document.getElementById('client-cart-list'); list.innerHTML = ''; const map = {}; c.forEach(i => { if(!map[i.id]) map[i.id] = {...i, count:0}; map[i.id].count++; }); Object.values(map).forEach(i => { list.innerHTML += `<div style="display:flex; justify-content:space-between; align-items:center; border-bottom:4px dashed color-mix(in srgb, var(--text-color) 20%, transparent); padding:20px 0;"><div style="display:flex; align-items:center; gap:30px;"><img src="${i.image}" style="width:120px; height:120px; object-fit:contain; border-radius:20px; background:rgba(255,255,255,0.8);"><div><div style="font-weight:900; color:var(--text-color); font-size:3rem; line-height:1.2; margin-bottom:10px;">${i.name}</div><div style="color:var(--accent-color); font-weight:900; font-size:2.5rem;">¥${i.price.toLocaleString()}</div></div></div><div style="font-size:4rem; font-weight:900; color:var(--text-color);">x ${i.count}</div></div>`; }); animateValue(document.getElementById('client-subtotal'), parseInt(document.getElementById('client-subtotal').innerText.replace(/,/g, '')) || 0, t, 500); } }
     
-function runSignageLoop() { 
-        clearTimeout(signageTimeout); 
-        if(clientIsAway) return; 
+    function triggerSlideshowWipe() {
+        const wipe = document.getElementById('slideshow-wipe');
+        if (!wipe) return;
+        wipe.classList.remove('slideshow-wipe-go');
+        void wipe.offsetWidth;
+        wipe.style.background = `linear-gradient(${90 + Math.floor(Math.random() * 40 - 20)}deg, transparent 30%, rgba(255,255,255,0.25) 48%, rgba(255,255,255,0.55) 50%, rgba(255,255,255,0.25) 52%, transparent 70%)`;
+        wipe.classList.add('slideshow-wipe-go');
+    }
+
+    function spawnSlideshowSparkles(count) {
+        const layer = document.getElementById('slideshow-particles');
+        if (!layer) return;
+        const palette = [
+            'radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,220,130,0.9) 35%, rgba(255,170,80,0.4) 60%, transparent 75%)',
+            'radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(180,220,255,0.9) 35%, rgba(120,170,230,0.4) 60%, transparent 75%)',
+            'radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,200,230,0.9) 35%, rgba(220,140,200,0.4) 60%, transparent 75%)',
+            'radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(200,255,210,0.9) 35%, rgba(120,220,160,0.4) 60%, transparent 75%)'
+        ];
+        for (let i = 0; i < count; i++) {
+            const p = document.createElement('div');
+            p.className = 'slideshow-sparkle';
+            const size = 6 + Math.random() * 14;
+            const dur  = 0.9 + Math.random() * 1.4;
+            const delay = Math.random() * 0.5;
+            const baseX = Math.random() * 100;
+            const baseY = Math.random() * 100;
+            const drift = (s) => (Math.random() - 0.5) * s;
+            p.style.cssText = `
+                left:${baseX}%; top:${baseY}%;
+                width:${size}px; height:${size}px;
+                background:${palette[Math.floor(Math.random() * palette.length)]};
+                --dx1:${drift(40)}px; --dy1:${drift(40) - 10}px;
+                --dx2:${drift(60)}px; --dy2:${drift(60) - 30}px;
+                --dx3:${drift(90)}px; --dy3:${drift(80) - 60}px;
+                animation: slideshow-sparkle-anim ${dur}s ease-out ${delay}s forwards;
+            `;
+            layer.appendChild(p);
+            setTimeout(() => p.remove(), (dur + delay) * 1000 + 100);
+        }
+    }
+
+function runSignageLoop() {
+        clearTimeout(signageTimeout);
+        if(clientIsAway) return;
         if(clientData.cart && clientData.cart.length > 0) return; 
         
         document.getElementById('client-cart-area').style.display = 'none'; 
@@ -1894,6 +1974,20 @@ function runSignageLoop() {
                 imgEl.style.transform = 'translate(0px, 0px) scale(1) rotate(0deg)';
                 imgEl.style.filter = 'blur(0px) brightness(1)';
                 imgEl.style.opacity = 1;
+
+                triggerSlideshowWipe();
+                spawnSlideshowSparkles(12 + Math.floor(Math.random() * 10));
+
+                const kbDelay = inDurMs + 80;
+                const kbDurMs = Math.max(8000, 14000 - kbDelay);
+                const kbScale = 1.05 + Math.random() * 0.08;
+                const kbX = (Math.random() - 0.5) * 36;
+                const kbY = (Math.random() - 0.5) * 36;
+                setTimeout(() => {
+                    if (!signageTimeout) return;
+                    imgEl.style.transition = `transform ${kbDurMs}ms linear, opacity 400ms ease, filter 400ms ease`;
+                    imgEl.style.transform = `translate(${kbX}px, ${kbY}px) scale(${kbScale}) rotate(0deg)`;
+                }, kbDelay);
 
                 currentSlideIndex++;
             }, outDurMs);
