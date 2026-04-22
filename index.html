@@ -906,20 +906,22 @@
         }
         section.style.display = 'block';
         imgEl.src = ev.oshinagakiImage;
-        
+
         // リセット
         mapScale = 1; mapPanX = 0; mapPanY = 0;
         currentMapPoints = []; selectedPointIdx = -1;
         applyMapTransform();
-        
-        imgEl.onload = () => {
+
+        const onImgReady = () => {
             canvas.width = imgEl.clientWidth;
             canvas.height = imgEl.clientHeight;
             mapCtx = canvas.getContext('2d');
             redrawMappingCanvas();
-            renderMapEditorBadges(); 
+            renderMapEditorBadges();
             renderMappedAreaList();
-        }
+        };
+        imgEl.onload = onImgReady;
+        if (imgEl.complete && imgEl.naturalWidth) onImgReady();
 
         // スマホなどのPinch Zoom用
         wrapper.ontouchstart = (e) => {
@@ -1795,7 +1797,7 @@ function renderPosOshinagaki() {
     function clearSlideshowImages() { appData.slideshowImages = []; saveData(); renderSlideshowPreview(); syncStateToClient(); }
     function renderSlideshowPreview() { const container = document.getElementById('slideshow-preview'); container.innerHTML = ''; if(appData.slideshowImages && appData.slideshowImages.length > 0) { appData.slideshowImages.forEach(src => { container.innerHTML += `<img src="${src}" style="height:60px; border-radius:8px; border:1px solid rgba(128,128,128,0.2);">`; }); } else { container.innerHTML = '<span style="font-size:0.8rem; opacity:0.6;">画像なし</span>'; } }
     let targetHostPin = '', lastPing = Date.now(), reconnectInterval = null, clientIsAway = false;
-    function startClientMode() { if(!initPeer()) return; targetHostPin = prompt('PINを入力', targetHostPin); if(!targetHostPin || targetHostPin.length !== 4) return; isClient = true; document.getElementById('client-display').style.display = 'flex'; try { document.documentElement.requestFullscreen(); } catch(e) {} connectToHost(); }
+    function startClientMode() { if(!initPeer()) return; targetHostPin = prompt('PINを入力', targetHostPin); if(!targetHostPin || targetHostPin.length !== 4) return; isClient = true; lastPing = Date.now(); document.getElementById('client-display').style.display = 'flex'; try { document.documentElement.requestFullscreen(); } catch(e) {} connectToHost(); }
     function connectToHost() { if(peer) peer.destroy(); peer = new Peer(peerOptions); peer.on('open', () => { conn = peer.connect(PEER_PREFIX + targetHostPin, { reliable: true }); conn.on('open', () => { lastPing = Date.now(); if(reconnectInterval) { clearInterval(reconnectInterval); reconnectInterval = null; } }); conn.on('data', (data) => { if(data.type === 'ping') { lastPing = Date.now(); return; } handleClientData(data); }); conn.on('close', evaluateClientDisplay); }); }
     setInterval(() => { if (isClient) { if (Date.now() - lastPing > 12000) { if (!clientIsAway) { clientData.cart = []; if (!signageTimeout) runSignageLoop(); } if (!reconnectInterval) { reconnectInterval = setInterval(() => { if (Date.now() - lastPing > 12000) connectToHost(); else { clearInterval(reconnectInterval); reconnectInterval = null; } }, 5000); } } } }, 3000);
     function exitClientMode() { isClient = false; if(peer) peer.destroy(); if(reconnectInterval) clearInterval(reconnectInterval); stopSignageLoop(); document.getElementById('client-display').style.display = 'none'; try { document.exitFullscreen(); } catch(e) {} }
