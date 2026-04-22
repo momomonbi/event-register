@@ -1841,30 +1841,64 @@ function runSignageLoop() {
         }
 
         if (cycleImages.length > 0) {
-            document.getElementById('client-menu-area').style.display = 'none'; 
-            document.getElementById('client-slideshow').style.display = 'flex'; 
-            
-            const imgEl = document.getElementById('slideshow-img'); 
-            imgEl.style.transition = 'opacity 0.4s ease';
-            imgEl.style.opacity = 0; 
-            
-            setTimeout(() => { 
-                imgEl.src = cycleImages[currentSlideIndex % cycleImages.length]; 
-                const effects = ['scale(0.9)', 'scale(1.05)', 'translateY(40px)', 'translateY(-40px)', 'translateX(40px)', 'translateX(-40px)', 'scale(1)'];
-                const eff = effects[Math.floor(Math.random() * effects.length)];
-                
+            document.getElementById('client-menu-area').style.display = 'none';
+            document.getElementById('client-slideshow').style.display = 'flex';
+
+            const imgEl = document.getElementById('slideshow-img');
+
+            const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+            const dirs = [
+                {tx:-90, ty:0}, {tx:90, ty:0}, {tx:0, ty:-90}, {tx:0, ty:90},
+                {tx:-70, ty:-70}, {tx:70, ty:-70}, {tx:-70, ty:70}, {tx:70, ty:70},
+                {tx:0, ty:0}
+            ];
+            const easings = [
+                'cubic-bezier(0.25, 0.1, 0.25, 1)',
+                'cubic-bezier(0.34, 1.56, 0.64, 1)',
+                'cubic-bezier(0.16, 1, 0.3, 1)',
+                'cubic-bezier(0.22, 1, 0.36, 1)',
+                'cubic-bezier(0.65, 0, 0.35, 1)',
+                'cubic-bezier(0.4, 0, 0.2, 1)'
+            ];
+
+            const entryDir = pick(dirs);
+            const exitDir = Math.random() < 0.6
+                ? { tx: -entryDir.tx * 0.6, ty: -entryDir.ty * 0.6 }
+                : { tx: entryDir.tx * 0.5,  ty: entryDir.ty * 0.5 };
+            const entryScale = pick([0.82, 0.88, 0.92, 0.96, 1.04, 1.08, 1.12]);
+            const exitScale  = pick([0.9, 0.95, 1.0, 1.05, 1.1]);
+            const entryRot   = pick([-8, -5, -3, 0, 0, 0, 3, 5, 8]);
+            const exitRot    = pick([-6, -3, 0, 0, 3, 6]);
+            const entryBlur  = pick([0, 0, 0, 4, 8, 12]);
+            const entryBright = pick([1, 1, 1, 0.75, 1.25]);
+            const outDurMs = 450 + Math.floor(Math.random() * 300);
+            const inDurMs  = 1000 + Math.floor(Math.random() * 600);
+            const outEase = pick(easings);
+            const inEase  = pick(easings);
+
+            imgEl.style.transition = `transform ${outDurMs}ms ${outEase}, opacity ${outDurMs}ms ${outEase}, filter ${outDurMs}ms ${outEase}`;
+            imgEl.style.transform = `translate(${exitDir.tx}px, ${exitDir.ty}px) scale(${exitScale}) rotate(${exitRot}deg)`;
+            imgEl.style.filter = 'blur(4px)';
+            imgEl.style.opacity = 0;
+
+            setTimeout(() => {
+                imgEl.src = cycleImages[currentSlideIndex % cycleImages.length];
+
                 imgEl.style.transition = 'none';
-                imgEl.style.transform = eff;
+                imgEl.style.transform = `translate(${entryDir.tx}px, ${entryDir.ty}px) scale(${entryScale}) rotate(${entryRot}deg)`;
+                imgEl.style.filter = `blur(${entryBlur}px) brightness(${entryBright})`;
+                imgEl.style.opacity = 0;
                 void imgEl.offsetWidth;
-                
-                imgEl.style.transition = 'all 1.2s cubic-bezier(0.25, 0.1, 0.25, 1)';
-                imgEl.style.opacity = 1; 
-                imgEl.style.transform = 'scale(1) translate(0px, 0px)';
-                
-                currentSlideIndex++; 
-            }, 500); 
-            signageTimeout = setTimeout(runSignageLoop, cycleImages.length > 1 ? 15000 : 9999999); 
-        } 
+
+                imgEl.style.transition = `transform ${inDurMs}ms ${inEase}, opacity ${inDurMs}ms ${inEase}, filter ${inDurMs}ms ${inEase}`;
+                imgEl.style.transform = 'translate(0px, 0px) scale(1) rotate(0deg)';
+                imgEl.style.filter = 'blur(0px) brightness(1)';
+                imgEl.style.opacity = 1;
+
+                currentSlideIndex++;
+            }, outDurMs);
+            signageTimeout = setTimeout(runSignageLoop, cycleImages.length > 1 ? 15000 : 9999999);
+        }
         else {
             document.getElementById('client-slideshow').style.display = 'none'; 
             document.getElementById('client-menu-area').style.display = 'flex'; 
